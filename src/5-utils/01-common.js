@@ -125,7 +125,7 @@ export const getSomeFromArr = (arr, num) => {
 };
 
 // search 转为 obj
-export const searchToObj = path => {
+export const searchToObj = (path = decodeURIComponent(window.location.hash)) => {
   // window.location.search
   const obj = {};
   if (!path) return obj;

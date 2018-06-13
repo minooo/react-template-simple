@@ -17,7 +17,7 @@ export default class extends Component {
     const { home_collage, getHomeCollage } = this.props
     if (!home_collage) { getHomeCollage() }
   }
-  renderItem = item => <List key={item.id} href="/0-home/1-product-detail" as={`/product/${item.id}`} item={item} />
+  renderItem = item => <List key={item.id} as={`/product_detail_${item.id}`} item={item} />
   render() {
     const { home_collage } = this.props
     return (
