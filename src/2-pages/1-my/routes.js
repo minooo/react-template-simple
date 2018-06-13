@@ -25,11 +25,11 @@ export default [
     component: loadPage("4-address")
   },
   {
-    path: "/add_address",
+    path: "/add_address_:id",
     component: loadPage("5-add-address")
   },
   {
-    path: "/retreat",
+    path: "/retreat_:id",
     component: loadPage("6-retreat")
   },
   {
@@ -39,10 +39,6 @@ export default [
   {
     path: "/write_comment",
     component: loadPage("8-write-comment")
-  },
-  {
-    path: "/auth_code",
-    component: loadPage("9-auth-code")
   },
   {
     path: "/order_list",
