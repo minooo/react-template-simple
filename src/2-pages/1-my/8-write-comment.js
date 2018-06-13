@@ -1,22 +1,24 @@
 import React, { Component } from "react";
+import { common, http } from "@utils";
 import { Toast, TextareaItem } from "antd-mobile";
-import { Layout, NavBar, WrapLink, List, Rate } from "@components";
+import {
+  Layout,
+  NavBar,
+  WrapLink,
+  List,
+  Rate,
+  RequestStatus
+} from "@components";
 
 export default class extends Component {
   state = {
     value: 0,
-    data: {
-      details: {
-        thumb: "https://dummyimage.com/600x400",
-        title: "title",
-        price: 123,
-        count: 12
-      },
-      freight: 24,
-      price: 123,
-      message: "友军模拟盘"
-    }
+    netBad: false
   };
+  componentDidMount() {
+    const orderId = common.getUrlLastStr(window.location.pathname);
+    this.getDate(orderId);
+  }
   onRateChange = index => {
     this.setState(() => ({
       value: index + 1
@@ -28,36 +30,95 @@ export default class extends Component {
     this.setState(() => ({ con, canPost }));
   };
   onSave = () => {
-    const { value, canPost } = this.state;
+    const { value, canPost, data, con } = this.state;
     if (value === 0) {
       Toast.info("请评分", 1);
       return;
     }
     if (!canPost) {
       Toast.info("请填写5字已上的评论", 2);
+      return;
     }
+    http.getC(
+      {
+        action: "user",
+        operation: "add_comment",
+        goods_id: data.goods.id,
+        score: value,
+        con,
+        order_id: data.order_id
+      },
+      data => {
+        const { history } = this.props;
+        if (parseInt(data.errcode, 10) === 0) {
+          Toast.info("评分成功", 2, () => {
+            const {
+              history: { search }
+            } = this.props;
+            if (search.type && parseInt(search.type, 10) === 1) {
+              history.replace("order_list")
+            } else {
+              history.replace(`/order_details_${this.state.data.id}`);
+            }
+          });
+        }
+      }
+    );
+  };
+  getDate = orderId => {
+    const { history } = this.props;
+    http
+      .get({ action: "order", operation: "show", id: orderId })
+      .then(response => {
+        const { errcode } = response;
+        if (parseInt(errcode, 10) === 0) {
+          this.setState(() => ({
+            data: response.data
+          }));
+        } else {
+          Toast.fail("该订单不存在", 1, () => {
+            history.replace("order_list");
+          });
+        }
+      })
+      .catch(err => {
+        this.setState(() => ({ netBad: true }));
+        console.info(err);
+      });
   };
   render() {
-    const { data, value } = this.state;
+    const { data, value, netBad } = this.state;
+    if (netBad) return <RequestStatus type="no-net" />;
+    if (!data) return <RequestStatus />;
     return (
       <Layout title="评价">
         <NavBar title="评价" />
         <div className="equal overflow-y">
           <div className="bg-white mb20 plr30">
-            <List item={data.details} order />
+            {data.goods && (
+              <List
+                item={data.goods}
+                href="/0-home/1-product-detail"
+                as={`/product/${data.goods.id}`}
+                isOrder={{ price: data.goods.low_price, buy_num: data.buy_num }}
+              />
+            )}
             <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
               <div>运费</div>
-              <div>￥{data.freight}</div>
+              <div>￥{data.delivery_fee && data.delivery_fee}</div>
             </div>
             <div className="h84 flex ai-center font24 c333 border-bottom-one">
               <div style={{ paddingRight: "0.45rem" }}>留言</div>
-              <div>{data.message}</div>
+              <div>{data.con || "什么也没说"}</div>
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">
               <div className="flex ai-end">
                 小计：
                 <span className="c-main font24 lh100">
-                  ￥<span className="font40 bold">{data.price}</span>
+                  ￥
+                  <span className="font40 bold">
+                    {data.pay_price && data.pay_price}
+                  </span>
                 </span>
               </div>
             </div>

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Layout, NavBar, HomeMoreTeambuyList, ScrollLoad } from "@components";
-import { http } from "@utils";
 
 export default class extends Component {
   // static async getInitialProps({ ctx }) {
@@ -16,10 +15,10 @@ export default class extends Component {
   constructor(props) {
     super(props);
     const {
-      router: { query }
+      history: { search }
     } = this.props;
-    const goodsNum = query && query.num;
-    const goodsId = query && query.id;
+    const goodsNum = search && search.num;
+    const goodsId = search && search.id;
     this.state = {
       goodsNum,
       goodsId
@@ -34,9 +33,8 @@ export default class extends Component {
       <Layout title="更多拼单">
         <NavBar title="更多拼单" />
         <ScrollLoad
-          dataPath="collage"
           renderItem={this.renderGroup}
-          dataParam={{ ...(goodsId && { goods_id: goodsId }), status: 1 }}
+          dataParam={{ action: "collage", operation: "list", goods_id: goodsId }}
           listsClass="plr30 bg-white"
         >
           <div className="h60 bg-smoke plr30 flex ai-center font24 c666">

@@ -39,18 +39,22 @@ export default class extends PureComponent {
     const { item } = this.props;
     const { surplusTime, surplusNum } = this.state;
     return (
-      <div>
+      <div className="bg-white plr30 mb20å">
         <div
           className="flex jc-between ai-center border-bottom-one"
           style={{ height: "1.4rem" }}
         >
           <div className="flex">
             <div className="h80 w80 overflow-h common-img-bg circle">
-              <img
-                className="h-100 w-100"
-                src={item.fan && item.fan.avatar}
-                alt=""
-              />
+              {item.member && item.member.headimgurl ? (
+                <img
+                  className="h-100 w-100"
+                  src={item.member && item.member.headimgurl}
+                  alt=""
+                />
+              ) : (
+                <div className="h-100 w-100" />
+              )}
             </div>
             <div
               className="pl20 font30 flex ai-center text-overflow-one"
@@ -62,9 +66,13 @@ export default class extends PureComponent {
           <div className="flex">
             <div className="flex column lh100 ">
               <div className="font28 pb15 text-right">
-                {surplusNum > 0
-                  ? <span>还差<span className="c-main plr5">{surplusNum}</span>人拼单完成</span>
-                  : "拼单完成"}
+                {surplusNum > 0 ? (
+                  <span>
+                    还差<span className="c-main plr5">{surplusNum}</span>人拼单完成
+                  </span>
+                ) : (
+                  "拼单完成"
+                )}
               </div>
               <div className="c999 font24 text-right">
                 {surplusTime && surplusNum > 0
@@ -78,7 +86,7 @@ export default class extends PureComponent {
             </div>
             {surplusTime && surplusNum > 0 ? (
               <WrapLink
-                path="/"
+                path={`/details_${item.id}`}
                 className="w120 h60 bg-main c-white font24 flex ai-center jc-center ml30 r10"
               >
                 去拼单
