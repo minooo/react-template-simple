@@ -60,8 +60,7 @@ export default ({ item, handle }) => (
     </div>
     <List
       item={item}
-      href="/1-my/11-order-details"
-      as={`/my/order/${item.id}`}
+      as={`/order_details_${item.id}`}
       isOrder={{ price: item.pay_price }}
     />
     <div className="h110 flex jc-between ai-center">
