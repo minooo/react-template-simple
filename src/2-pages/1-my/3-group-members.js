@@ -5,19 +5,13 @@ import { Layout, NavBar, MyImgList } from "@components";
 import chunk from "lodash/chunk";
 
 export default class extends Component {
-  // static async getInitialProps(ctx) {
-  //   // err req res pathname query asPath
-  //   const { store } = ctx;
-  //   if (!store.getState().home_banners) {
-  //     store.dispatch(getHomeBanners());
-  //   }
-  // }
-  state = { id: 1 };
+  state = {};
   componentDidMount() {
     this.onAddress();
   }
   onAddress = () => {
-    const { id } = this.state;
+    console.info(this.props.match);
+    const { id } = this.props.match.params;
     http.getC(
       {
         action: "collage",

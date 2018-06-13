@@ -17,23 +17,19 @@ export default class extends Component {
     this.onAddress();
   }
   onAddress = () => {
-    const {
-      router: { query }
-    } = this.props;
-    if (query && query.id) {
-      this.setState(() => ({ id: query.id }));
-      http.getC(
-        { action: "address", operation: "show", id: query.id },
-        data => {
-          console.info(data);
-          this.setState(() => ({
-            name: data.data.name,
-            mobile: data.data.mobile,
-            address: data.data.address,
-            isLongLogin: data.data.is_default
-          }));
-        }
-      );
+    console.info(this.props.match);
+    const { id } = this.props.match.params;
+    if (id > 0) {
+      this.setState({ id });
+      http.getC({ action: "address", operation: "show", id }, data => {
+        console.info(data);
+        this.setState(() => ({
+          name: data.data.name,
+          mobile: data.data.mobile,
+          address: data.data.address,
+          isLongLogin: data.data.is_default
+        }));
+      });
     }
   };
   // 获取省
@@ -135,7 +131,7 @@ export default class extends Component {
           province_id: sValue[0],
           city_id: sValue[1],
           county_id: sValue[2],
-          address,
+          address
         },
         () => {
           Toast.success("收货地址保存成功", 1, () => {
@@ -170,7 +166,7 @@ export default class extends Component {
           province_id: sValue[0],
           city_id: sValue[1],
           county_id: sValue[2],
-          address,
+          address
         },
         () => {
           Toast.success("收货地址编辑成功", 1, () => {
@@ -183,15 +179,7 @@ export default class extends Component {
     }
   };
   render() {
-    const {
-      name,
-      mobile,
-      address,
-      cols,
-      cityDatas,
-      sValue,
-      id
-    } = this.state;
+    const { name, mobile, address, cols, cityDatas, sValue, id } = this.state;
     return (
       <Layout title={`${id ? "编辑" : "添加"}收货地址`}>
         <div className="equal overflow-y">

@@ -4,19 +4,18 @@ import { http } from "@utils";
 import { Layout, NavBar } from "@components";
 
 export default class extends Component {
-  state = { order_id: "20180607164319234784" };
+  state = {};
   componentDidMount() {
-    // this.onAddress();
+    this.onAddress();
   }
-  // 获取退货订单id
-  // onAddress = () => {
-  //   const {
-  //     router: { query }
-  //   } = this.props;
-  //   if (query && query.id) {
-  //     this.setState(() => ({ order_id: query.id }));
-  //   }
-  // };
+  // 获取退货订单号
+  onAddress = () => {
+    console.info(this.props.match);
+    const { id } = this.props.match.params;
+    if (id) {
+      this.setState(() => ({ order_id: id }));
+    }
+  };
   // 获取输入数据
   onChange = (val, type) => {
     if (type === "express_comp_name" || type === "express_code") {

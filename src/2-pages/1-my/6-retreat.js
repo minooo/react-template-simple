@@ -4,19 +4,18 @@ import { http } from "@utils";
 import { Layout, WrapLink } from "@components";
 
 export default class extends Component {
-  state = { order_id: "20180607164319234784", type: 1 };
+  state = {};
   componentDidMount() {
-    // this.onAddress();
+    this.onAddress();
   }
-  // 获取退货订单id和退货类型
-  // onAddress = () => {
-  //   const {
-  //     router: { query }
-  //   } = this.props;
-  //   if (query && query.id) {
-  //     this.setState(() => ({ order_id: query.id }));
-  //   }
-  // };
+  // 获取退货订单号id
+  onAddress = () => {
+    console.info(this.props.match);
+    const { id } = this.props.match.params;
+    if (id) {
+      this.setState(() => ({ order_id: id }));
+    }
+  };
   // 获取输入数据
   onChange = (val, type) => {
     if (type === "reason") {
@@ -26,12 +25,12 @@ export default class extends Component {
   };
   // 设置
   onSetting = () => {
-    const { reason, order_id, type } = this.state;
+    const { reason, order_id } = this.state;
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else {
       http.postC(
-        { action: "refund", operation: "store", order_id, type, reason },
+        { action: "refund", operation: "store", order_id, reason },
         () => {
           Toast.success("退货原因提交成功", 1, () => {
             if (window && window.history && window.history.length > 1) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { WrapLink } from "@components";
 
-export default ({ href, as, onClick, extra, children }) => (
+export default ({ as, onClick, extra, children }) => (
   <WrapLink
     path={as}
     onClick={onClick}
