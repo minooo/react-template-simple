@@ -1,81 +1,44 @@
 import React from "react";
-import { WrapLink, HideImg } from "@components";
+import { HideImg } from "@components";
 
-const fans = [
-  {
-    nickname: "L",
-    headimgurl:
-      "http://wx.qlogo.cn/mmopen/wd4D3PsQHYzRSKjwiaUP8oz3nLNTR4874YUsJAMYt7zvZXWu24UHcwM4vhXTpuCKRXqG4Ew9ENW4vZricOVSkMceoIW2EsdnhN/0"
-  },
-  {
-    nickname: "L",
-    headimgurl:
-      "http://wx.qlogo.cn/mmopen/wd4D3PsQHYzRSKjwiaUP8oz3nLNTR4874YUsJAMYt7zvZXWu24UHcwM4vhXTpuCKRXqG4Ew9ENW4vZricOVSkMceoIW2EsdnhN/0"
-  },
-  {
-    nickname: "L",
-    headimgurl:
-      "http://wx.qlogo.cn/mmopen/wd4D3PsQHYzRSKjwiaUP8oz3nLNTR4874YUsJAMYt7zvZXWu24UHcwM4vhXTpuCKRXqG4Ew9ENW4vZricOVSkMceoIW2EsdnhN/0"
-  },
-  {
-    nickname: "L",
-    headimgurl:
-      "http://wx.qlogo.cn/mmopen/wd4D3PsQHYzRSKjwiaUP8oz3nLNTR4874YUsJAMYt7zvZXWu24UHcwM4vhXTpuCKRXqG4Ew9ENW4vZricOVSkMceoIW2EsdnhN/0"
-  }
-];
-
-export default () => (
+export default ({ id, places, status, surplusTime, offerd_num, fans }) => (
   <div className=" plr30 bg-white">
     <div className="h40" />
     <div className=" flex column ai-center">
-      <div className=" font30 c333 lh100 mb30">
-        仅剩<span className=" c-main bold"> 1 </span>个名额，23:55:53 后结束
-      </div>
+      {/* 剩余时间 */}
+      {status === 2 || places === 0 ? (
+        <div className="font30 c333 mb30 lh100">此拼单已满员!</div>
+      ) : (
+        <div className=" font30 c333 lh100 mb30">
+          {surplusTime
+            ? surplusTime.getdays > 0
+              ? `剩余时间 ${surplusTime.getdays}天 后结束`
+              : `剩余时间 ${surplusTime.getHours}:${surplusTime.getMinutes}:${
+                  surplusTime.getSeconds
+                } 后结束`
+            : "拼单时间到，未达到拼单人数"}
+        </div>
+      )}
+      {/* 头像显示 */}
       <div className="flex jc-center">
         <HideImg
           imgList={fans}
           imgSize={90}
-          teamId={1}
-          margin={0.20}
+          teamId={id}
+          margin={0.2}
           teaming
           team
         />
-        {/* <div className=" relative">
-          <img
-            className=" circle w90 h90 mr20"
-            src="/static/images/my_logo.png"
-            alt=""
-          />
-          <div
-            style={{
-              borderRadius: "0.16rem",
-              left: "0.15rem",
-              bottom: "-0.2rem",
-              padding: "0.05rem 0.07rem"
-            }}
-            className=" bg-main font24 c-white text-center absolute"
-          >
-            团长
-          </div>
-        </div>
-        <img
-          className=" circle w90 h90"
-          src="/static/images/my_logo.png"
-          alt=""
-        /> */}
       </div>
-
-      <div className="h60" />
+      <div className="h60 w-100" />
       <div className=" font28 c333 lh100">
-        <span className=" c-main ">2人团</span>·拼单中
+        <span className=" c-main ">{offerd_num}人团</span>·拼单{status === 1
+          ? "中"
+          : status === 2
+            ? "完成"
+            : "失败"}
       </div>
-      <div className="h50 " />
-      <WrapLink className=" r10 h80 bg-main c-white font30 w-100">
-        邀请好友
-      </WrapLink>
-      <div className="h40" />
-      <WrapLink className=" font24 c666 ">查看订单详情</WrapLink>
-      <div className="h40" />
+      <div className="h50  w-100" />
     </div>
   </div>
 );

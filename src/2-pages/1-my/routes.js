@@ -17,7 +17,7 @@ export default [
     component: loadPage("1-group-details")
   },
   {
-    path: "/group_members",
+    path: "/group_members_:id",
     component: loadPage("3-group-members")
   },
   {
@@ -33,7 +33,7 @@ export default [
     component: loadPage("6-retreat")
   },
   {
-    path: "/logistics",
+    path: "/logistics_:id",
     component: loadPage("7-logistics")
   },
   {
