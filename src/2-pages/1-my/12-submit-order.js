@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Toast } from "antd-mobile";
-import { Layout, NavBar, WrapLink, List, RequestStatus } from "@components";
+import { Layout, NavBar, WrapLink, List } from "@components";
 import { http, common } from "@utils";
 
 // const { alert } = Modal;
@@ -8,7 +8,6 @@ import { http, common } from "@utils";
 export default class extends Component {
   state = {};
   componentDidMount() {
-    console.log(this.props, common.searchToObj(), "la")
     // const { router } = this.props;
     // if (!router || !router.query) Router.replace("/index", "/");
     this.onAddress();
@@ -40,7 +39,7 @@ export default class extends Component {
   onSetting = () => {
     const { history } = this.props
     const { con, addressData } = this.state;
-    const { goods_id, goods_sku_id, type, launch_log_id } = common.searchToObj()
+    const { goods_id, price, goods_sku_id, type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
     if (type === "1" && !addressData.id) { Toast.info("请选择您的邮寄地址。") }
     Toast.loading("订单处理中...")
     http.post({
@@ -49,13 +48,15 @@ export default class extends Component {
       goods_id,
       goods_sku_id,
       type,
-      ...(type === "1" && { launch_log_id, address_id: addressData.id }),
-      ...(con && { con })
+      ...(type === "1" && { launch_log_id }), // type 1 是拼团，拼团时，必须传 开团的id
+      ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
+      ...(con && { con }) // 留言
     }).then(data => {
       const { errcode, msg } = data
       if (parseInt(errcode, 10) === 0) {
         Toast.hide()
-        const paramsObj = { ...data.data }
+        const payPrice = common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))
+        const paramsObj = { ...data.data, goods_id, payPrice, type }
         const paramsStr = common.serializeParams(paramsObj)
         history.push(`/pay?${paramsStr}`)
       } else if (parseInt(errcode, 10) === 2) {
@@ -152,7 +153,7 @@ export default class extends Component {
               <div className="flex ai-end">
                 小计：
                 <span className="c-main font24 lh100">
-                  ￥<span className="font40 bold">{(delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)}</span>
+                  ￥<span className="font40 bold">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
                 </span>
               </div>
             </div>
@@ -169,7 +170,7 @@ export default class extends Component {
               <div className="flex ai-end">
                 <div className="font24 c-main">
                   <span className="font24 c333">合计：</span>
-                  ￥<span className="font40 pl5">{(delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)}</span>
+                  ￥<span className="font40 pl5">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
                 </div>
               </div>
             </div>

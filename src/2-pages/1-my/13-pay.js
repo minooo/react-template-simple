@@ -1,18 +1,54 @@
 import React, { Component } from "react";
-import { Checkbox } from "antd-mobile";
+import { Checkbox, Toast } from "antd-mobile";
 import { Layout, NavBar, WrapLink } from "@components";
+import { common, http, wxapi } from "@utils"
 
 // const { alert } = Modal;
 
 export default class extends Component {
-  state = {};
+  state = { isLongLogin: true };
+  componentDidMount() {
+    common.setTitle("支付")
+    wxapi.setShare({
+      title: "标题",
+      desc: "副标题",
+    })
+  }
   onChange = (val, type) => {
     if (type === "login") {
       const { checked } = val.target;
-      console.info(checked);
       this.setState(() => ({ isLongLogin: checked }));
     }
   };
+  onPay = () => {
+    const { history } = this.props
+    const { order_id, id, goods_id, payPrice, type } = common.searchToObj()
+    http.post({ action: "wxpay", order_id }).then(response => {
+      const { errcode, msg, data } = response
+      if (errcode === 0) {
+        console.info(data, "success")
+        const paramsObj = { id, goods_id, payPrice, type }
+        const paramsStr = common.serializeParams(paramsObj)
+        history.push(`/pay_details?${paramsStr}`)
+
+        wxapi.pay({
+          timestamp: data.timestamp,
+          nonceStr: data.nonceStr,
+          package: data.package,
+          signType: "HMAC-SHA256",
+          paySign: data.sign
+        }).then(() => {
+          http.postC({ action: "piWxpayQueryOrder", out_trade_no: data.out_trade_no }, () => {
+            history.push(`/pay_details?${paramsStr}`)
+          })
+        })
+      } else {
+        Toast.fail(msg)
+      }
+    }).catch(error => {
+      Toast.offline(error)
+    })
+  }
   render() {
     const { isLongLogin } = this.state;
     return (
@@ -50,7 +86,10 @@ export default class extends Component {
           </div>
           <div className="h52" />
           <div className="plr30 w-100">
-            <WrapLink className=" h80 font30 c-white bg-main r10 flex jc-center ai-center w-100">
+            <WrapLink
+              className={`h80 font30 c-white ${isLongLogin ? "bg-main" : "bg-d9"} bg-main r10 flex jc-center ai-center w-100`}
+              onClick={isLongLogin ? this.onPay : null}
+            >
               立即支付
             </WrapLink>
           </div>

@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { Layout, NavBar, WrapLink } from "@components";
+import { common } from "@utils"
 
 export default class extends Component {
   state = {};
+  componentDidMount() {}
   render() {
+    const { id, goods_id, payPrice, type } = common.searchToObj()
     return (
       <Layout title="订单支付详情">
         <NavBar title="订单支付详情" />
@@ -12,7 +15,7 @@ export default class extends Component {
             style={{ height: "3.62rem" }}
             className=" flex column jc-center ai-center bg-white"
           >
-            <i style={{ fontSize: "1rem" }} className="i-tag c-main" />
+            <i style={{ fontSize: "1rem" }} className="i-tag c-main mb20" />
             <div>支付成功</div>
           </div>
           <div className=" h20" />
@@ -23,20 +26,27 @@ export default class extends Component {
             </div>
             <div className=" flex jc-between ai-center h88 font28 c000">
               <div>支付金额</div>
-              <div>￥2000.00</div>
+              <div>￥{payPrice}</div>
             </div>
           </div>
           <div className="h72" />
           <div className=" plr30">
-            <WrapLink className=" h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30">
-            邀请好友参团
+            {
+              type === "1" && (
+                <WrapLink className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30">
+                  邀请好友参团
+                </WrapLink>
+              )
+            }
+            <WrapLink
+              className="h80 font30 c-white bg-second r10 flex jc-center ai-center w-100"
+              path={`/order_details_${id}`}
+            >
+              查看订单详情
             </WrapLink>
-            <WrapLink className=" h80 font30 c-white bg-second r10 flex jc-center ai-center w-100">
-            查看订单详情
-            </WrapLink>
-            <div className="h40" />
-            <WrapLink className=" font28 c333 w-100">
-            继续购买
+            <div className="h20" />
+            <WrapLink className="h80 font30 c333  r10 flex jc-center ai-center w-100" path={`/product_detail_${goods_id}`}>
+              继续购买
             </WrapLink>
           </div>
         </div>

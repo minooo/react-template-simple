@@ -13,7 +13,7 @@ import {
   SyncList,
   Comment
 } from "@components";
-import { common, http } from "@utils";
+import { common, http, wxapi } from "@utils";
 import { getHomeCollage } from "@actions";
 
 @connect(({ home_collage }) => ({
@@ -43,7 +43,7 @@ export default class extends Component {
   async componentDidMount() {
     const { home_collage, getHomeCollage, match: { params } } = this.props
     if (!home_collage) { getHomeCollage() }
-
+    common.setTitle("商品详情")
     const { id } = params
     try {
       const goodsDataP = http.get({ action: "goods", operation: "show", id }); // 产品数据
@@ -115,6 +115,7 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
+      wxapi.setShare({ title: `火热拼团中-${goodsData.title}`, caption: goodsData.caption })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({
@@ -135,7 +136,10 @@ export default class extends Component {
     );
   }
   onImages() {
-    this.setState();
+    const { goods } = this.state
+    if (goods.images && goods.images.length > 0) {
+      wxapi.previewImage(goods.images[0], goods.images)
+    }
   }
   onPaySure() {
     const { history } = this.props
@@ -160,7 +164,7 @@ export default class extends Component {
           delivery_fee: goods.delivery_fee,
           goods_id,
           goods_sku_id,
-          launch_log_id: data && data.launch_id,
+          launch_log_id: data && data.launch_id, // 开团id
           type // 单独买还是团购
         }
         const paramsStr = common.serializeParams(paramsObj)

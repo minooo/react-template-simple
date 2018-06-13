@@ -61,7 +61,7 @@ export default [
     component: loadPage("13-pay")
   },
   {
-    path: "/pay_details_:id",
+    path: "/pay_details",
     component: loadPage("14-pay-details")
   },
   {
