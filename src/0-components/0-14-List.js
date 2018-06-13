@@ -1,7 +1,7 @@
 import React from "react";
 import { WrapLink } from "@components";
 
-export default ({ item, href, as, isOrder }) => (
+export default ({ item, as, isOrder }) => (
   <WrapLink
     className="flex ptb30 border-bottom"
     path={as}

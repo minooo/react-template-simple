@@ -56,17 +56,20 @@ export default class extends Component {
           }),
           () => {
             this.onTime();
+            if (data) {
+              this.onAddressList(data && data.data.goods.id);
+            }
           }
         );
       }
     );
+  };
+  onAddressList = id => {
     http.getC(
       {
         action: "collage",
         operation: "list",
-        limit: 2,
-        offset: 0,
-        goods_id: 1
+        goods_id: id
       },
       data => {
         console.info(data);
@@ -130,6 +133,7 @@ export default class extends Component {
               fans={collageData && collageData.fans && collageData.fans}
             />
           )}
+          {/* 拼单状态按钮 */}
           <div className="w-100 text-center plr30 bg-white">
             {collageData && collageData.is_self ? (
               collageData.status === 1 ? (
@@ -142,8 +146,9 @@ export default class extends Component {
                   </WrapLink>
                   <div className="h40" />
                   <WrapLink
-                    href="/1-my/11-order-details"
-                    as={`/my/order/${collageData && collageData.goods_id}`}
+                    path={`/order_details_${collageData &&
+                      collageData.order_id &&
+                      collageData.order_id}`}
                     className=" font24 c666 "
                   >
                     查看订单详情
@@ -153,8 +158,7 @@ export default class extends Component {
               ) : collageData.status === 2 ? (
                 <div>
                   <WrapLink
-                    href="/index"
-                    as="/"
+                    path="/"
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                   >
                     去逛逛
@@ -162,8 +166,9 @@ export default class extends Component {
                   <div className="h40" />
                   <WrapLink
                     className=" font24 c666 "
-                    href="/1-my/11-order-details"
-                    as={`/my/order/${collageData && collageData.goods_id}`}
+                    path={`/order_details_${collageData &&
+                      collageData.order_id &&
+                      collageData.order_id}`}
                   >
                     查看订单详情
                   </WrapLink>
@@ -173,8 +178,8 @@ export default class extends Component {
                 <div>
                   <WrapLink
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
-                    href="/0-home/1-product-detail"
-                    as={`/product/${collageData && collageData.goods_id}`}
+                    path={`/product_detail_${collageData &&
+                      collageData.goods_id}`}
                   >
                     重新发起拼单
                   </WrapLink>
@@ -187,7 +192,10 @@ export default class extends Component {
               )
             ) : collageData && collageData.status === 1 ? (
               <div>
-                <WrapLink className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center">
+                <WrapLink
+                  path="/submit_order"
+                  className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
+                >
                   立即参团
                 </WrapLink>
               </div>
@@ -195,8 +203,8 @@ export default class extends Component {
               <div>
                 <WrapLink
                   className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
-                  href="/0-home/1-product-detail"
-                  as={`/product/${collageData && collageData.goods_id}`}
+                  path={`/product_detail_${collageData &&
+                    collageData.goods_id}`}
                 >
                   重新发起拼单
                 </WrapLink>
@@ -208,8 +216,8 @@ export default class extends Component {
               <div>
                 <WrapLink
                   className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
-                  href="/0-home/1-product-detail"
-                  as={`/product/${collageData && collageData.goods_id}`}
+                  path={`/product_detail_${collageData &&
+                    collageData.goods_id}`}
                 >
                   重新发起拼单
                 </WrapLink>
@@ -220,6 +228,7 @@ export default class extends Component {
             )}
           </div>
           <div className="h20" />
+          {/* 更多拼单 */}
           {collageData && collageData.is_self && collageData.status === 3 ? (
             <div className=" plr30 bg-white">
               <div className="flex jc-between ai-center border-bottom-one h84">
@@ -229,8 +238,7 @@ export default class extends Component {
                   人正在参与此拼单
                 </div>
                 <WrapLink
-                  href="/0-home/3-group-list"
-                  as="/grouplist"
+                  path="/group_list"
                   className=" c999 font24 flex ai-center"
                 >
                   <span className=" mr10">查看更多</span>
@@ -244,8 +252,7 @@ export default class extends Component {
                 ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
-                href="/0-home/3-group-list"
-                as="/grouplist"
+                path="/group_list"
               >
                 查看更多
               </WrapLink>
@@ -259,8 +266,7 @@ export default class extends Component {
                   人正在参与此拼单
                 </div>
                 <WrapLink
-                  href="/0-home/3-group-list"
-                  as="/grouplist"
+                  path="/group_list"
                   className=" c999 font24 flex ai-center"
                 >
                   <span className=" mr10">查看更多</span>
@@ -274,8 +280,7 @@ export default class extends Component {
                 ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
-                href="/0-home/3-group-list"
-                as="/grouplist"
+                path="/group_list"
               >
                 查看更多
               </WrapLink>

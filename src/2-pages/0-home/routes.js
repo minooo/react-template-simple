@@ -21,7 +21,7 @@ export default [
     component: ProductDetail
   },
   {
-    path: "/comment_list",
+    path: "/comment_list_:id",
     component: CommentList
   },
   {

@@ -37,7 +37,7 @@ export default [
     component: loadPage("7-logistics")
   },
   {
-    path: "/write_comment",
+    path: "/write_comment_:id",
     component: loadPage("8-write-comment")
   },
   {
@@ -61,7 +61,7 @@ export default [
     component: loadPage("14-pay-details")
   },
   {
-    path: "/retreat_cause",
+    path: "/retreat_cause_:id",
     component: loadPage("15-retreat-cause")
   }
 ];

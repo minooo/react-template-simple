@@ -1,8 +1,13 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import { Toast, Modal } from "antd-mobile";
-import { http } from "@utils";
-import { Layout, NavBar, HomeMyTeambuyList, WrapLink } from "@components";
+import { http, common } from "@utils";
+import {
+  Layout,
+  NavBar,
+  HomeMyTeambuyList,
+  WrapLink,
+  ScrollLoad
+} from "@components";
 
 const { alert } = Modal;
 const commonAlert = (text, handle) =>
@@ -13,76 +18,91 @@ const commonAlert = (text, handle) =>
 
 export default class extends Component {
   state = {
-    list: [
-      { id: 1, order_id: 1213454566, goods_id: 1, status: 0, status_val: "待支付", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 2, order_id: 1213454566, goods_id: 2, status: 1, status_val: "确认中", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 1 },
-      { id: 3, order_id: 1213454566, goods_id: 3, status: 2, status_val: "已支付", delivery_type: 1, thumb: "", title: "邮寄类", pay_price: 12344, buy_num: 3 },
-      { id: 33, order_id: 1213454566, goods_id: 4, status: 2, status_val: "已支付", delivery_type: 2, thumb: "", title: "核销类", pay_price: 12344, verify_code: 22233 },
-      { id: 4, order_id: 1213454566, goods_id: 5, status: 3, status_val: "交易关闭", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 5, order_id: 1213454566, goods_id: 6, status: 4, status_val: "支付失败", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 6, order_id: 1213454566, goods_id: 7, status: 5, status_val: "卖家已发货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 66, order_id: 1213454566, goods_id: 8, status: 6, status_val: "买家确认收货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 7, order_id: 1213454566, goods_id: 9, status: 7, status_val: "买家申请退货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 8, order_id: 1213454566, goods_id: 10, status: 8, status_val: "卖家同意退货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 9, order_id: 1213454566, goods_id: 11, status: 9, status_val: "卖家拒绝退货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 91, order_id: 1213454566, goods_id: 12, status: 10, status_val: "买家确认退货", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 92, order_id: 1213454566, goods_id: 13, status: 11, status_val: "已核销", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 93, order_id: 1213454566, goods_id: 14, status: 12, status_val: "无货退款", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-      { id: 94, order_id: 1213454566, goods_id: 15, status: 13, status_val: "交易已完成", thumb: "", title: "手动阀", pay_price: 12344, buy_num: 3 },
-    ]
+    dataUpdata: false
   };
   handle = (type, item) => {
+    const { history } = this.props;
+    const payState = {
+      good_id: item.goods.id,
+      id: item.id,
+      order_id: item.order_id,
+      pay_price: item.pay_price,
+      type: item.buy_type
+    };
+    const payStr = common.serializeParams(payState);
     switch (type) {
       case "delOrder": // 删除订单
         commonAlert("删除订单", () => {
-          console.info("删除订单的逻辑。。。")
+          this.deleOrder(item.id);
         });
         break;
       case "goPay": // 去支付
-        // Router.push("/1-my/11-order-details", `/my/order/${item.id}`);
+        history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        commonAlert("申请退货", () => {
-          console.info("申请退货的逻辑。。。")
-        });
+        history.push(`/retreat_:id_${item.order_id}`);
         break;
       case "checkCode": // 查看核销码
-        alert("核销码", item.verify_code, [
-          { text: "确定" },
-        ]);
+        alert("核销码", item.verify_code, [{ text: "确定" }]);
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
-          console.info("确认收货的逻辑。。。")
+          this.upOrder(item.id, 6, "已确认收货");
         });
         break;
       case "goComment": // 去评价
-        // Router.push("/1-my/8-write-comment", `/my/writeComment/${item.id}`)
+        history.push(`/write_comment_${item.id}`);
         break;
       case "backGoods": // 退还商品
-        commonAlert("退还商品", () => {
-          console.info("退还商品的逻辑。。。")
-        });
+        history.push(`logistics_${item.order_id}`);
         break;
       case "tipReceipt": // 提醒商家收货
-        commonAlert("提醒商家收货", () => {
-          console.info("提醒商家收货的逻辑。。。")
-        });
+        Toast.info("已提醒商家收货", 2);
         break;
       case "finishOrder": // 完成交易
-        commonAlert("完成交易", () => {
-          console.info("完成交易的逻辑。。。")
-        });
+        this.upOrder(item.id, 10, "已完成交易");
         break;
       default:
-        console.info("nothing")
+        console.info("nothing");
     }
-  }
-  componentDidMount() {
-    console.info(this.props, "pp")
-  }
+  };
+  // 删除订单
+  deleOrder = id => {
+    http.deleteC({ action: "order", operation: "destroy", id }, data => {
+      if (data.errcode === 0) {
+        Toast.info("删除成功", 1, () =>
+          this.setState(pre => ({
+            dataUpdata: !pre.dataUpdata
+          }))
+        );
+      }
+    });
+  };
+  // 更新订单状态
+  upOrder = (id, status, text) => {
+    http.putC(
+      {
+        action: "order",
+        operation: "update",
+        id,
+        status
+      },
+      data => {
+        if (data.errcode === 0) {
+          Toast.info(text, 1);
+          this.setState(pre => ({
+            dataUpdata: !pre.dataUpdata
+          }));
+        }
+      }
+    );
+  };
+  renderItem = item => (
+    <HomeMyTeambuyList key={item.id} item={item} handle={this.handle} />
+  );
+
   render() {
-    const { list } = this.state;
+    const { dataUpdata } = this.state;
     return (
       <Layout title="商品订单">
         <NavBar title="商品订单" />
@@ -93,19 +113,15 @@ export default class extends Component {
           as="/my"
         >
           <i className="font40 i-group font40 mb10" />
-          <span className="font24">拼团订单</span>
+          <span className="font24">我的拼团</span>
         </WrapLink>
         {/* 列表 */}
         <div className="equal overflow-y">
-          {list &&
-            list.length &&
-            list.map(item => (
-              <HomeMyTeambuyList
-                key={item.id}
-                item={item}
-                handle={this.handle}
-              />
-            ))}
+          <ScrollLoad
+            dataParam={{ action: "order", operation: "list" }}
+            renderItem={this.renderItem}
+            forceUpdate={dataUpdata}
+          />
         </div>
       </Layout>
     );

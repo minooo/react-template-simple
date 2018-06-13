@@ -26,13 +26,12 @@ const commonAlert = (text, handle) =>
 const { countDown } = common;
 
 // 4-支付失败 的列表不会出现，所以此情况不再考虑
-// 0-待支付、1-确认中、2-已支付、3-交易关闭、4-支付失败、5-卖家已发货、6-买家确认收货、7-买家申请退货、
-// 8-卖家同意退货、9-卖家拒绝退货、10-买家确认退货、11-已核销 12-无货退款、13-交易已完成
+// 0 待支付 1确认中 2已支付 3订单关闭 4支付失败 5卖家已发货 6买家确认收货-（交易完成）7买家申请退货 8卖家同意退货 9卖家拒绝退货 10卖家拒绝退货，买家同意交易完成-（交易完成）11买家已退货 12卖家确认退货-（交易关闭）13卖家确认无货退款-（交易关闭）14已核销-（交易完成）15已过期 16已退款
 const statusConfig = {
   0: {
     status: {
       title: "未支付",
-      ico: "i-clock font60 c-white",
+      ico: "i-clock font60",
       bg: "bg-second"
     },
     btns: [
@@ -44,7 +43,7 @@ const statusConfig = {
     status: {
       title: "支付确认中",
       caption: "等待确认支付完成",
-      ico: "i-clock font60 c-white",
+      ico: "i-clock font60",
       bg: "bg-d9"
     },
     btns: [{ text: "等待确认支付完成", class: "equal bg-d9 c666" }]
@@ -56,8 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "提醒发货", class: "equal bg-second", type: "tipReceipt" }],
-    showGroup: true
+    btns: [{ text: "申请退货", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
@@ -66,13 +64,15 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "查看核销码", class: "equal bg-main", type: "checkCode" }],
-    showGroup: true
+    btns: [
+      { text: "申请退货", class: "equal bg-second", type: "returnGoods" },
+      { text: "查看核销码", class: "equal bg-main", type: "checkCode" }
+    ]
   },
   3: {
     status: {
-      title: "交易关闭",
-      caption: "卖家已确认退货",
+      title: "支付关闭",
+      caption: "支付已经关闭",
       ico: "i-fail font60 c-white",
       bg: "bg-d9"
     },
@@ -95,8 +95,7 @@ const statusConfig = {
       bg: "bg-main"
     },
     btns: [
-      { text: "申请退货", class: "equal bg-second", type: "returnGoods" },
-      { text: "确认收货", class: "equal bg-main", type: "confirmReceipt" }
+      { text: "确认收货", class: "equal bg-second", type: "confirmReceipt" }
     ],
     showGroup: true
   },
@@ -107,7 +106,19 @@ const statusConfig = {
       ico: "i-used font56 c-white",
       bg: "bg-d9"
     },
-    btns: [{ text: "删除订单", class: "equal bg-d9 c666", type: "delOrder" }]
+    btns: [
+      { text: "申请退货", class: "equal bg-second", type: "returnGoods" },
+      { text: "评价", class: "equal bg-main", type: "goComment" }
+    ]
+  },
+  62: {
+    status: {
+      title: "交易完成",
+      caption: "买家已确认收货",
+      ico: "i-used font56 c-white",
+      bg: "bg-d9"
+    },
+    btns: [{ text: "申请退货", class: "equal bg-second", type: "returnGoods" }]
   },
   7: {
     status: {
@@ -141,6 +152,16 @@ const statusConfig = {
   },
   10: {
     status: {
+      title: "交易完成",
+      caption: "卖家拒绝退货，买家同意交易完成",
+      ico: "i-back font56 c-white",
+      bg: "bg-second"
+    },
+    btns: [{ text: "评价", class: "equal bg-second", type: "goComment" }],
+    showGroup: true
+  },
+  11: {
+    status: {
       title: "买家已退货",
       caption: "等待卖家确认退货",
       ico: "i-back font56 c-white",
@@ -149,16 +170,17 @@ const statusConfig = {
     btns: [{ text: "提醒收货", class: "equal bg-second", type: "tipReceipt" }],
     showGroup: true
   },
-  11: {
+  12: {
     status: {
-      title: "已核销",
-      ico: "i-used font56 c-white",
+      title: "交易关闭",
+      caption: "卖家确认退货",
+      ico: "i-fail font56 c-white",
       bg: "bg-d9"
     },
-    btns: [{ text: "已核销", class: "equal bg-d9 c666" }],
+    btns: [{ text: "删除订单", class: "equal bg-second", type: "delOrder" }],
     showGroup: true
   },
-  12: {
+  13: {
     status: {
       title: "交易关闭",
       caption: "无货退款",
@@ -168,18 +190,61 @@ const statusConfig = {
     btns: [{ text: "删除订单", class: "equal bg-second", type: "delOrder" }],
     showGroup: true
   },
-  13: {
+  14: {
     status: {
-      title: "交易完成",
-      caption: "买家已确认收货",
-      ico: "i-completed font56 c-white",
-      bg: "bg-main"
+      title: "已核销",
+      ico: "i-used font56 c-white",
+      bg: "bg-d9"
     },
     btns: [{ text: "评价", class: "equal bg-second", type: "goComment" }],
+    showGroup: true
+  },
+  142: {
+    status: {
+      title: "已核销",
+      ico: "i-used font56 c-white",
+      bg: "bg-d9"
+    },
+    btns: [{ text: "已评价", class: "equal bg-d9 c666" }],
+    showGroup: true
+  },
+  15: {
+    status: {
+      title: "订单超时",
+      caption: "付款",
+      ico: "i-fail font56 c-white",
+      bg: "bg-d9"
+    },
+    btns: [{ text: "删除订单", class: "equal bg-second", type: "delOrder" }],
+    showGroup: true
+  },
+  16: {
+    status: {
+      title: "已退款",
+      caption: "已完成退款",
+      ico: "i-used font56 c-white",
+      bg: "bg-d9"
+    },
+    btns: [{ text: "删除订单", class: "equal bg-d9 c666" }],
     showGroup: true
   }
 };
 
+// 状态值筛选
+const selectStatus = item => {
+  switch (item.status) {
+    case 2:
+      return item.delivery_type === 1 ? "2" : "22";
+    case 6:
+      return item.is_comment ? "62" : "6";
+    case 10:
+      return item.is_comment ? "102" : "10";
+    case 14:
+      return item.is_comment ? "141" : "14";
+    default:
+      return item.status;
+  }
+};
 // 订单信息列表
 const orderInfoList = [
   { sign: "order_id", title: "订单编号" },
@@ -202,64 +267,47 @@ const orderInfoList = [
   { sign: "refund_completed_at", title: "退货完成时间" }
 ];
 
-const util = require("util");
+// const util = require("util");
 
-const initData = {
-  id: 1,
-  status: 0,
-  member_region: "郑州市金水区",
-  member_address: "受到法律卡机了撒旦发啊打发打发上的",
-  launch_log_id: 2, // 拼团id
-  goods: {
-    thumb: "https://dummyimage.com/600x600",
-    title: "的法律受到法律",
-    low_price: 20
-  },
-  order_id: 123412341,
-  verify_code: 123456,
-  created_at: "2018-06-11 09:23:09",
-  pay_at: "2018-11-12 12:12:00",
-  pay_price: 40,
-  reson: 1
-};
+// const initData = {
+//   id: 1,
+//   status: 0,
+//   member_region: "郑州市金水区",
+//   member_address: "受到法律卡机了撒旦发啊打发打发上的",
+//   launch_log_id: 2, // 拼团id
+//   goods: {
+//     thumb: "https://dummyimage.com/600x600",
+//     title: "的法律受到法律",
+//     low_price: 20
+//   },
+//   order_id: 123412341,
+//   verify_code: 123456,
+//   created_at: "2018-06-11 09:44:09",
+//   pay_at: "2018-11-12 12:12:00",
+//   pay_price: 40,
+//   reson: 1
+// };
 
 export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      config: { ...statusConfig }
+      config: { ...statusConfig },
+      netBad: false
     };
   }
 
   async componentDidMount() {
     const id = common.getUrlLastStr(window.location.pathname);
-    Promise.resolve({ ...initData }).then(response => {
-      if (response.status === 0) {
-        const { config } = this.state;
-        let newConfig;
-        const milliseconds = +parse(response.created_at) + (30 * 60 * 1000);
-        const remainMilliseconds = milliseconds - new Date()
-        const remainDate = countDown(milliseconds);
-        if (!remainDate) {
-          newConfig = {
-            ...config,
-            0: {
-              status: {
-                title: "订单超时",
-                ico: "i-clock font60 c-white",
-                bg: "bg-d9"
-              },
-              btns: [
-                {
-                  text: "删除订单",
-                  class: "equal2 bg-second",
-                  type: "delOrder"
-                }
-              ]
-            }
-          };
-        } else {
-          this.tickTimeout = setTimeout(() => {
+    this.getData(id, data => {
+      Promise.resolve({ ...data }).then(response => {
+        if (response.status === 0) {
+          const { config } = this.state;
+          let newConfig;
+          const milliseconds = +parse(response.created_at) + 30 * 60 * 1000;
+          const remainMilliseconds = milliseconds - new Date();
+          const remainDate = countDown(milliseconds);
+          if (!remainDate) {
             newConfig = {
               ...config,
               0: {
@@ -277,108 +325,170 @@ export default class extends Component {
                 ]
               }
             };
-            this.setState(() => ({ config: newConfig }));
-          }, remainMilliseconds)
-          newConfig = {
-            ...config,
-            0: {
-              status: {
-                title: "未支付",
-                ico: "i-clock font60 c-white",
-                customCaption: (
-                  <span className="font24 c-main mt40">
-                    <span className="mr30 c333">等待买家付款</span>
-                    <OrderCountDown milliseconds={milliseconds} />
-                  </span>
-                ),
-                bg: "bg-second"
-              },
-              btns: [
-                {
-                  text: "删除订单",
-                  class: "equal2 bg-second",
-                  type: "delOrder"
+          } else {
+            this.tickTimeout = setTimeout(() => {
+              newConfig = {
+                ...config,
+                0: {
+                  status: {
+                    title: "订单超时",
+                    ico: "i-clock font60 c-white",
+                    bg: "bg-d9"
+                  },
+                  btns: [
+                    {
+                      text: "删除订单",
+                      class: "equal2 bg-second",
+                      type: "delOrder"
+                    }
+                  ]
+                }
+              };
+              this.setState(() => ({ config: newConfig }));
+            }, remainMilliseconds);
+            newConfig = {
+              ...config,
+              0: {
+                status: {
+                  title: "未支付",
+                  ico: "i-clock font60 c-white",
+                  customCaption: (
+                    <span className="font24 c-main mt40">
+                      <span className="mr30 c333">等待买家付款</span>
+                      <OrderCountDown milliseconds={milliseconds} />
+                    </span>
+                  ),
+                  bg: "bg-second"
                 },
-                { text: "去支付", class: "equal3 bg-main", type: "goPay" }
-              ]
-            }
-          };
+                btns: [
+                  {
+                    text: "删除订单",
+                    class: "equal2 bg-second",
+                    type: "delOrder"
+                  },
+                  { text: "去支付", class: "equal3 bg-main", type: "goPay" }
+                ]
+              }
+            };
+          }
+          this.setState(() => ({ config: newConfig }));
         }
-        this.setState(() => ({ config: newConfig }));
-      }
-      this.setState(() => ({ item: response }));
+        this.setState(() => ({ item: response }));
+      });
     });
-    // try {
-    //   const { data } = await http.get(`order/${id}`, null, !!res)
-    //   if (parseInt(goodsData.errcode, 10) !== 0 && res) {
-    //     res.writeHead(301, {
-    //       Location: "/"
-    //     });
-    //     res.end();
-    //     res.finished = true;
-    //   } else if (parseInt(goodsData.errcode, 10) !== 0 && !res) {
-    //     Toast.fail("该商品不存在", 1, () => {
-    //       Router.replace("/index", "/");
-    //     });
-    //   }
-    //   return { data }
-    // } catch (error) {
-    //   const err = util.inspect(error);
-    //   return { err };
-    // }
   }
+  // 订单详情的操作
   onOrderDetailList = type => {
-    console.info(type);
+    const { item } = this.state;
+    const { history } = this.props;
+    // 查看退货原因和拒绝退货原因
+    if (type === "reason") {
+      history.push(`/retreat_cause_${item.order_id}?type=1`)
+        } else {
+      history.push(
+        history.push(`/retreat_cause_${item.order_id}?type=2`)
+      );
+    }
   };
+  // 获取数据
+  getData = (id, success) => {
+    const { history } = this.props;
+    http
+      .get({ action: "order", operation: "show", id })
+      .then(response => {
+        const { errcode } = response;
+        if (parseInt(errcode, 10)===0 ) {
+          success(response.data);
+        } else {
+          Toast.fail("该订单不存在", 1, () => {
+            history.replace("/1-my/10-list", "/my/order");
+          });
+        }
+      })
+      .catch(err => {
+        this.setState(() => ({ netBad: true }));
+        console.info(err);
+      });
+  };
+  // 底部按钮
   handle = type => {
     const { item } = this.state;
+    const { history } = this.props;
+    const payState = {
+      good_id: item.goods.id,
+      id: item.id,
+      order_id: item.order_id,
+      pay_price: item.pay_price,
+      type: item.buy_type
+    };
+    const payStr = common.serializeParams(payState);
     switch (type) {
       case "delOrder": // 删除订单
         commonAlert("删除订单", () => {
-          console.info("删除订单的逻辑。。。");
+          this.deleOrder(item.id);
         });
         break;
       case "goPay": // 去支付
-        // Router.push("/1-my/11-order-details", `/my/order/${item.id}`);
+         history.push(`/retreat_:id_${item.order_id}`);
         break;
       case "returnGoods": // 申请退货
-        commonAlert("申请退货", () => {
-          console.info("申请退货的逻辑。。。");
-        });
+        history.push(`/retreat_:id_${item.order_id}`);
         break;
       case "checkCode": // 查看核销码
         alert("核销码", item.verify_code, [{ text: "确定" }]);
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
-          console.info("确认收货的逻辑。。。");
+          this.upOrder(item.id, 6, "已确认收货");
         });
         break;
       case "goComment": // 去评价
-        // Router.push("/1-my/8-write-comment", `/my/writeComment/${item.id}`);
+        history.push(`/write_comment_${item.id}?type=2`);
         break;
       case "backGoods": // 退还商品
-        commonAlert("退还商品", () => {
-          console.info("退还商品的逻辑。。。");
-        });
+        history.push(`logistics_${item.order_id}`);
         break;
       case "tipReceipt": // 提醒商家收货
-        commonAlert("提醒商家收货", () => {
-          console.info("提醒商家收货的逻辑。。。");
-        });
+        Toast.info("已提醒商家收货", 2);
         break;
       case "finishOrder": // 完成交易
-        commonAlert("完成交易", () => {
-          console.info("完成交易的逻辑。。。");
-        });
+        this.upOrder(item.id, 10, "已完成交易");
         break;
       default:
         console.info("nothing");
     }
   };
-  handle = type => {
-    console.info(type)
-  }
+  // 删除订单
+  deleOrder = id => {
+    http.deleteC({ action: "order", operation: "destroy", id }, data => {
+      if (data.errcode === 0) {
+        Toast.info("删除成功", 1, () =>
+          history.replace("order_list")
+        );
+      }
+    });
+  };
+  // 更新订单状态
+  upOrder = (id, status, text) => {
+    http.putC(
+      {
+        action: "order",
+        operation: "update",
+        id,
+        status
+      },
+      data => {
+        if (data.errcode === 0) {
+          Toast.info(text, 1);
+          getData(item.id, data => {
+            this.setState(() => ({
+              item: data
+            }));
+          });
+        }
+      }
+    );
+  };
   renderOrderDetail = item => (
     <OrderDetailList
       key={item.sign}
@@ -388,7 +498,8 @@ export default class extends Component {
   );
 
   render() {
-    const { item, config } = this.state;
+    const { item, config, netBad } = this.state;
+    if (netBad) return <RequestStatus type="no-net" />;
     if (!item) return <RequestStatus />;
     const validOrderInfoList = orderInfoList.filter(x => {
       if (item[x.sign]) {
@@ -415,22 +526,30 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {config[item.status] &&
-            config[item.status].showGroup && (
-              <OrderGroup members={item.members} groupId={item.launch_log_id} />
+          {item.launch_log_status &&
+            item.joins &&
+            item.launch_log_id && (
+              <OrderGroup
+                status={item.launch_log_status}
+                list={item.joins}
+                groupId={item.launch_log_id}
+              />
             )}
 
           {/* 商品展示 */}
           <div className="plr30 bg-white mb20">
-            <List
-              href="/0-home/1-product-detail"
-              as={`/product/${item.goods_id}`}
-              isOrder={{ price: item.goods.low_price, buy_num: item.buy_num }}
-              item={item.goods}
-            />
+            {item.goods && (
+              <List
+                href="/0-home/1-product-detail"
+                as={`/product/${item.goods_id}`}
+                isOrder={{ price: item.goods.low_price, buy_num: item.buy_num }}
+                item={item.goods}
+              />
+            )}
+
             <div className="h86 font28 c333 flex jc-between ai-center border-bottom-one">
               <span>运费</span>
-              <span>货到付款</span>
+              <span>￥{item.goods && item.goods.delivery_fee}</span>
             </div>
             <div className="h86 font28 c333 flex ai-center border-bottom-one">
               <span className="pr20">留言</span>
@@ -471,13 +590,7 @@ export default class extends Component {
             <span className="font28">联系客服</span>
           </a>
           {config[item.status] &&
-            config[
-              item.status === 2
-                ? item.delivery_type === 1
-                  ? "2"
-                  : "22"
-                : item.status
-            ].btns.map(x => (
+            config[selectStatus(item)].btns.map(x => (
               <button
                 key={x.type || 1}
                 className={`font28 c-white ${x.class}`}

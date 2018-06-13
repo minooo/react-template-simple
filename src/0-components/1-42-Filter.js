@@ -1,4 +1,5 @@
 import React from "react";
+
 export default ({ focusId, filters, onFilterClick }) => (
   <div className="flex jc-around h90 border-bottom-one bg-white">
     {filters.map((item, index) => (
