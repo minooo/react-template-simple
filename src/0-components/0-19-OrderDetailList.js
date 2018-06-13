@@ -1,4 +1,5 @@
 import React from "react";
+
 export default ({ item, onClick }) => (
   <div
     className="h86 flex jc-between ai-center border-bottom font26 c333"

@@ -17,7 +17,7 @@ export default [
     component: loadPage("1-group-details")
   },
   {
-    path: "/group_members",
+    path: "/group_members_:id",
     component: loadPage("3-group-members")
   },
   {
@@ -25,24 +25,20 @@ export default [
     component: loadPage("4-address")
   },
   {
-    path: "/add_address",
+    path: "/add_address_:id",
     component: loadPage("5-add-address")
   },
   {
-    path: "/retreat",
+    path: "/retreat_:id",
     component: loadPage("6-retreat")
   },
   {
-    path: "/logistics",
+    path: "/logistics_:id",
     component: loadPage("7-logistics")
   },
   {
     path: "/write_comment",
     component: loadPage("8-write-comment")
-  },
-  {
-    path: "/auth_code",
-    component: loadPage("9-auth-code")
   },
   {
     path: "/order_list",
