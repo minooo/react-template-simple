@@ -2,7 +2,7 @@ import React from "react";
 import { WrapLink } from "@components";
 
 export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
-  <div className="flex">
+  <div className="flex ">
     {imgList &&
       imgList.length > 0 &&
       imgList.map((item, index) => {
@@ -10,7 +10,9 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
           return false;
         }
         return (
-          <div key={item.id} className="relative">
+          /* eslint-disable */
+          <div key={index} className="relative">
+            {/* eslint-enable */}
             {index === (teaming ? 2 : 3) ? (
               <WrapLink
                 as={`/my/number/${teamId}`}
@@ -25,16 +27,18 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
                 <i className={`i-more ${team ? "font34" : "font24"}`} />
               </WrapLink>
             ) : teaming && index === 3 ? (
-              <img
-                src={item.headimgurl}
-                className={`w${imgSize} h${imgSize} r100 common-img-bg`}
+              <div
+                as={`/my/number/${teamId}`}
+                href="/1-my/3-number"
+                className={`font24 bold w${imgSize} h${imgSize} circle home-img-overflow flex jc-center ai-center`}
                 style={
                   team
-                    ? { marginLeft: `${index === 0 ? "0rem" : `${margin}rem`}` }
+                    ? { marginLeft: `${margin}rem` }
                     : { transform: `translateX(${index * margin}rem)` }
                 }
-                alt=""
-              />
+              >
+                <i className="i-add font34" />
+              </div>
             ) : (
               <img
                 src={item.headimgurl}
@@ -73,3 +77,4 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
 // margin={0.20}  图片间距 rem值
 // teaming 拼团中
 // team 是拼团详情还是拼团列表
+
