@@ -150,7 +150,7 @@ export default class extends Component {
       Toast.success("处理中...");
       const goods_id = goods.id
       const goods_sku_id = skuId || sku[0].id
-      const type = payType === "single" ? 2 : 1
+      const buy_type = payType === "single" ? 2 : 1
       const price = payType === "single" ? goods.real_price : goods.low_price
       // 首先发起拼团，然后跳转到订单页面
       http.postC({ action: "collage", operation: "store", goods_id }, response => {
@@ -165,7 +165,7 @@ export default class extends Component {
           goods_id,
           goods_sku_id,
           launch_log_id: data && data.launch_id, // 开团id
-          type // 单独买还是团购
+          buy_type // 单独买还是团购
         }
         const paramsStr = common.serializeParams(paramsObj)
         history.push(`/submit_order?${paramsStr}`)
@@ -348,6 +348,13 @@ export default class extends Component {
       goods, currentGroup, currentComment, home_collage
     } = this.state;
     if (!goods) return <RequestStatus />;
+
+    // 查看更多拼团要传的参数
+    const paramsObjGroup = {
+      id: goods.id,
+      num: goods.collage_num
+    }
+    const paramsStrGroup = common.serializeParams(paramsObjGroup)
     return (
       <Layout title={goods.title}>
         {/* 头部 */}
@@ -415,11 +422,7 @@ export default class extends Component {
               {currentGroup &&
                 currentGroup.length > 1 && (
                   <WrapLink
-                    href={{
-                      pathname: "/0-home/3-group-list",
-                      query: { num: goods.collage_num, id: goods.id }
-                    }}
-                    as="/grouplist"
+                    path={`/group_list?${paramsStrGroup}`}
                     className="c999"
                   >
                     查看更多&nbsp;<i className="i-right" />
@@ -466,7 +469,7 @@ export default class extends Component {
               <div className="font28 bold">用户评价</div>
               {currentComment &&
                 currentComment.length > 1 && (
-                  <WrapLink href="/0-home/2-comment-list" as={`/product/commentList/${goods.id}`} className="c999">
+                  <WrapLink path={`/comment_list_${goods.id}`} className="c999">
                     查看更多&nbsp;<i className="i-right" />
                   </WrapLink>
                 )}

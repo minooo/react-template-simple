@@ -39,16 +39,16 @@ export default class extends Component {
   onSetting = () => {
     const { history } = this.props
     const { con, addressData } = this.state;
-    const { goods_id, price, goods_sku_id, type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
-    if (type === "1" && !addressData.id) { Toast.info("请选择您的邮寄地址。") }
+    const { goods_id, price, goods_sku_id, buy_type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
+    if (buy_type === "1" && !addressData.id) { Toast.info("请选择您的邮寄地址。") }
     Toast.loading("订单处理中...")
     http.post({
       action: "order",
       operation: "store",
       goods_id,
       goods_sku_id,
-      type,
-      ...(type === "1" && { launch_log_id }), // type 1 是拼团，拼团时，必须传 开团的id
+      buy_type,
+      ...(buy_type === "1" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
       ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
       ...(con && { con }) // 留言
     }).then(data => {
@@ -56,7 +56,7 @@ export default class extends Component {
       if (parseInt(errcode, 10) === 0) {
         Toast.hide()
         const payPrice = common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))
-        const paramsObj = { ...data.data, goods_id, payPrice, type }
+        const paramsObj = { ...data.data, goods_id, payPrice, buy_type }
         const paramsStr = common.serializeParams(paramsObj)
         history.push(`/pay?${paramsStr}`)
       } else if (parseInt(errcode, 10) === 2) {

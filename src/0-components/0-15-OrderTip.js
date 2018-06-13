@@ -4,7 +4,7 @@ import { WrapLink } from "@components"
 const Tip = ({ item, switchClass }) => (
   <WrapLink
     className={`home-tip-item h56 bold-mid font24 c-white flex-inline ai-center ${switchClass}`}
-    path="/grouplist"
+    path="/group_list"
   >
     <img src={item.fan && item.fan.avatar} className="w56 h56 circle equal-no" alt="" />
     <span className="plr10 equal">{item.fan && item.fan.nickname && item.fan.nickname.slice(0, 10)}</span>

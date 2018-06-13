@@ -6,7 +6,7 @@ export default class extends Component {
   state = {};
   componentDidMount() {}
   render() {
-    const { id, goods_id, payPrice, type } = common.searchToObj()
+    const { id, goods_id, payPrice, buy_type } = common.searchToObj()
     return (
       <Layout title="订单支付详情">
         <NavBar title="订单支付详情" />
@@ -32,7 +32,7 @@ export default class extends Component {
           <div className="h72" />
           <div className=" plr30">
             {
-              type === "1" && (
+              buy_type === "1" && (
                 <WrapLink className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30">
                   邀请好友参团
                 </WrapLink>
