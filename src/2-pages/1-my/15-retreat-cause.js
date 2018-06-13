@@ -1,46 +1,51 @@
 import React, { Component } from "react";
 import { common, http } from "@utils";
-// import Router from "next/router";
 import { Toast } from "antd-mobile";
 import { Layout, RequestStatus } from "@components";
 
 export default class extends Component {
   state = {
     netBad: false,
+    causeType: 1
   };
   componentDidMount() {
-    const orderId = common.getUrlLastStr(window.location.pathname);
-    const { query } = Router;
+    const { id } = this.props.match.params;
+    const {
+      location: { search }
+    } = this.props;
+    const searchObj = common.searchToObj(search)
+    const { history } = this.props;
     http
-    .get({
-      action: "order",
-      operation: "show",
-      order_id: orderId,
-      type: (query && query.type) || 1
-    })
-    .then(response => {
-      const { errcode } = response;
-      if (parseInt(errcode, 10) === 0) {
-        this.setState(() => ({
-          data: response.data
-        }));
-      } else {
-        Toast.fail("该商品还未退货原因", 1, () => {
-          Router.replace("/1-my/10-list", "/my/order");
-        });
-      }
-    })
-    .catch(err => {
-      this.setState(() => ({ netBad: true }));
-      console.info(err);
-    });
+      .get({
+        action: "order",
+        operation: "show",
+        order_id: id,
+        type: (searchObj && searchObj.type) || 1
+      })
+      .then(response => {
+        const { errcode } = response;
+        if (parseInt(errcode, 10) === 0) {
+          this.setState(() => ({
+            data: response.data,
+            causeType: parseInt(search.type, 10)
+          }));
+        } else {
+          Toast.fail("订单无效", 1, () => {
+            history.replace("order_list");
+          });
+        }
+      })
+      .catch(err => {
+        this.setState(() => ({ netBad: true }));
+        console.info(err);
+      });
   }
   render() {
-    const { data, netBad } = this.state;
+    const { data, netBad, causeType } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
     if (!data) return <RequestStatus />;
     return (
-      <Layout title="退货原因">
+      <Layout title={`${causeType === 1 ? "退货" : "拒绝退货"}原因`}>
         <div className="equal">
           <div
             className="bg-white font28 plr30"

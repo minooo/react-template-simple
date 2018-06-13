@@ -23,7 +23,7 @@ export default class extends Component {
   handle = (type, item) => {
     const { history } = this.props;
     const payState = {
-      good_id: item.goods.id,
+      good_id: item.goods_id,
       id: item.id,
       order_id: item.order_id,
       pay_price: item.pay_price,
