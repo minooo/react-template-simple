@@ -125,7 +125,9 @@ export const getSomeFromArr = (arr, num) => {
 };
 
 // search 转为 obj
-export const searchToObj = (path = decodeURIComponent(window.location.hash)) => {
+export const searchToObj = (
+  path = decodeURIComponent(window.location.hash)
+) => {
   // window.location.search
   const obj = {};
   if (!path) return obj;
@@ -265,7 +267,7 @@ export const countDown = (upDateParse, timer) => {
   const dateDifference = upDateParse - new Date();
   // 时间到
   if (dateDifference <= 0) {
-    if (timer) clearInterval(timer)
+    if (timer) clearInterval(timer);
     return false;
   }
   /* eslint-disable */
@@ -297,4 +299,13 @@ export const countDown = (upDateParse, timer) => {
     getMinutes,
     getSeconds
   };
+};
+//
+export const filterHtml = (text, num = 30) => {
+  if (!text) {
+    return "";
+  }
+  console.info(num);
+  const m = `${text.replace(/<[^>]+>/g, "").substr(0, num)}}`;
+  return m;
 };
