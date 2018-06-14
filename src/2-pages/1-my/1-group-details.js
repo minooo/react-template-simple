@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { parse } from "date-fns";
-import { common, http } from "@utils";
+import { common, http, wxapi } from "@utils";
 
 import {
   Layout,
@@ -9,7 +9,8 @@ import {
   Steps,
   TeamState,
   WrapLink,
-  HomeMoreTeambuyList
+  HomeMoreTeambuyList,
+  RequestStatus
 } from "@components";
 
 const { countDown } = common;
@@ -81,12 +82,38 @@ export default class extends Component {
   };
   // 分享弹窗
   onSwitch = () => {
+    const { collageData } = this.state;
+    const title = `【仅剩${collageData.goods.offerd_num -
+      collageData.collage_num}个名额 】我刚花了$${
+      collageData.goods.low_price
+    }买了${collageData.goods.title}`;
+    const desc = `${common.filterHtml(collageData.goods.caption)}`;
+    wxapi.setShare({
+      title,
+      desc
+    });
     this.setState(
       pre => ({ isOpen: !pre.isOpen }),
       () => {
         console.info(this.state.isOpen);
       }
     );
+  };
+  onTuxedo = () => {
+    const { history } = this.props;
+    const { collageData } = this.state;
+    const paramsObjGroup = {
+      title: collageData.goods.title,
+      thumb: collageData.goods.thumb,
+      goods_id: collageData.goods_id,
+      price: collageData.goods.low_price,
+      goods_sku_id: collageData.goods_sku_id,
+      delivery_type: collageData.goods.delivery_type,
+      delivery_fee: collageData.goods.delivery_fee,
+      buy_type: 3
+    };
+    const paramsStrGroup = common.serializeParams(paramsObjGroup);
+    history.push(`/submit_order?${paramsStrGroup}`);
   };
   // 创建定时函数
   timeUpdate = (upDateParse, interval) => {
@@ -96,24 +123,12 @@ export default class extends Component {
   };
   render() {
     const { isOpen, collageData, listData, surplusTime } = this.state;
+    if (!collageData) return <RequestStatus />;
     // 查看参加拼团要传的参数
-    // if (collageData) {
-    //   const paramsObjGroup = {
-    //     title: collageData.goods.title,
-    //     thumb: collageData.goods.thumb,
-    //     goods_id: collageData.goods_id,
-    //     price: collageData.goods.low_price,
-    //     goods_sku_id: collageData.goods_sku_id,
-    //     delivery_type: collageData.goods.delivery_type,
-    //     delivery_fee: collageData.goods.delivery_fee,
-    //     buy_type: 3
-    //   };
-    // }
     return (
       <Layout title="拼团详情">
         <div className="equal overflow-y">
-          <NavBar title="拼团详情" />
-          {isOpen && (
+        {isOpen && (
             <div className="home-share" onClick={this.onSwitch}>
               <img
                 src="http://public.duduapp.net/finance/pc-static/app/static/app_load_go.png"
@@ -122,6 +137,7 @@ export default class extends Component {
               />
             </div>
           )}
+          <NavBar title="拼团详情" />
           <div className=" plr30 ptb10 bg-white">
             {/* 获取拼团商品数据 */}
             {collageData && (
@@ -186,7 +202,7 @@ export default class extends Component {
               ) : collageData.status === 2 ? (
                 <div>
                   <WrapLink
-                    path="/"
+                    onClick={this.onSwitch}
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                   >
                     去逛逛
@@ -221,7 +237,7 @@ export default class extends Component {
             ) : collageData && collageData.status === 1 ? (
               <div>
                 <WrapLink
-                  // path={`/submit_order?${paramsStrGroup}`}
+                  onClick={this.onTuxedo}
                   className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                 >
                   立即参团
