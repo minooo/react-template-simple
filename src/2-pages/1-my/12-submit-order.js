@@ -87,8 +87,7 @@ export default class extends Component {
           {/* 地址 */}
           {delivery_type === "1" && (
             <WrapLink
-              href="/1-my/4-address"
-              as="/my/address"
+              path="/address"
               className="bg-white flex jc-between ai-center mb20 plr30 ptb30 w-100"
             >
               <div className=" flex ai-center">
@@ -126,8 +125,7 @@ export default class extends Component {
           {/* 商品详情 */}
           <div className="bg-white mb20 plr30">
             <List
-              href="/0-home/1-product-detail"
-              as={`/product/${goods_id}`}
+              as={`/product_detail_${goods_id}`}
               item={{ title, thumb }}
               isOrder={{ price }}
             />

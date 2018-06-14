@@ -129,7 +129,7 @@ export default class extends Component {
     return (
       <Layout title="拼团详情">
         <div className="equal overflow-y">
-        {isOpen && (
+          {isOpen && (
             <div className="home-share" onClick={this.onSwitch}>
               <img
                 src="http://public.duduapp.net/new-media/app/static/share.png"
@@ -144,8 +144,7 @@ export default class extends Component {
             {collageData && (
               <List
                 item={collageData.goods}
-                href="/0-home/1-product-detail"
-                as={`/product/${collageData.goods &&
+                as={`/product_detail_${collageData &&
                   collageData.goods &&
                   collageData.goods.id}`}
               />
