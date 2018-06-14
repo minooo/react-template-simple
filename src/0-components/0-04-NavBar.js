@@ -1,6 +1,8 @@
 import React from "react";
+import { withRouter } from "react-router";
 import { WrapLink } from "@components";
 
+@withRouter
 export default class extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -11,9 +13,12 @@ export default class extends React.PureComponent {
     this.onSwitch = this.onSwitch.bind(this);
   }
   onSwitch() {
-    this.setState(pre => ({ isOpen: !pre.isOpen }), () => {
-      console.info(this.state.isOpen)
-    });
+    this.setState(
+      pre => ({ isOpen: !pre.isOpen }),
+      () => {
+        console.info(this.state.isOpen);
+      }
+    );
   }
 
   render() {
@@ -54,7 +59,7 @@ export default class extends React.PureComponent {
               ) {
                 window.history.go(-1);
               } else {
-                // Router.push("/index", "/");
+                this.props.history.push("/")
               }
             }}
           >
