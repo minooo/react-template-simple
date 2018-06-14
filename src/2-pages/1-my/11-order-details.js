@@ -559,7 +559,7 @@ export default class extends Component {
               <div className="font24 c333">
                 <span className="bold">小计:</span>
                 <span className="font20 c-main">￥</span>
-                <span className="font40 bold c-main">{item.pay_price && tem.pay_price}</span>
+                <span className="font40 bold c-main">{item.pay_price && item.pay_price}</span>
               </div>
             </div>
           </div>
