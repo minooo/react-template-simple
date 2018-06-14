@@ -115,7 +115,7 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
-      wxapi.setShare({ title: `火热拼团中-${goodsData.title}`, caption: goodsData.caption })
+      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, caption: goodsData.data.caption })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({
@@ -147,29 +147,24 @@ export default class extends Component {
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
     } else if (tipArrStr.length === 0) {
-      Toast.success("处理中...");
       const goods_id = goods.id
       const goods_sku_id = skuId || sku[0].id
       const buy_type = payType === "single" ? 2 : 1
       const price = payType === "single" ? goods.real_price : goods.low_price
+
       // 首先发起拼团，然后跳转到订单页面
-      http.postC({ action: "collage", operation: "store", goods_id }, response => {
-        Toast.hide()
-        const { data } = response
-        const paramsObj = {
-          title: goods.title,
-          thumb: goods.thumb,
-          price,
-          delivery_type: goods.delivery_type, // 1 邮寄 2 核销
-          delivery_fee: goods.delivery_fee,
-          goods_id,
-          goods_sku_id,
-          launch_log_id: data && data.launch_id, // 开团id
-          buy_type // 单独买还是团购
-        }
-        const paramsStr = common.serializeParams(paramsObj)
-        history.push(`/submit_order?${paramsStr}`)
-      })
+      const paramsObj = {
+        title: goods.title,
+        thumb: goods.thumb,
+        price,
+        delivery_type: goods.delivery_type, // 1 邮寄 2 核销
+        delivery_fee: goods.delivery_fee, // 配送属性
+        goods_id,
+        goods_sku_id,
+        buy_type // 单独买还是团购
+      }
+      const paramsStr = common.serializeParams(paramsObj)
+      history.push(`/submit_order?${paramsStr}`)
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`);
     }
@@ -456,7 +451,7 @@ export default class extends Component {
             <div
               className="c333 font30 lh150 ptb20 common-width100"
               dangerouslySetInnerHTML={{
-                __html: "这是一个内容吧。。。"
+                __html: goods.con
               }}
               style={{ lineHeight: "200%" }}
             />
