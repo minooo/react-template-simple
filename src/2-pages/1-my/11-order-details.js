@@ -462,7 +462,7 @@ export default class extends Component {
   deleOrder = id => {
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
       Toast.info("删除成功", 1, () =>
-        history.replace("/order_list")
+        this.props.history.replace("/order_list")
       );
     });
   };
@@ -514,7 +514,7 @@ export default class extends Component {
           )}
 
           {/* 收货地址 */}
-          {item && item.delivery_type === 1 (
+          {item && parseInt(item.delivery_type, 10) === 1 && (
             <OrderAddress
               title={item.member_region}
               caption={item.member_address}
@@ -536,7 +536,7 @@ export default class extends Component {
           <div className="plr30 bg-white mb20">
             {item.goods && (
               <List
-                as={`/product_detail_${item.goods_id}`}
+                as={`/product_detail_${item.goods.goods_id}`}
                 isOrder={{ price: item.goods.low_price, buy_num: item.buy_num }}
                 item={item.goods}
               />

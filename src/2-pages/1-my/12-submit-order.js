@@ -40,7 +40,7 @@ export default class extends Component {
     const { con, addressData } = this.state;
     const { goods_id, price, goods_sku_id, buy_type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
     if (delivery_type === "1" && (!addressData || !addressData.id)) { Toast.info("请选择您的邮寄地址。"); return }
-    Toast.loading("订单处理中...")
+    Toast.loading("订单处理中...", 60)
     http.post({
       action: "order",
       operation: "store",

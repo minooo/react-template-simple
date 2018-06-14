@@ -293,7 +293,7 @@ export default class extends Component {
     </div>
   );
 
-  // 渲染产品参数
+  // 渲染商品参数
   renderParam = item => (
     <div
       key={item.id}
@@ -519,12 +519,12 @@ export default class extends Component {
               style={{ lineHeight: "0.94rem" }}
               className="h94 font34 bold text-center"
             >
-              产品参数
+              商品参数
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {attr &&
-                attr.length > 0 &&
-                attr.filter(x => x.attr_type === 1).length > 0 && (
+              {goods.attr &&
+                goods.attr.length > 0 &&
+                goods.attr.filter(x => x.attr_type === 1).length > 0 && (
                   <SyncList
                     items={attr.filter(x => x.attr_type === 1)}
                     renderItem={this.renderParam}

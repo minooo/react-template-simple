@@ -32,7 +32,7 @@ export default class extends Component {
         // history.push(`/pay_details?${paramsStr}`)
         wxapi.pay({
           timestamp: data.timestamp,
-          nonceStr: data.nonceStr,
+          nonceStr: data.noncestr,
           package: data.package,
           signType: "HMAC-SHA256",
           paySign: data.sign
@@ -40,7 +40,9 @@ export default class extends Component {
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
-        })
+        }, (err) => {
+          Toast.info(JSON.stringify(err))
+        }).catch(err => { Toast.fail(JSON.stringify(err)) })
       } else {
         Toast.fail(msg)
       }
@@ -73,7 +75,7 @@ export default class extends Component {
               <div className="flex ai-center">
                 <i style={{ fontSize: "0.7rem" }} className=" i-wechat mr20" />
                 <div>
-                  <div className=" font24 c000">微信支付</div>
+                  <div className=" font24 c000 mb10">微信支付</div>
                   <div className=" font20 c999">亿万用户的选择，更快更安全</div>
                 </div>
               </div>

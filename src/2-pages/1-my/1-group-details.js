@@ -58,9 +58,9 @@ export default class extends Component {
           () => {
             const { collageData } = this.state;
             const title = `【仅剩${collageData.goods.offerd_num -
-              collageData.collage_num}个名额 】我刚花了$${
+              collageData.collage_num}个名额 】我刚花了${
               collageData.goods.low_price
-            }买了${collageData.goods.title}`;
+            }元买了${collageData.goods.title}`;
             const desc = `${common.filterHtml(collageData.goods.caption)}`;
             wxapi.setShare({
               title,

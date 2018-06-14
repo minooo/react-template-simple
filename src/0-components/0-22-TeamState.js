@@ -32,9 +32,10 @@ export default ({ id, places, status, surplusTime, offerd_num, fans }) => (
       </div>
       <div className="h60 w-100" />
       <div className=" font28 c333 lh100">
-        <span className=" c-main ">{offerd_num}人团</span>·拼单{status === 1
+        <span className=" c-main ">{offerd_num}人团</span>·拼单{surplusTime &&
+        status === 1
           ? "中"
-          : status === 2
+          : (surplusTime && status === 2) || (!surplusTime && status === 2)
             ? "完成"
             : "失败"}
       </div>
