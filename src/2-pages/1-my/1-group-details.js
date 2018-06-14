@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Toast } from "antd-mobile";
 import { parse } from "date-fns";
 import { common, http } from "@utils";
 
@@ -16,7 +15,8 @@ import {
 const { countDown } = common;
 export default class extends Component {
   state = {
-    surplusTime: ""
+    surplusTime: "",
+    isOpen: false
   };
   // 获取拼团数据
   componentDidMount() {
@@ -57,7 +57,7 @@ export default class extends Component {
           () => {
             this.onTime();
             if (data) {
-              this.onAddressList(data && data.data.goods.id);
+              this.onAddressList(data.data.goods.id);
             }
           }
         );
@@ -79,8 +79,14 @@ export default class extends Component {
       }
     );
   };
-  onShare = () => {
-    Toast.success("这是一个微信分享按钮", 1);
+  // 分享弹窗
+  onSwitch = () => {
+    this.setState(
+      pre => ({ isOpen: !pre.isOpen }),
+      () => {
+        console.info(this.state.isOpen);
+      }
+    );
   };
   // 创建定时函数
   timeUpdate = (upDateParse, interval) => {
@@ -89,11 +95,33 @@ export default class extends Component {
     }));
   };
   render() {
-    const { collageData, listData, surplusTime } = this.state;
+    const { isOpen, collageData, listData, surplusTime } = this.state;
+    // 查看参加拼团要传的参数
+    // if (collageData) {
+    //   const paramsObjGroup = {
+    //     title: collageData.goods.title,
+    //     thumb: collageData.goods.thumb,
+    //     goods_id: collageData.goods_id,
+    //     price: collageData.goods.low_price,
+    //     goods_sku_id: collageData.goods_sku_id,
+    //     delivery_type: collageData.goods.delivery_type,
+    //     delivery_fee: collageData.goods.delivery_fee,
+    //     buy_type: 3
+    //   };
+    // }
     return (
       <Layout title="拼团详情">
         <div className="equal overflow-y">
           <NavBar title="拼团详情" />
+          {isOpen && (
+            <div className="home-share" onClick={this.onSwitch}>
+              <img
+                src="http://public.duduapp.net/finance/pc-static/app/static/app_load_go.png"
+                className="w-100"
+                alt=""
+              />
+            </div>
+          )}
           <div className=" plr30 ptb10 bg-white">
             {/* 获取拼团商品数据 */}
             {collageData && (
@@ -140,7 +168,7 @@ export default class extends Component {
                 <div>
                   <WrapLink
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
-                    onClick={this.onShare}
+                    onClick={this.onSwitch}
                   >
                     邀请好友
                   </WrapLink>
@@ -193,11 +221,12 @@ export default class extends Component {
             ) : collageData && collageData.status === 1 ? (
               <div>
                 <WrapLink
-                  path="/submit_order"
+                  // path={`/submit_order?${paramsStrGroup}`}
                   className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                 >
                   立即参团
                 </WrapLink>
+                <div className="h40" />
               </div>
             ) : collageData && collageData.status === 2 ? (
               <div>
@@ -247,9 +276,11 @@ export default class extends Component {
               </div>
               {listData &&
                 listData.length > 0 &&
-                listData.map(item => (
-                  <HomeMoreTeambuyList key={item.id} item={item} />
-                ))}
+                listData
+                  .slice(0, 2)
+                  .map(item => (
+                    <HomeMoreTeambuyList key={item.id} item={item} />
+                  ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
                 path="/group_list"
@@ -275,9 +306,11 @@ export default class extends Component {
               </div>
               {listData &&
                 listData.length > 0 &&
-                listData.map(item => (
-                  <HomeMoreTeambuyList key={item.id} item={item} />
-                ))}
+                listData
+                  .slice(0, 2)
+                  .map(item => (
+                    <HomeMoreTeambuyList key={item.id} item={item} />
+                  ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
                 path="/group_list"
