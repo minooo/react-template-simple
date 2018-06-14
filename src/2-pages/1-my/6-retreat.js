@@ -4,7 +4,10 @@ import { http } from "@utils";
 import { Layout, WrapLink } from "@components";
 
 export default class extends Component {
-  state = {};
+  state = {
+    localIds: [],
+    photos: []
+  };
   componentDidMount() {
     this.onAddress();
   }
@@ -23,6 +26,12 @@ export default class extends Component {
       this.setState(() => ({ [type]: value }));
     }
   };
+  // addPhoto = () => {
+  //   const { localIds } = wx.chooseImage({
+  //     count: 8,
+  //     sizeType: "compressed"
+  //   });
+  // };
   // 设置
   onSetting = () => {
     const { reason, order_id } = this.state;
@@ -42,7 +51,7 @@ export default class extends Component {
     }
   };
   render() {
-    const { reason } = this.state;
+    const { reason, localIds, photos } = this.state;
     return (
       <Layout title="申请退货">
         <div className="equal overflow-y">
@@ -54,9 +63,30 @@ export default class extends Component {
             onChange={val => this.onChange(val, "reason")}
           />
           <div className=" h20" />
-          {/* <button onClick={this.onUp} className=" pt30 pl30">
-            <img src={image} alt="" className="feedback-button-bg block" />
-          </button> */}
+          <div>
+            {photos &&
+              photos.length > 0 &&
+              photos.map((item, index) => (
+                <div
+                  key={item}
+                  onClick={this.previewImage(item, index)}
+                  style={{ backgroundImage: `url(${item})` }}
+                />
+              ))}
+            {localIds &&
+              localIds.length < 8 && (
+                <div
+                  className=" bg-borde flex jc-center ai-center"
+                  style={{
+                    width: "1.6rem",
+                    height: "1.6rem",
+                    border: "dashed 2px #d9d9d9"
+                  }}
+                >
+                  <i className="i-add font60" />
+                </div>
+              )}
+          </div>
           <div className=" h80" />
           <div className="plr30">
             <WrapLink
