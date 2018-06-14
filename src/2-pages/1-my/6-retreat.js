@@ -99,7 +99,7 @@ export default class extends Component {
             onChange={val => this.onChange(val, "reason")}
           />
           <div className=" h20" />
-          <div className="bg-white plr30 ptb30">
+          <div className="bg-white pl30 ptb10 flex wrap">
             {localIds &&
               localIds.length > 0 &&
               localIds.map(item => (
@@ -107,6 +107,7 @@ export default class extends Component {
                   key={item}
                   onClick={this.previewImage(item)}
                   style={{ backgroundImage: `url(${item})` }}
+                  className="retreat-img"
                 />
               ))}
             {localIds &&
