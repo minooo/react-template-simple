@@ -87,7 +87,7 @@ export default class extends Component {
       collageData.collage_num}个名额 】我刚花了$${
       collageData.goods.low_price
     }买了${collageData.goods.title}`;
-    const desc = `${common.filterHtml(collageData.goods.caption, 30)}`;
+    const desc = `${common.filterHtml(collageData.goods.caption)}`;
     wxapi.setShare({
       title,
       desc
@@ -128,8 +128,7 @@ export default class extends Component {
     return (
       <Layout title="拼团详情">
         <div className="equal overflow-y">
-          <NavBar title="拼团详情" />
-          {isOpen && (
+        {isOpen && (
             <div className="home-share" onClick={this.onSwitch}>
               <img
                 src="http://public.duduapp.net/finance/pc-static/app/static/app_load_go.png"
@@ -138,6 +137,7 @@ export default class extends Component {
               />
             </div>
           )}
+          <NavBar title="拼团详情" />
           <div className=" plr30 ptb10 bg-white">
             {/* 获取拼团商品数据 */}
             {collageData && (
@@ -202,7 +202,7 @@ export default class extends Component {
               ) : collageData.status === 2 ? (
                 <div>
                   <WrapLink
-                    path="/"
+                    onClick={this.onSwitch}
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                   >
                     去逛逛
