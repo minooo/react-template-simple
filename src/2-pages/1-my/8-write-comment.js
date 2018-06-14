@@ -57,7 +57,7 @@ export default class extends Component {
             } = this.props;
             const searchObj = common.searchToObj(search)
             if (searchObj.type && parseInt(searchObj.type, 10) === 1) {
-              history.replace("order_list")
+              history.replace("/order_list")
             } else {
               history.replace(`/order_details_${this.state.data.id}`);
             }
@@ -78,7 +78,7 @@ export default class extends Component {
           }));
         } else {
           Toast.fail("该订单不存在", 1, () => {
-            history.replace("order_list");
+            history.replace("/");
           });
         }
       })

@@ -9,7 +9,7 @@ export default class extends PureComponent {
     super(props);
     const { item, maxNum } = this.props;
     const surplusNum = Math.max(
-      (maxNum || 0) - ((item && item.collage_num) || 0),
+      (maxNum || 0) - ((item && parseInt(item.collage_num, 10)) || 0),
       0
     );
     this.state = {
