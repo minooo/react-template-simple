@@ -23,7 +23,7 @@ export default class extends Component {
   handle = (type, item) => {
     const { history } = this.props;
     const payState = {
-      good_id: item.goods.id,
+      good_id: item.goods_id,
       id: item.id,
       order_id: item.order_id,
       pay_price: item.pay_price,
@@ -109,8 +109,7 @@ export default class extends Component {
         {/* 拼团订单按钮 */}
         <WrapLink
           className="flex column jc-center ai-center c-white bg-main circle home-order-btn"
-          href="/1-my/0-home"
-          as="/my"
+          path="/my"
         >
           <i className="font40 i-group font40 mb10" />
           <span className="font24">我的拼团</span>

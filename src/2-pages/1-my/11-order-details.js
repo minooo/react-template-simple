@@ -298,7 +298,7 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    const id = common.getUrlLastStr(window.location.pathname);
+    const { id } = this.props.match.params;
     this.getData(id, data => {
       Promise.resolve({ ...data }).then(response => {
         if (response.status === 0) {

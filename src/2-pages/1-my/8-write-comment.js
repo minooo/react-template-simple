@@ -16,8 +16,8 @@ export default class extends Component {
     netBad: false
   };
   componentDidMount() {
-    const orderId = common.getUrlLastStr(window.location.pathname);
-    this.getDate(orderId);
+    const { id } = this.props.match.params;
+    this.getDate(id);
   }
   onRateChange = index => {
     this.setState(() => ({
@@ -53,9 +53,10 @@ export default class extends Component {
         if (parseInt(data.errcode, 10) === 0) {
           Toast.info("评分成功", 2, () => {
             const {
-              history: { search }
+              location: { search }
             } = this.props;
-            if (search.type && parseInt(search.type, 10) === 1) {
+            const searchObj = common.searchToObj(search)
+            if (searchObj.type && parseInt(searchObj.type, 10) === 1) {
               history.replace("order_list")
             } else {
               history.replace(`/order_details_${this.state.data.id}`);
