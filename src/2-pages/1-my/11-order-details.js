@@ -401,7 +401,7 @@ export default class extends Component {
           success(response.data);
         } else {
           Toast.fail("该订单不存在", 1, () => {
-            history.replace("/1-my/10-list", "/my/order");
+            history.replace("/");
           });
         }
       })

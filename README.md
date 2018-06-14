@@ -7,6 +7,7 @@
 * 人民币的符号统一使用 `¥`
 * 测试 http://plugins.duduapp.net/
 * 模拟登陆 http://mp.dev.duduapp.net/h5/zKB4Db0a2PVqyV8YPve3?token=NkFtSlpUZFNrd1QxbUZRWkRCSExSUT09
+* 本地网址 http://mp.duduapp.localhost/#/
 
 ## 后端约定
 

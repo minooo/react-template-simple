@@ -40,7 +40,7 @@ export default class extends Component {
     const { history } = this.props
     const { con, addressData } = this.state;
     const { goods_id, price, goods_sku_id, buy_type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
-    if (buy_type === "1" && !addressData.id) { Toast.info("请选择您的邮寄地址。") }
+    if (delivery_type === "1" && (!addressData || !addressData.id)) { Toast.info("请选择您的邮寄地址。") }
     Toast.loading("订单处理中...")
     http.post({
       action: "order",
@@ -48,7 +48,7 @@ export default class extends Component {
       goods_id,
       goods_sku_id,
       buy_type,
-      ...(buy_type === "1" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
+      ...(buy_type === "3" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
       ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
       ...(con && { con }) // 留言
     }).then(data => {
