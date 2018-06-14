@@ -56,10 +56,10 @@ export default class extends PureComponent {
             )}
           </div>
           <div
-            className="pl20 font30 flex ai-center text-overflow-one"
+            className="pl20 font30 flex ai-center"
             style={{ width: "1.8rem" }}
           >
-            {item.fan && item.fan.nickname}
+          <div className="text-overflow-one w-100">{item.fan && item.fan.nickname}</div>
           </div>
         </div>
         <div className="flex">

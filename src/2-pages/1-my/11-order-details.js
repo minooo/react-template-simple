@@ -514,7 +514,7 @@ export default class extends Component {
           )}
 
           {/* 收货地址 */}
-          {item && (
+          {item && item.delivery_type === 1 (
             <OrderAddress
               title={item.member_region}
               caption={item.member_address}
