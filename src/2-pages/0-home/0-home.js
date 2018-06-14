@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getHomeCollage } from "@actions";
 import { Layout, List, WrapLink, OrderTip, NavBar, ScrollLoad } from "@components";
-import { common } from "@utils"
 
 @connect(({ home_collage }) => ({
   home_collage
@@ -14,7 +13,6 @@ export default class extends Component {
   componentDidMount() {
     const { home_collage, getHomeCollage } = this.props
     if (!home_collage) { getHomeCollage() }
-    common.setTitle("首页")
   }
   renderItem = item => <List key={item.id} as={`/product_detail_${item.id}`} item={item} />
   render() {

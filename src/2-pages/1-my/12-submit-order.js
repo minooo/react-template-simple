@@ -8,9 +8,8 @@ import { http, common } from "@utils";
 export default class extends Component {
   state = {};
   componentDidMount() {
-    // const { router } = this.props;
-    // if (!router || !router.query) Router.replace("/index", "/");
-    this.onAddress();
+    const { delivery_type } = common.searchToObj()
+    if (delivery_type === "1") this.onAddress();
   }
   // 获取默认地址
   onAddress = () => {
@@ -40,7 +39,7 @@ export default class extends Component {
     const { history } = this.props
     const { con, addressData } = this.state;
     const { goods_id, price, goods_sku_id, buy_type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
-    if (delivery_type === "1" && (!addressData || !addressData.id)) { Toast.info("请选择您的邮寄地址。") }
+    if (delivery_type === "1" && (!addressData || !addressData.id)) { Toast.info("请选择您的邮寄地址。"); return }
     Toast.loading("订单处理中...")
     http.post({
       action: "order",
@@ -55,8 +54,8 @@ export default class extends Component {
       const { errcode, msg } = data
       if (parseInt(errcode, 10) === 0) {
         Toast.hide()
-        const payPrice = common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))
-        const paramsObj = { ...data.data, goods_id, payPrice, buy_type }
+        const pay_price = common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))
+        const paramsObj = { ...data.data, goods_id, pay_price, buy_type }
         const paramsStr = common.serializeParams(paramsObj)
         history.push(`/pay?${paramsStr}`)
       } else if (parseInt(errcode, 10) === 2) {

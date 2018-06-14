@@ -22,12 +22,12 @@ export default class extends Component {
   };
   onPay = () => {
     const { history } = this.props
-    const { order_id, id, goods_id, payPrice, buy_type } = common.searchToObj()
-    http.post({ action: "wxpay", order_id }).then(response => {
+    const { order_id, id, goods_id, pay_price, buy_type } = common.searchToObj()
+    http.post({ action: "apiWxpay", order_id }).then(response => {
       const { errcode, msg, data } = response
       if (errcode === 0) {
         console.info(data, "success")
-        const paramsObj = { id, goods_id, payPrice, buy_type }
+        const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
 
@@ -38,7 +38,7 @@ export default class extends Component {
           signType: "HMAC-SHA256",
           paySign: data.sign
         }).then(() => {
-          http.postC({ action: "piWxpayQueryOrder", out_trade_no: data.out_trade_no }, () => {
+          http.postC({ action: "apiWxpayQueryOrder", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
         })
@@ -51,6 +51,7 @@ export default class extends Component {
   }
   render() {
     const { isLongLogin } = this.state;
+    const { pay_price } = common.searchToObj()
     return (
       <Layout title="支付订单">
         <NavBar title="支付订单" />
@@ -60,7 +61,7 @@ export default class extends Component {
             <div className=" font28 c000">订单金额</div>
             <div className="flex ai-end">
               <div className="font24 c-main">
-                ￥<span className=" font34 pl10">1288.00</span>
+                ￥<span className=" font34 pl10">{pay_price}</span>
               </div>
             </div>
           </div>

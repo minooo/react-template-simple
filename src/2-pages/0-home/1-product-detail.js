@@ -43,7 +43,6 @@ export default class extends Component {
   async componentDidMount() {
     const { home_collage, getHomeCollage, match: { params } } = this.props
     if (!home_collage) { getHomeCollage() }
-    common.setTitle("商品详情")
     const { id } = params
     try {
       const goodsDataP = http.get({ action: "goods", operation: "show", id }); // 产品数据
@@ -115,7 +114,8 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
-      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, caption: goodsData.data.caption })
+      const desc = common.filterHtml(goodsData.data.con)
+      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, desc })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({

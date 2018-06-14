@@ -415,11 +415,11 @@ export default class extends Component {
     const { item } = this.state;
     const { history } = this.props;
     const payState = {
-      good_id: item.goods.id,
+      goods_id: item.goods.id,
       id: item.id,
       order_id: item.order_id,
       pay_price: item.pay_price,
-      type: item.buy_type
+      buy_type: item.buy_type
     };
     const payStr = common.serializeParams(payState);
     switch (type) {
@@ -429,7 +429,7 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-         history.push(`/retreat_:id_${item.order_id}`);
+         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         history.push(`/retreat_:id_${item.order_id}`);
