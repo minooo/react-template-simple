@@ -16,7 +16,6 @@ export default ({ item }) => (
     </div>
     <List
       item={item.goods}
-      href="/0-home/1-product-detail"
       as={`/product/${item.goods_id}`}
     />
     <div className="h110 flex jc-between ai-center">
