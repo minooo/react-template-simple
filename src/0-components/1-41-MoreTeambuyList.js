@@ -45,10 +45,10 @@ export default class extends PureComponent {
       >
         <div className="flex">
           <div className="h80 w80 overflow-h common-img-bg circle">
-            {item.member && item.member.headimgurl ? (
+            {item.fan && item.fan.avatar ? (
               <img
                 className="h-100 w-100"
-                src={item.member && item.member.headimgurl}
+                src={item.fan && item.fan.avatar}
                 alt=""
               />
             ) : (

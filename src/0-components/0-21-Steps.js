@@ -24,7 +24,7 @@ export default ({ step }) => (
         <span className="font34 bold c-main mr25">嘟嘟拼团</span>
         <span className="font24 c333">此商品正在参加拼团活动</span>
       </div>
-      <WrapLink className=" c999 font24 flex ai-center">
+      <WrapLink className=" c999 font24 flex ai-center" path="/group_rule">
         <span>规则说明</span>
         <i className="i-right" />
       </WrapLink>

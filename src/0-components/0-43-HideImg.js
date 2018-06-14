@@ -38,7 +38,7 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
               </div>
             ) : (
               <img
-                src={item.headimgurl}
+                src={item.headimgurl || item.avatar}
                 className={`w${imgSize} h${imgSize} circle common-img-bg`}
                 style={
                   team
