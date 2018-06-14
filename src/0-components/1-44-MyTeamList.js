@@ -14,10 +14,10 @@ export default ({ item }) => (
             : "拼团失败"}
       </span>
     </div>
-    <List
-      item={item.goods}
-      as={`/product_detail_${item.goods_id}`}
-    />
+    {item.goods && (
+      <List item={item.goods} as={`/product_detail_${item.goods_id}`} />
+    )}
+
     <div className="h110 flex jc-between ai-center">
       <HideImg
         imgList={item.fans}
@@ -27,7 +27,7 @@ export default ({ item }) => (
       />
       <div>
         <WrapLink
-          path={`/details_${item.id}`}
+          path={`/details_${item.launch_id}`}
           className="w150 h50 r10 font24 ml20 c999 border-default flex-inline jc-center ai-center"
         >
           拼单详情
