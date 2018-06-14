@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-// import getUser from '../actions/user'
-// import { Loading } from '../components'
+import { config, wxapi } from "@utils"
 @connect(
   null,
   {}
 )
 export default class extends React.Component {
-  componentWillMount() {}
+  componentDidMount() {
+    wxapi.setConfig(config("wx").jsConfig);
+  }
   render() {
     return this.props.children;
   }

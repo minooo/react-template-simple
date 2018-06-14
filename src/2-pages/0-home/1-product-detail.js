@@ -13,7 +13,7 @@ import {
   SyncList,
   Comment
 } from "@components";
-import { common, http } from "@utils";
+import { common, http, wxapi } from "@utils";
 import { getHomeCollage } from "@actions";
 
 @connect(({ home_collage }) => ({
@@ -30,7 +30,6 @@ export default class extends Component {
       show: false,
       showOth: false,
       inputNum: 1,
-      attr: this.props.attr,
       selectPrice: 1,
       stock: 1
     };
@@ -42,10 +41,10 @@ export default class extends Component {
     this.input = React.createRef();
   }
   async componentDidMount() {
-    const { home_collage, getHomeCollage } = this.props
+    const { home_collage, getHomeCollage, match: { params } } = this.props
     if (!home_collage) { getHomeCollage() }
-
-    const id = common.getUrlLastStr(window.location.pathname);
+    common.setTitle("商品详情")
+    const { id } = params
     try {
       const goodsDataP = http.get({ action: "goods", operation: "show", id }); // 产品数据
       const skuDataP = http.get({ action: "goods", operation: "sku", id }); // 有效商品组合
@@ -65,11 +64,44 @@ export default class extends Component {
         currentGroupDataP,
         currentCommentDataP
       ]);
-
+      if (!goodsData || !skuData || !skuData.data || !attrData || !attrData.data) {
+        console.info("必要数据获取失败！")
+        return
+      }
       const tipArrStr = [];
       const attrObj = {};
-      if (attrData && attrData.length > 0) {
-        attrData
+
+      const newSku = skuData.data.slice();
+      let newAttr = attrData.data ? [...attrData.data] : [];
+      attrData.data
+        .filter(item1 => item1.attr_type === 2)
+        .forEach(item2 => {
+          // 对 newAttr 处理后获取最新值
+          newAttr = newAttr.map(item3 => {
+            // 新旧 attr 在同一类别中
+            if (item3.id === item2.id) {
+              // 比如，在剩下的尺寸中
+              item3.values.forEach(item4 => {
+                let flag = false;
+                // 核心，基于当前循环体中的类别id, 以及点击选中的类别id, 在所有的可用组合中，是否存在某个组合包含这两个id，或者val 是否为空
+                // 如果是，则当前的类别是可用状态。
+                newSku.forEach(item5 => {
+                  if (
+                    item5.attr.some(x => x.value.id === item4.id)
+                  ) {
+                    flag = true;
+                  }
+                });
+                // eslint-disable-next-line
+                item4.valid = flag ? 1 : 2;
+              });
+            }
+            return item3;
+          });
+        });
+
+      if (newAttr && newAttr.length > 0) {
+        newAttr
           .filter(item => item.attr_type === 2)
           .reduce((init, item) => {
             // 如果类别只有一个选项，则默认选中
@@ -83,11 +115,12 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
+      wxapi.setShare({ title: `火热拼团中-${goodsData.title}`, caption: goodsData.caption })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({
         goods: goodsData.data,
-        attr: attrData.data,
+        attr: newAttr,
         sku: skuData.data,
         currentGroup: currentGroupData.data,
         currentComment: currentCommentData.data,
@@ -95,7 +128,6 @@ export default class extends Component {
         tipArrStr,
       }))
     } catch (error) { console.info(error) }
-    return null
   }
   onPay(type) {
     this.setState(
@@ -104,35 +136,39 @@ export default class extends Component {
     );
   }
   onImages() {
-    this.setState();
+    const { goods } = this.state
+    if (goods.images && goods.images.length > 0) {
+      wxapi.previewImage(goods.images[0], goods.images)
+    }
   }
   onPaySure() {
+    const { history } = this.props
     const { tipArrStr, skuId, sku, goods, payType } = this.state;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
     } else if (tipArrStr.length === 0) {
-      Toast.success(`跳转购买,skuId: ${skuId || sku[0].id}`);
+      Toast.success("处理中...");
       const goods_id = goods.id
       const goods_sku_id = skuId || sku[0].id
-      const type = payType === "single" ? 2 : 1
+      const buy_type = payType === "single" ? 2 : 1
       const price = payType === "single" ? goods.real_price : goods.low_price
       // 首先发起拼团，然后跳转到订单页面
       http.postC({ action: "collage", operation: "store", goods_id }, response => {
+        Toast.hide()
         const { data } = response
-        // Router.push({
-        //   pathname: "/1-my/12-submit-order",
-        //   query: {
-        //     title: goods.title,
-        //     thumb: goods.thumb,
-        //     price,
-        //     delivery_type: goods.delivery_type, // 1 邮寄 2 核销
-        //     delivery_fee: goods.delivery_fee,
-        //     goods_id,
-        //     goods_sku_id,
-        //     launch_log_id: data && data.launch_id,
-        //     type // 单独买还是团购
-        //   }
-        // }, "/my/submit/order")
+        const paramsObj = {
+          title: goods.title,
+          thumb: goods.thumb,
+          price,
+          delivery_type: goods.delivery_type, // 1 邮寄 2 核销
+          delivery_fee: goods.delivery_fee,
+          goods_id,
+          goods_sku_id,
+          launch_log_id: data && data.launch_id, // 开团id
+          buy_type // 单独买还是团购
+        }
+        const paramsStr = common.serializeParams(paramsObj)
+        history.push(`/submit_order?${paramsStr}`)
       })
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`);
@@ -312,6 +348,13 @@ export default class extends Component {
       goods, currentGroup, currentComment, home_collage
     } = this.state;
     if (!goods) return <RequestStatus />;
+
+    // 查看更多拼团要传的参数
+    const paramsObjGroup = {
+      id: goods.id,
+      num: goods.collage_num
+    }
+    const paramsStrGroup = common.serializeParams(paramsObjGroup)
     return (
       <Layout title={goods.title}>
         {/* 头部 */}
@@ -379,11 +422,7 @@ export default class extends Component {
               {currentGroup &&
                 currentGroup.length > 1 && (
                   <WrapLink
-                    href={{
-                      pathname: "/0-home/3-group-list",
-                      query: { num: goods.collage_num, id: goods.id }
-                    }}
-                    as="/grouplist"
+                    path={`/group_list?${paramsStrGroup}`}
                     className="c999"
                   >
                     查看更多&nbsp;<i className="i-right" />
@@ -430,7 +469,7 @@ export default class extends Component {
               <div className="font28 bold">用户评价</div>
               {currentComment &&
                 currentComment.length > 1 && (
-                  <WrapLink href="/0-home/2-comment-list" as={`/product/commentList/${goods.id}`} className="c999">
+                  <WrapLink path={`/comment_list_${goods.id}`} className="c999">
                     查看更多&nbsp;<i className="i-right" />
                   </WrapLink>
                 )}
