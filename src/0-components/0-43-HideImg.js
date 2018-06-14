@@ -15,8 +15,7 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
             {/* eslint-enable */}
             {index === (teaming ? 2 : 3) ? (
               <WrapLink
-                as={`/my/number/${teamId}`}
-                href="/1-my/3-number"
+                path={`/group_members_${teamId}`}
                 className={`font24 bold w${imgSize} h${imgSize} circle home-img-overflow flex jc-center ai-center`}
                 style={
                   team
@@ -28,8 +27,6 @@ export default ({ imgList, imgSize, teamId, margin, teaming, team }) => (
               </WrapLink>
             ) : teaming && index === 3 ? (
               <div
-                as={`/my/number/${teamId}`}
-                href="/1-my/3-number"
                 className={`font24 bold w${imgSize} h${imgSize} circle home-img-overflow flex jc-center ai-center`}
                 style={
                   team
