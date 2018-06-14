@@ -125,8 +125,7 @@ export default class extends Component {
           {/* 商品详情 */}
           <div className="bg-white mb20 plr30">
             <List
-              href="/0-home/1-product-detail"
-              as={`/product/${goods_id}`}
+              as={`/product_detail_${goods_id}`}
               item={{ title, thumb }}
               isOrder={{ price }}
             />
