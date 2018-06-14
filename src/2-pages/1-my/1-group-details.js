@@ -144,8 +144,7 @@ export default class extends Component {
             {collageData && (
               <List
                 item={collageData.goods}
-                href="/0-home/1-product-detail"
-                as={`/product/${collageData.goods &&
+                as={`/product_detail_${collageData &&
                   collageData.goods &&
                   collageData.goods.id}`}
               />

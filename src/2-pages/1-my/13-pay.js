@@ -23,14 +23,13 @@ export default class extends Component {
   onPay = () => {
     const { history } = this.props
     const { order_id, id, goods_id, pay_price, buy_type } = common.searchToObj()
-    http.post({ action: "apiWxpay", order_id }).then(response => {
+    http.post({ action: "wxpay", order_id }).then(response => {
       const { errcode, msg, data } = response
       if (errcode === 0) {
         console.info(data, "success")
         const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
-
         wxapi.pay({
           timestamp: data.timestamp,
           nonceStr: data.nonceStr,
@@ -38,7 +37,7 @@ export default class extends Component {
           signType: "HMAC-SHA256",
           paySign: data.sign
         }).then(() => {
-          http.postC({ action: "apiWxpayQueryOrder", out_trade_no: data.out_trade_no }, () => {
+          http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
         })
