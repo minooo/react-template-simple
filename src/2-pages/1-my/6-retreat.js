@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Toast } from "antd-mobile";
 import { http, wxapi } from "@utils";
-import { Layout, WrapLink } from "@components";
+import { Layout, WrapLink, NavBar } from "@components";
 
 export default class extends Component {
   state = {
@@ -37,25 +37,25 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-     wxapi.uploadImages(localIds).then(resolve => {
-      const images = resolve.serverId.join(",");
-      http.postC(
-        {
-          action: "refund",
-          operation: "store",
-          order_id,
-          reason,
-          images
-        },
-        () => {
-          Toast.success("退货原因提交成功", 1, () => {
-            if (window && window.history && window.history.length > 1) {
-              window.history.go(-1);
-            }
-          });
-        }
-      );
-     });
+      wxapi.uploadImages(localIds).then(resolve => {
+        const images = resolve.serverId.join(",");
+        http.postC(
+          {
+            action: "refund",
+            operation: "store",
+            order_id,
+            reason,
+            images
+          },
+          () => {
+            Toast.success("退货原因提交成功", 1, () => {
+              if (window && window.history && window.history.length > 1) {
+                window.history.go(-1);
+              }
+            });
+          }
+        );
+      });
     } else {
       http.postC(
         {
@@ -91,6 +91,7 @@ export default class extends Component {
     return (
       <Layout title="申请退货">
         <div className="equal overflow-y">
+          <NavBar title="申请退货" />
           <textarea
             className="ptb30 plr30 reset w-100 my-input-reset"
             placeholder="请输入退货理由……"
@@ -99,7 +100,7 @@ export default class extends Component {
             onChange={val => this.onChange(val, "reason")}
           />
           <div className=" h20" />
-          <div className="bg-white pl30 ptb10 flex wrap">
+          <div className="bg-white pl30 pt30 pb10 flex wrap">
             {localIds &&
               localIds.length > 0 &&
               localIds.map(item => (
@@ -113,7 +114,7 @@ export default class extends Component {
             {localIds &&
               localIds.length < 8 && (
                 <div
-                  className=" bg-borde flex jc-center ai-center"
+                  className=" bg-borde flex jc-center ai-center mb20"
                   style={{
                     width: "1.6rem",
                     height: "1.6rem",
