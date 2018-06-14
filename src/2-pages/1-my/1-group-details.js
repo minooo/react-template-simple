@@ -202,7 +202,7 @@ export default class extends Component {
               ) : collageData.status === 2 ? (
                 <div>
                   <WrapLink
-                    onClick={this.onSwitch}
+                    path="/"
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                   >
                     去逛逛

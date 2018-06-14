@@ -536,7 +536,7 @@ export default class extends Component {
           <div className="plr30 bg-white mb20">
             {item.goods && (
               <List
-                as={`/product_detail_${item.goods_id}`}
+                as={`/product_detail_${item.goods.goods_id}`}
                 isOrder={{ price: item.goods.low_price, buy_num: item.buy_num }}
                 item={item.goods}
               />
