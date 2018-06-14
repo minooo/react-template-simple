@@ -16,7 +16,7 @@ export default class extends Component {
     }
   }
   // 渲染当前的拼单列表
-  renderGroup = item => <HomeMoreTeambuyList key={item.id} item={item} />;
+  renderGroup = item => <HomeMoreTeambuyList key={item.id} item={item} maxNum={item.offerd_num} />;
   render() {
     const { id, num } = common.searchToObj()
     const { totalNum } = this.state;

@@ -10,7 +10,7 @@ const Home = loadPage("0-home")
 const ProductDetail = loadPage("1-product-detail")
 const CommentList = loadPage("2-comment-list")
 const GroupList = loadPage("3-group-list")
-
+const GroupRule = loadPage("4-group-rule")
 export default [
   {
     path: "/",
@@ -27,6 +27,10 @@ export default [
   {
     path: "/group_list",
     component: GroupList
+  },
+  {
+    path: "/group_rule",
+    component: GroupRule
   }
 ];
 

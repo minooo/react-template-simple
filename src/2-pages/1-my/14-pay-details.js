@@ -4,9 +4,8 @@ import { common } from "@utils"
 
 export default class extends Component {
   state = {};
-  componentDidMount() {}
   render() {
-    const { id, goods_id, payPrice, buy_type } = common.searchToObj()
+    const { id, goods_id, pay_price, buy_type, launch_log_id } = common.searchToObj()
     return (
       <Layout title="订单支付详情">
         <NavBar title="订单支付详情" />
@@ -26,14 +25,17 @@ export default class extends Component {
             </div>
             <div className=" flex jc-between ai-center h88 font28 c000">
               <div>支付金额</div>
-              <div>￥{payPrice}</div>
+              <div>￥{pay_price}</div>
             </div>
           </div>
           <div className="h72" />
           <div className=" plr30">
             {
-              buy_type === "1" && (
-                <WrapLink className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30">
+              buy_type !== "2" && (
+                <WrapLink
+                  className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
+                  path={`/details_${launch_log_id}`}
+                >
                   邀请好友参团
                 </WrapLink>
               )

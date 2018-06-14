@@ -1,7 +1,10 @@
 import React from "react";
+import { common } from "@utils"
 
 export default class extends React.Component {
-  componentDidMount() {}
+  componentDidMount() {
+    common.setTitle(this.props.title)
+  }
   render() {
     const { children } = this.props;
     return (

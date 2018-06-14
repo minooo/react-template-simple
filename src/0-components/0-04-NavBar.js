@@ -35,7 +35,7 @@ export default class extends React.PureComponent {
         {isOpen && (
           <div className="home-share" onClick={this.onSwitch}>
             <img
-              src="http://public.duduapp.net/finance/pc-static/app/static/app_load_go.png"
+              src="http://public.duduapp.net/new-media/app/static/share.png"
               className="w-100"
               alt=""
             />

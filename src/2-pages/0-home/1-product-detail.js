@@ -1,26 +1,17 @@
 // /* eslint-disable */
 import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
 import { Toast } from "antd-mobile";
 import {
   Layout,
   NavBar,
   WrapLink,
-  OrderTip,
   Steps,
   HomeMoreTeambuyList,
   RequestStatus,
   SyncList,
   Comment
 } from "@components";
-import { common, http, wxapi } from "@utils";
-import { getHomeCollage } from "@actions";
-
-@connect(({ home_collage }) => ({
-  home_collage
-}), {
-  getHomeCollage
-})
+import { common, http, wxapi, config } from "@utils";
 
 export default class extends Component {
   constructor(props) {
@@ -41,15 +32,13 @@ export default class extends Component {
     this.input = React.createRef();
   }
   async componentDidMount() {
-    const { home_collage, getHomeCollage, match: { params } } = this.props
-    if (!home_collage) { getHomeCollage() }
-    common.setTitle("商品详情")
+    const { match: { params } } = this.props
     const { id } = params
     try {
       const goodsDataP = http.get({ action: "goods", operation: "show", id }); // 产品数据
       const skuDataP = http.get({ action: "goods", operation: "sku", id }); // 有效商品组合
       const attrDataP = http.get({ action: "goods", operation: "attr", id }); // 所有基础分类
-      const currentGroupDataP = http.get({ action: "collage", operation: "list", goods_id: id }); // 该商品的拼团列表
+      const currentGroupDataP = http.get({ action: "collage", operation: "list", goods_id: id, limit: 2 }); // 该商品的拼团列表
       const currentCommentDataP = http.get({ action: "goods", operation: "comment", id }); // 该商品的评论列表
       const [
         goodsData,
@@ -115,7 +104,8 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
-      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, caption: goodsData.data.caption })
+      const desc = common.filterHtml(goodsData.data.con)
+      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, desc, imgUrl: goodsData.data.thumb })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({
@@ -340,7 +330,7 @@ export default class extends Component {
       selectPrice,
       tipArrStr,
       stock,
-      goods, currentGroup, currentComment, home_collage
+      goods, currentGroup, currentComment
     } = this.state;
     if (!goods) return <RequestStatus />;
 
@@ -362,10 +352,10 @@ export default class extends Component {
             className="relative"
             style={{ height: "80vw", maxHeight: "8rem" }}
           >
-            <div className="home-detail-tip overflow-h pl30 w-100">
+            {/* <div className="home-detail-tip overflow-h pl30 w-100">
               {home_collage &&
                 home_collage.length > 0 && <OrderTip data={home_collage} />}
-            </div>
+            </div> */}
             <div onClick={this.onImages} className="common-img-bg h-100">
               {goods.images &&
                 goods.images.length > 0 && (
@@ -483,7 +473,7 @@ export default class extends Component {
         {/* 底部 */}
         <div className="equal-no h108 flex border-top">
           <a
-            href="tel:13688886666"
+            href={`tel:${config("custom")}`}
             className="equal3 flex column jc-center ai-center c999 bg-white"
           >
             <i className="i-comment font34 mb10" />

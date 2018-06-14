@@ -9,7 +9,7 @@ export default class extends PureComponent {
     super(props);
     const { item, maxNum } = this.props;
     const surplusNum = Math.max(
-      (maxNum || 0) - ((item && item.collage_num) || 0),
+      (maxNum || 0) - ((item && parseInt(item.collage_num, 10)) || 0),
       0
     );
     this.state = {
@@ -45,10 +45,10 @@ export default class extends PureComponent {
       >
         <div className="flex">
           <div className="h80 w80 overflow-h common-img-bg circle">
-            {item.member && item.member.headimgurl ? (
+            {item.fan && item.fan.avatar ? (
               <img
                 className="h-100 w-100"
-                src={item.member && item.member.headimgurl}
+                src={item.fan && item.fan.avatar}
                 alt=""
               />
             ) : (
@@ -56,10 +56,10 @@ export default class extends PureComponent {
             )}
           </div>
           <div
-            className="pl20 font30 flex ai-center text-overflow-one"
+            className="pl20 font30 flex ai-center"
             style={{ width: "1.8rem" }}
           >
-            {item.fan && item.fan.nickname}
+          <div className="text-overflow-one w-100">{item.fan && item.fan.nickname}</div>
           </div>
         </div>
         <div className="flex">

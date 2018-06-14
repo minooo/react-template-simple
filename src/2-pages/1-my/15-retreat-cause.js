@@ -31,7 +31,7 @@ export default class extends Component {
           }));
         } else {
           Toast.fail("订单无效", 1, () => {
-            history.replace("order_list");
+            history.replace("/");
           });
         }
       })
