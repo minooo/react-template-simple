@@ -88,8 +88,7 @@ export default class extends Component {
           {/* 地址 */}
           {delivery_type === "1" && (
             <WrapLink
-              href="/1-my/4-address"
-              as="/my/address"
+              path="/address"
               className="bg-white flex jc-between ai-center mb20 plr30 ptb30 w-100"
             >
               <div className=" flex ai-center">
