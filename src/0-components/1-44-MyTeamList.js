@@ -16,7 +16,7 @@ export default ({ item }) => (
     </div>
     <List
       item={item.goods}
-      as={`/product/${item.goods_id}`}
+      as={`/product_detail_${item.goods_id}`}
     />
     <div className="h110 flex jc-between ai-center">
       <HideImg

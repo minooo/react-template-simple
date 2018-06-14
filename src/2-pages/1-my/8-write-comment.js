@@ -99,8 +99,7 @@ export default class extends Component {
             {data.goods && (
               <List
                 item={data.goods}
-                href="/0-home/1-product-detail"
-                as={`/product/${data.goods.id}`}
+                as={`/product_detail_${data.goods.id}`}
                 isOrder={{ price: data.goods.low_price, buy_num: data.buy_num }}
               />
             )}
