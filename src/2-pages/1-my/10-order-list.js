@@ -40,7 +40,7 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_:id_${item.order_id}`);
+        history.push(`/retreat_${item.order_id}`);
         break;
       case "checkCode": // 查看核销码
         alert("核销码", item.verify_code, [{ text: "确定" }]);
@@ -68,14 +68,12 @@ export default class extends Component {
   };
   // 删除订单
   deleOrder = id => {
-    http.deleteC({ action: "order", operation: "destroy", id }, data => {
-      if (data.errcode === 0) {
-        Toast.info("删除成功", 1, () =>
-          this.setState(pre => ({
-            dataUpdata: !pre.dataUpdata
-          }))
-        );
-      }
+    http.deleteC({ action: "order", operation: "destroy", id }, () => {
+      Toast.info("删除成功", 1, () =>
+        this.setState(pre => ({
+          dataUpdata: !pre.dataUpdata
+        }))
+      );
     });
   };
   // 更新订单状态
@@ -87,13 +85,11 @@ export default class extends Component {
         id,
         status
       },
-      data => {
-        if (data.errcode === 0) {
-          Toast.info(text, 1);
-          this.setState(pre => ({
-            dataUpdata: !pre.dataUpdata
-          }));
-        }
+      () => {
+        Toast.info(text, 1);
+        this.setState(pre => ({
+          dataUpdata: !pre.dataUpdata
+        }));
       }
     );
   };
