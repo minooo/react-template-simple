@@ -26,7 +26,7 @@ export default class extends Component {
           className="flex column jc-center ai-center c-white bg-main circle home-order-btn"
           path="/order_list"
         >
-          <i className="font40 i-star font40 mb10" />
+          <i className="font40 i-order font40 mb10" />
           <span className="font24">我的订单</span>
         </WrapLink>
         <NavBar leftCon={false} title="拼团" />
