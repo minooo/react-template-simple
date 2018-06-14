@@ -5,12 +5,7 @@ import { Layout, WrapLink } from "@components";
 
 export default class extends Component {
   state = {
-<<<<<<< HEAD
-    localIds: [],
-    photos: []
-=======
     localIds: []
->>>>>>> master
   };
   componentDidMount() {
     this.onAddress();
@@ -92,11 +87,7 @@ export default class extends Component {
     wxapi.previewImage(item, localIds);
   };
   render() {
-<<<<<<< HEAD
-    const { reason, localIds, photos } = this.state;
-=======
     const { reason, localIds } = this.state;
->>>>>>> master
     return (
       <Layout title="申请退货">
         <div className="equal overflow-y">
@@ -108,15 +99,6 @@ export default class extends Component {
             onChange={val => this.onChange(val, "reason")}
           />
           <div className=" h20" />
-<<<<<<< HEAD
-          <div>
-            {photos &&
-              photos.length > 0 &&
-              photos.map((item, index) => (
-                <div
-                  key={item}
-                  onClick={this.previewImage(item, index)}
-=======
           <div className="bg-white plr30 ptb30">
             {localIds &&
               localIds.length > 0 &&
@@ -124,7 +106,6 @@ export default class extends Component {
                 <div
                   key={item}
                   onClick={this.previewImage(item)}
->>>>>>> master
                   style={{ backgroundImage: `url(${item})` }}
                 />
               ))}
@@ -137,17 +118,12 @@ export default class extends Component {
                     height: "1.6rem",
                     border: "dashed 2px #d9d9d9"
                   }}
-<<<<<<< HEAD
-                >
-                  <i className="i-add font60" />
-=======
                   onClick={this.addPhoto}
                 >
                   <i
                     className="i-add"
                     style={{ color: "#d9d9d9", fontSize: "0.7rem" }}
                   />
->>>>>>> master
                 </div>
               )}
           </div>
