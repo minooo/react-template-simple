@@ -64,7 +64,7 @@ export default class extends Component {
           <div className=" flex jc-between ai-center bg-white h88 plr30">
             <div className=" font28 c000">订单金额</div>
             <div className="flex ai-end">
-              <div className="font24 c-main">
+              <div className="font28 c-main">
                 ￥<span className=" font34 pl10">{pay_price}</span>
               </div>
             </div>

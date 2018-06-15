@@ -103,7 +103,7 @@ export default class extends Component {
                 isOrder={{ price: data.goods.low_price, buy_num: data.buy_num }}
               />
             )}
-            <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
+            <div className="h84 flex ai-center jc-between font28 c333 border-bottom-one">
               <div>运费</div>
               <div>￥{data.delivery_fee && data.delivery_fee}</div>
             </div>
@@ -114,7 +114,7 @@ export default class extends Component {
             <div className="h84 flex ai-center font24 c333 jc-end">
               <div className="flex ai-end">
                 小计：
-                <span className="c-main font24 lh100">
+                <span className="c-main font28 lh100">
                   ￥
                   <span className="font40 bold">
                     {data.pay_price && data.pay_price}

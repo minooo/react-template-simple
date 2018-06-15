@@ -499,6 +499,7 @@ export default class extends Component {
     const validOrderInfoList = orderInfoList.filter(x => {
       if (item[x.sign]) {
         x.caption = item[x.sign];
+        x.status=item.status
       }
       return item[x.sign] !== undefined;
     });
@@ -554,8 +555,8 @@ export default class extends Component {
             </div>
             <div className="h84 flex jc-end ai-center">
               <div className="font24 c333">
-                <span className="bold">小计:</span>
-                <span className="font20 c-main">￥</span>
+                <span className="bold">小计: </span>
+                <span className="font28 c-main">￥</span>
                 <span className="font40 bold c-main">
                   {item.pay_price && item.pay_price}
                 </span>

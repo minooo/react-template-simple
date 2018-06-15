@@ -6,10 +6,13 @@ import { http, common } from "@utils";
 // const { alert } = Modal;
 
 export default class extends Component {
-  state = {};
+  state = {
+    isFoot: true
+  };
   componentDidMount() {
-    const { delivery_type } = common.searchToObj()
+    const { delivery_type } = common.searchToObj();
     if (delivery_type === "1") this.onAddress();
+    window.addEventListener("resize", this.footHide)
   }
   // 获取默认地址
   onAddress = () => {
@@ -36,50 +39,71 @@ export default class extends Component {
   };
   // 提交订单
   onSetting = () => {
-    const { history } = this.props
+    const { history } = this.props;
     const { con, addressData } = this.state;
-    const { goods_id, price, goods_sku_id, buy_type, launch_log_id, delivery_type, delivery_fee } = common.searchToObj()
-    if (delivery_type === "1" && (!addressData || !addressData.id)) { Toast.info("请选择您的邮寄地址。"); return }
-    Toast.loading("订单处理中...", 60)
-    http.post({
-      action: "order",
-      operation: "store",
+    const {
       goods_id,
+      price,
       goods_sku_id,
       buy_type,
-      ...(buy_type === "3" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
-      ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
-      ...(con && { con }) // 留言
-    }).then(data => {
-      const { errcode, msg } = data
-      if (parseInt(errcode, 10) === 0) {
-        Toast.hide()
-        const pay_price = common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))
-        const paramsObj = { ...data.data, goods_id, pay_price, buy_type }
-        const paramsStr = common.serializeParams(paramsObj)
-        history.push(`/pay?${paramsStr}`)
-      } else if (parseInt(errcode, 10) === 2) {
-        Toast.info(msg, 1, () => {
-          history.push(`/order_details_${data.data.id}`)
-        })
-      } else {
-        console.info(msg)
-      }
-    }).catch(err => {
-      Toast.offline("网络出错，请稍后再试！")
-      console.error(err)
-    });
+      launch_log_id,
+      delivery_type,
+      delivery_fee
+    } = common.searchToObj();
+    if (delivery_type === "1" && (!addressData || !addressData.id)) {
+      Toast.info("请选择您的邮寄地址。");
+      return;
+    }
+    Toast.loading("订单处理中...", 60);
+    http
+      .post({
+        action: "order",
+        operation: "store",
+        goods_id,
+        goods_sku_id,
+        buy_type,
+        ...(buy_type === "3" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
+        ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
+        ...(con && { con }) // 留言
+      })
+      .then(data => {
+        const { errcode, msg } = data;
+        if (parseInt(errcode, 10) === 0) {
+          Toast.hide();
+          const pay_price = common.clipPrice(
+            (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
+          );
+          const paramsObj = { ...data.data, goods_id, pay_price, buy_type };
+          const paramsStr = common.serializeParams(paramsObj);
+          history.push(`/pay?${paramsStr}`);
+        } else if (parseInt(errcode, 10) === 2) {
+          Toast.info(msg, 1, () => {
+            history.push(`/order_details_${data.data.id}`);
+          });
+        } else {
+          console.info(msg);
+        }
+      })
+      .catch(err => {
+        Toast.offline("网络出错，请稍后再试！");
+        console.error(err);
+      });
+  };
+  footHide = () => {
+    this.setState(pre => ({
+      isFoot: !pre.isFoot
+    }));
   };
   render() {
-    const { addressData, con } = this.state;
+    const { addressData, con, isFoot } = this.state;
     const {
       title,
       thumb,
       price,
       delivery_type, // 1 邮寄 2 核销
       delivery_fee,
-      goods_id,
-    } = common.searchToObj()
+      goods_id
+    } = common.searchToObj();
     return (
       <Layout title="填写订单">
         <NavBar title="填写订单" />
@@ -124,19 +148,25 @@ export default class extends Component {
           )}
           {/* 商品详情 */}
           <div className="bg-white mb20 plr30">
-            <List
-              as={`/product_detail_${goods_id}`}
-              item={{ title, thumb }}
-              isOrder={{ price }}
-            />
-            {
-              delivery_type === "1" && delivery_fee !== undefined && (
+            {isFoot && (
+              <List
+                as={`/product_detail_${goods_id}`}
+                item={{ title, thumb }}
+                isOrder={{ price }}
+              />
+            )}
+
+            {delivery_type === "1" &&
+              delivery_fee !== undefined && (
                 <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
                   <div>运费</div>
-                  <div>{parseFloat(delivery_fee, 10) === 0 ? "免运费" : delivery_fee}</div>
+                  <div>
+                    {parseFloat(delivery_fee, 10) === 0
+                      ? "免运费"
+                      : delivery_fee}
+                  </div>
                 </div>
-              )
-            }
+              )}
             <div className="h84 flex ai-center font24 c333 border-bottom-one">
               <div style={{ paddingRight: "0.45rem" }}>留言</div>
               <input
@@ -144,13 +174,20 @@ export default class extends Component {
                 placeholder="请填写给卖家的留言（选填）"
                 value={con || ""}
                 onChange={val => this.onChange(val, "con")}
+                // onBlur={this.footHide}
+                // onFocus={this.footHide}
               />
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">
               <div className="flex ai-end">
                 小计：
-                <span className="c-main font24 lh100">
-                  ￥<span className="font40 bold">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
+                <span className="c-main font28 lh100">
+                  ￥
+                  <span className="font40 bold">
+                    {common.clipPrice(
+                      (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
+                    )}
+                  </span>
                 </span>
               </div>
             </div>
@@ -166,8 +203,13 @@ export default class extends Component {
             >
               <div className="flex ai-end">
                 <div className="font24 c-main">
-                  <span className="font24 c333">合计：</span>
-                  ￥<span className="font40 pl5">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
+                  <span className="font28 c333">合计：</span>
+                  ￥
+                  <span className="font40 pl5">
+                    {common.clipPrice(
+                      (delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
