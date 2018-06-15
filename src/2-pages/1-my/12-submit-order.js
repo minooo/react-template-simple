@@ -149,7 +149,7 @@ export default class extends Component {
             <div className="h84 flex ai-center font24 c333 jc-end">
               <div className="flex ai-end">
                 小计：
-                <span className="c-main font24 lh100">
+                <span className="c-main font28 lh100">
                   ￥<span className="font40 bold">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
                 </span>
               </div>
@@ -166,7 +166,7 @@ export default class extends Component {
             >
               <div className="flex ai-end">
                 <div className="font24 c-main">
-                  <span className="font24 c333">合计：</span>
+                  <span className="font28 c333">合计：</span>
                   ￥<span className="font40 pl5">{common.clipPrice((delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price))}</span>
                 </div>
               </div>

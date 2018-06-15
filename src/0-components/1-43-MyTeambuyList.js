@@ -58,6 +58,7 @@ export default ({ item, handle }) => (
         <span className="c-main bold-mid">{item.status_val}</span>
       </div>
     </div>
+    <div className="pt20 lh100 font24">{item.created_at}</div>
     <List
       item={item}
       as={`/order_details_${item.id}`}
@@ -66,7 +67,7 @@ export default ({ item, handle }) => (
     <div className="h110 flex jc-between ai-center">
       <div className="font24 c333">
         <span className="bold">小计:</span>
-        <span className="font20 c-main">￥</span>
+        <span className="font28 c-main">￥</span>
         <span className="font40 bold c-main mr25">{item.pay_price}</span>
       </div>
       <div>

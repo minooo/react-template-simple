@@ -373,8 +373,8 @@ export default class extends Component {
           <div className="bg-white plr30 ptb25 mb20">
             <div className="font34 c333 lh150 bold">{goods.title}</div>
             <div className="flex jc-between mt30">
-              <div className="font22 c-main">
-                ¥ <span className="font40 bold mr20">{goods.low_price}</span>
+              <div className="font28 c-main">
+                ¥ <span className="font50 bold mr20">{goods.low_price}</span>
                 <del className="font24 c999">{goods.price}</del>
               </div>
               <div className="font24 c999">
@@ -484,8 +484,8 @@ export default class extends Component {
             onClick={this.onSinglePay}
           >
             <span className="font24">
-              ¥{" "}
-              <span className="font30 bold">
+              <span className="font28">¥ </span>
+              <span className="font34 bold">
                 {common.tipPrice(goods.real_price).int}
               </span>.{common.tipPrice(goods.real_price).dec}
             </span>
@@ -496,8 +496,8 @@ export default class extends Component {
             onClick={this.onGroupPay}
           >
             <span className="font24">
-              ¥{" "}
-              <span className="font30 bold">
+              <span className="font28">¥ </span>
+              <span className="font34 bold">
                 {common.tipPrice(goods.low_price).int}
               </span>.{common.tipPrice(goods.low_price).dec}
             </span>
