@@ -15,7 +15,7 @@ export default ({ item, as, isOrder }) => (
       </div>
       <div className="flex jc-between font24 c999">
         <div>
-          <span className="font20 c-main">￥</span>
+          <span className="font28 c-main">￥</span>
           <span className={`${isOrder ? "font30" : "font40"} bold c-main mr25`}>{isOrder ? isOrder.price : item.low_price}</span>
           {!isOrder && `${item.offerd_num}人拼`}
         </div>

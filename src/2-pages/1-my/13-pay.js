@@ -20,7 +20,6 @@ export default class extends Component {
     http.post({ action: "wxpay", order_id }).then(response => {
       const { errcode, msg, data } = response
       if (errcode === 0) {
-        console.info(data, "success")
         const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
@@ -32,7 +31,6 @@ export default class extends Component {
           signType: data.signType,
           paySign: data.paySign
         }
-        console.info("微信支付参数", pay_param)
         wxapi.pay(pay_param).then(() => {
           Toast.loading("订单处理中，请稍后...", 60)
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
@@ -60,7 +58,7 @@ export default class extends Component {
           <div className=" flex jc-between ai-center bg-white h88 plr30">
             <div className=" font28 c000">订单金额</div>
             <div className="flex ai-end">
-              <div className="font24 c-main">
+              <div className="font28 c-main">
                 ￥<span className=" font34 pl10">{pay_price}</span>
               </div>
             </div>
