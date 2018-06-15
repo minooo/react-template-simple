@@ -125,9 +125,24 @@ export default class extends Component {
   render() {
     const { isOpen, collageData, listData, surplusTime } = this.state;
     if (!collageData) return <RequestStatus />;
-    // 查看参加拼团要传的参数
+    if (!listData) return <RequestStatus />;
+    // 查看更多拼团要传的参数
+    const paramsObjGroup = {
+      id: collageData.goods.id,
+      num: listData.length
+    };
+    const paramsStrGroup = common.serializeParams(paramsObjGroup);
     return (
-      <Layout title="拼团详情">
+      <Layout
+        title={
+          surplusTime && collageData.status === 1
+            ? "拼团中"
+            : (surplusTime && collageData.status === 2) ||
+              (!surplusTime && collageData.status === 2)
+              ? "拼团完成"
+              : "拼团失败"
+        }
+      >
         <div className="equal overflow-y">
           {isOpen && (
             <div className="home-share" onClick={this.onSwitch}>
@@ -138,7 +153,16 @@ export default class extends Component {
               />
             </div>
           )}
-          <NavBar title="拼团详情" />
+          <NavBar
+            title={
+              surplusTime && collageData.status === 1
+                ? "拼团中"
+                : (surplusTime && collageData.status === 2) ||
+                  (!surplusTime && collageData.status === 2)
+                  ? "拼团完成"
+                  : "拼团失败"
+            }
+          />
           <div className=" plr30 ptb10 bg-white">
             {/* 获取拼团商品数据 */}
             {collageData && (
@@ -202,7 +226,7 @@ export default class extends Component {
               ) : collageData.status === 2 ? (
                 <div>
                   <WrapLink
-                    onClick={this.onSwitch}
+                    path="/"
                     className=" r10 h80 bg-main c-white font30 w-100 flex jc-center ai-center"
                   >
                     去逛逛
@@ -283,7 +307,7 @@ export default class extends Component {
                   人正在参与此拼单
                 </div>
                 <WrapLink
-                  path="/group_list"
+                  path={`/group_list?${paramsStrGroup}`}
                   className=" c999 font24 flex ai-center"
                 >
                   <span className=" mr10">查看更多</span>
@@ -329,7 +353,7 @@ export default class extends Component {
                   ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
-                path="/group_list"
+                path={`/group_list?${paramsStrGroup}`}
               >
                 查看更多
               </WrapLink>

@@ -133,7 +133,7 @@ export default class extends Component {
               delivery_type === "1" && delivery_fee !== undefined && (
                 <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
                   <div>运费</div>
-                  <div>{parseInt(delivery_fee, 10) === 0 ? "免运费" : delivery_fee}</div>
+                  <div>{parseFloat(delivery_fee, 10) === 0 ? "免运费" : delivery_fee}</div>
                 </div>
               )
             }
