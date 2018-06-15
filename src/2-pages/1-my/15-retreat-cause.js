@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { common, http } from "@utils";
 import { Toast } from "antd-mobile";
-import { Layout, RequestStatus } from "@components";
+import { Layout, RequestStatus, NavBar } from "@components";
 
 export default class extends Component {
   state = {
@@ -46,7 +46,8 @@ export default class extends Component {
     if (!data) return <RequestStatus />;
     return (
       <Layout title={`${causeType === 1 ? "退货" : "拒绝退货"}原因`}>
-        <div className="equal">
+        <NavBar title={`${causeType === 1 ? "退货" : "拒绝退货"}原因`} />
+        <div className="equal overflow-y">
           <div
             className="bg-white font28 plr30"
             style={{ paddingTop: "0.5rem", paddingBottom: "0.5rem" }}

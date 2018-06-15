@@ -43,7 +43,7 @@ export default class extends PureComponent {
         className="flex jc-between ai-center border-bottom-one"
         style={{ height: "1.4rem" }}
       >
-        <div className="flex">
+        <div className="flex equal overflow-h">
           <div className="h80 w80 overflow-h common-img-bg circle">
             {item.fan && item.fan.avatar ? (
               <img
@@ -55,15 +55,12 @@ export default class extends PureComponent {
               <div className="h-100 w-100" />
             )}
           </div>
-          <div
-            className="pl20 font30 flex ai-center"
-            style={{ width: "1.8rem" }}
-          >
-          <div className="text-overflow-one w-100">{item.fan && item.fan.nickname}</div>
+          <div className="pl20 font30 flex ai-center equal overflow-h">
+            <div className="text-overflow-one w-100">{item.fan && item.fan.nickname}</div>
           </div>
         </div>
-        <div className="flex">
-          <div className="flex column lh100 ">
+        <div className="flex jc-end" style={{ width: "3.9rem" }}>
+          <div className="flex column lh100">
             <div className="font28 pb15 text-right">
               {remainNum > 0 ? (
                 <span>
