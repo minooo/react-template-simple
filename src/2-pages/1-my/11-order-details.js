@@ -383,11 +383,9 @@ export default class extends Component {
     const { history } = this.props;
     // 查看退货原因和拒绝退货原因
     if (type === "reason") {
-      history.push(`/retreat_cause_${item.order_id}?type=1`)
+      history.push(`/retreat_cause_${item.order_id}?type=1`);
     } else {
-      history.push(
-        history.push(`/retreat_cause_${item.order_id}?type=2`)
-      );
+      history.push(history.push(`/retreat_cause_${item.order_id}?type=2`));
     }
   };
   // 获取数据
@@ -429,7 +427,7 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-         history.push(`/pay?${payStr}`);
+        history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         history.push(`/retreat_${item.order_id}`);
@@ -460,10 +458,9 @@ export default class extends Component {
   };
   // 删除订单
   deleOrder = id => {
+    const { history } = this.props;
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
-      Toast.info("删除成功", 1, () =>
-        history.replace("/order_list")
-      );
+      Toast.info("删除成功", 1, () => history.replace("/order_list"));
     });
   };
   // 更新订单状态
@@ -514,12 +511,13 @@ export default class extends Component {
           )}
 
           {/* 收货地址 */}
-          {item && item.delivery_type === 1 (
-            <OrderAddress
-              title={item.member_region}
-              caption={item.member_address}
-            />
-          )}
+          {item &&
+            item.delivery_type === 1 && (
+              <OrderAddress
+                title={item.member_region}
+                caption={item.member_address}
+              />
+            )}
 
           {/* 拼单成功 */}
           {item.launch_log_status &&
@@ -541,13 +539,12 @@ export default class extends Component {
                 item={item.goods}
               />
             )}
-            {
-              item.delivery_type === 1 &&
+            {item.delivery_type === 1 && (
               <div className="h86 font28 c333 flex jc-between ai-center border-bottom-one">
                 <span>运费</span>
                 <span>￥{item.goods && item.goods.delivery_fee}</span>
               </div>
-            }
+            )}
             <div className="h86 font28 c333 flex ai-center border-bottom-one">
               <span className="pr20">留言</span>
               <div className="pl20 text-overflow-1 equal">
@@ -558,7 +555,9 @@ export default class extends Component {
               <div className="font24 c333">
                 <span className="bold">小计:</span>
                 <span className="font20 c-main">￥</span>
-                <span className="font40 bold c-main">{item.pay_price && item.pay_price}</span>
+                <span className="font40 bold c-main">
+                  {item.pay_price && item.pay_price}
+                </span>
               </div>
             </div>
           </div>
