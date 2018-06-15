@@ -32,7 +32,7 @@ export const previewImage = (thumb, list) => {
 export const pay = params => new Promise((resolve, reject) =>
   wx.chooseWXPay({
     appId: params.appId,
-    timeStamp: params.timestamp,
+    timestamp: params.timestamp,
     nonceStr: params.nonceStr,
     package: params.package,
     signType: params.signType,

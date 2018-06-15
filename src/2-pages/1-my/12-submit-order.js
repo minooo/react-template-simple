@@ -59,11 +59,12 @@ export default class extends Component {
         const paramsStr = common.serializeParams(paramsObj)
         history.push(`/pay?${paramsStr}`)
       } else if (parseInt(errcode, 10) === 2) {
+        // 该订单已存在
         Toast.info(msg, 1, () => {
           history.push(`/order_details_${data.data.id}`)
         })
       } else {
-        console.info(msg)
+        Toast.fail(msg)
       }
     }).catch(err => {
       Toast.offline("网络出错，请稍后再试！")

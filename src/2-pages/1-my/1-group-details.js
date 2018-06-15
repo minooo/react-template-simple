@@ -143,16 +143,16 @@ export default class extends Component {
               : "拼团失败"
         }
       >
+        {isOpen && (
+          <div className="home-share" onClick={this.onSwitch}>
+            <img
+              src="http://public.duduapp.net/new-media/app/static/share.png"
+              className="w-100"
+              alt=""
+            />
+          </div>
+        )}
         <div className="equal overflow-y">
-          {isOpen && (
-            <div className="home-share" onClick={this.onSwitch}>
-              <img
-                src="http://public.duduapp.net/new-media/app/static/share.png"
-                className="w-100"
-                alt=""
-              />
-            </div>
-          )}
           <NavBar
             title={
               surplusTime && collageData.status === 1

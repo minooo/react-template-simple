@@ -34,26 +34,31 @@ export default class extends Component {
   async componentDidMount() {
     const { match: { params } } = this.props
     const { id } = params
+
+    // 为了优化商品的渲染速度
+    http.getC({ action: "goods", operation: "show", id }, response => {
+      const goods = response.data
+      this.setState(() => ({ goods }))
+      const desc = common.filterHtml(goods.con)
+      wxapi.setShare({ title: `火热拼团中-${goods.title}`, desc, imgUrl: goods.thumb })
+    })
     try {
-      const goodsDataP = http.get({ action: "goods", operation: "show", id }); // 产品数据
       const skuDataP = http.get({ action: "goods", operation: "sku", id }); // 有效商品组合
       const attrDataP = http.get({ action: "goods", operation: "attr", id }); // 所有基础分类
       const currentGroupDataP = http.get({ action: "collage", operation: "list", goods_id: id, limit: 2 }); // 该商品的拼团列表
       const currentCommentDataP = http.get({ action: "goods", operation: "comment", id }); // 该商品的评论列表
       const [
-        goodsData,
         skuData,
         attrData,
         currentGroupData,
         currentCommentData
       ] = await Promise.all([
-        goodsDataP,
         skuDataP,
         attrDataP,
         currentGroupDataP,
         currentCommentDataP
       ]);
-      if (!goodsData || !skuData || !skuData.data || !attrData || !attrData.data) {
+      if (!skuData || !skuData.data || !attrData || !attrData.data) {
         console.info("必要数据获取失败！")
         return
       }
@@ -104,12 +109,9 @@ export default class extends Component {
             return init;
           }, tipArrStr);
       }
-      const desc = common.filterHtml(goodsData.data.con)
-      wxapi.setShare({ title: `火热拼团中-${goodsData.data.title}`, desc, imgUrl: goodsData.data.thumb })
       // 当前拼单信息
       // eslint-disable-next-line
       this.setState(() => ({
-        goods: goodsData.data,
         attr: newAttr,
         sku: skuData.data,
         currentGroup: currentGroupData.data,
@@ -522,7 +524,7 @@ export default class extends Component {
               商品参数
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {goods.attr &&
+              {attr && goods.attr &&
                 goods.attr.length > 0 &&
                 goods.attr.filter(x => x.attr_type === 1).length > 0 && (
                   <SyncList
@@ -579,11 +581,15 @@ export default class extends Component {
                     {goods.offerd_num}人拼团
                     {/* &nbsp;&nbsp;&nbsp;&nbsp;库存：{stock} */}
                   </div>
-                  <div className="font24 c666 ptb10">
-                    {tipArrStr.length === 0
-                      ? "可以立即购买啦！"
-                      : `请选择 ${tipArrStr.map(item => item)}`}
-                  </div>
+                  {
+                    tipArrStr !== undefined && (
+                      <div className="font24 c666 ptb10">
+                        {tipArrStr.length === 0
+                          ? "可以立即购买啦！"
+                          : `请选择 ${tipArrStr.map(item => item)}`}
+                      </div>
+                    )
+                  }
                 </div>
               </div>
 

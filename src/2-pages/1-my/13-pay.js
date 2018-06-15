@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import { Checkbox, Toast } from "antd-mobile";
-import { Layout, NavBar, WrapLink } from "@components";
+import { Checkbox, Toast, Button } from "antd-mobile";
+import { Layout, NavBar } from "@components";
 import { common, http, wxapi } from "@utils"
-
-// const { alert } = Modal;
 
 export default class extends Component {
   state = { isLongLogin: true };
-  componentDidMount() {
-    common.setTitle("支付")
-    wxapi.setShare({
-      title: "标题",
-      desc: "副标题",
-    })
+  componentWillUnmount() {
+    Toast.hide()
   }
   onChange = (val, type) => {
     if (type === "login") {
@@ -35,22 +29,24 @@ export default class extends Component {
           timestamp: data.timestamp,
           nonceStr: data.nonceStr,
           package: data.package,
-          signType: "MD5",
+          signType: data.signType,
           paySign: data.paySign
         }
         console.info("微信支付参数", pay_param)
         wxapi.pay(pay_param).then(() => {
+          Toast.loading("订单处理中，请稍后...", 60)
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
         }, (err) => {
-          Toast.info(`支付reject错误：${JSON.stringify(err)}`)
-        }).catch(err => { Toast.fail(`支付catch错误：${JSON.stringify(err)}`) })
+          Toast.info(`抱歉，支付 reject 错误：${JSON.stringify(err)}`)
+        }).catch(err => { Toast.fail(`抱歉，支付 catch 错误：${JSON.stringify(err)}`) })
       } else {
-        Toast.fail(`wxpay 的错误信息：${msg}`)
+        // 订单过期 回到订单详情中
+        Toast.fail(msg, 1, () => history.replace(`/order_details_${data.id}`))
       }
     }).catch(error => {
-      Toast.offline(`wxpay 的catch信息：${error}`)
+      Toast.offline(error, 1, () => history.replace("/"))
     })
   }
   render() {
@@ -91,12 +87,7 @@ export default class extends Component {
           </div>
           <div className="h52" />
           <div className="plr30 w-100">
-            <WrapLink
-              className={`h80 font30 c-white ${isLongLogin ? "bg-main" : "bg-d9"} bg-main r10 flex jc-center ai-center w-100`}
-              onClick={isLongLogin ? this.onPay : null}
-            >
-              立即支付
-            </WrapLink>
+            <Button type="primary" disabled={!isLongLogin} onClick={this.onPay}>立即支付</Button>
           </div>
         </div>
       </Layout>
