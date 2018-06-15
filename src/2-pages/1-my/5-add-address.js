@@ -213,13 +213,13 @@ export default class extends Component {
               onPickerChange={this.onPickerChange}
             >
               <MyList>
-                <div className="font28 c333">所在地区</div>
+                <div className="font28 c333">所在地区:</div>
               </MyList>
             </Picker>
             <div className=" flex   my-input-reset">
               <div className="font28 c333 mt30">详细地址：</div>
               <textarea
-                className="ptb30 plr30 reset equal my-input-reset"
+                className="ptb30 plr30 reset equal my-input-reset font28"
                 placeholder="请输入详细地址信息，如门牌号等"
                 maxLength={60}
                 rows={5}

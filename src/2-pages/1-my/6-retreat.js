@@ -25,12 +25,6 @@ export default class extends Component {
       this.setState(() => ({ [type]: value }));
     }
   };
-  // addPhoto = () => {
-  //   const { localIds } = wx.chooseImage({
-  //     count: 8,
-  //     sizeType: "compressed"
-  //   });
-  // };
   // 设置
   onSetting = () => {
     const { reason, order_id, localIds } = this.state;
@@ -75,12 +69,15 @@ export default class extends Component {
     }
   };
   addPhoto = () => {
-    const { localIds } = wxapi.chooseImage({
-      count: 8,
-      sizeType: "compressed"
-    });
-    console.info(localIds);
-    this.setState(pre => ({ localIds: pre.localIds.concat(localIds) }));
+    wxapi
+      .chooseImage({
+        count: 8,
+        sizeType: "compressed"
+      })
+      .then(resolve => {
+        console.info(resolve);
+        this.setState(pre => ({ localIds: pre.localIds.concat(resolve.localIds) }));
+      });
   };
   previewImage = item => {
     const { localIds } = this.state;
