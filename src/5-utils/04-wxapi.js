@@ -31,13 +31,14 @@ export const previewImage = (thumb, list) => {
 
 export const pay = params => new Promise((resolve, reject) =>
   wx.chooseWXPay({
-    timestamp: params.timestamp,
+    appId: params.appId,
+    timeStamp: params.timestamp,
     nonceStr: params.nonceStr,
     package: params.package,
     signType: params.signType,
     paySign: params.paySign,
     success: resolve,
-    error: reject
+    fail: reject
   }))
 
 // 选择图片

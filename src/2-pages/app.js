@@ -7,7 +7,6 @@ import RootSaga from "../4-store/saga";
 
 const store = configureStore(window.__INITIAL_STATE__); // eslint-disable-line
 store.runSaga(RootSaga);
-// import 'vconsole'
 
 const render = Component => {
   ReactDOM.render(

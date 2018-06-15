@@ -30,22 +30,27 @@ export default class extends Component {
         const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
-        wxapi.pay({
+        const pay_param = {
+          appId: data.appId,
           timestamp: data.timestamp,
           nonceStr: data.nonceStr,
           package: data.package,
-          signType: "HMAC-SHA256",
-          paySign: data.sign
-        }).then(() => {
+          signType: "MD5",
+          paySign: data.paySign
+        }
+        console.info("微信支付参数", pay_param)
+        wxapi.pay(pay_param).then(() => {
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
-        })
+        }, (err) => {
+          Toast.info(`支付reject错误：${JSON.stringify(err)}`)
+        }).catch(err => { Toast.fail(`支付catch错误：${JSON.stringify(err)}`) })
       } else {
-        Toast.fail(msg)
+        Toast.fail(`wxpay 的错误信息：${msg}`)
       }
     }).catch(error => {
-      Toast.offline(error)
+      Toast.offline(`wxpay 的catch信息：${error}`)
     })
   }
   render() {
@@ -73,7 +78,7 @@ export default class extends Component {
               <div className="flex ai-center">
                 <i style={{ fontSize: "0.7rem" }} className=" i-wechat mr20" />
                 <div>
-                  <div className=" font24 c000">微信支付</div>
+                  <div className=" font24 c000 mb10">微信支付</div>
                   <div className=" font20 c999">亿万用户的选择，更快更安全</div>
                 </div>
               </div>

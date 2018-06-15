@@ -10,6 +10,7 @@ export default ({ as, onClick, extra, children }) => (
     {children}
     <div className=" flex ai-center">
       {extra && <div className=" font24 c999 lh100 mr20">{extra}</div>}
+      <i className=" i-right c999 font20" />
     </div>
   </WrapLink>
 );

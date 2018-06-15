@@ -12,7 +12,7 @@ export default ({ type = "loading", text, err }) => (
       <div
         style={{
           width: "65%",
-          borderTop: "1px solid #999",
+          borderTop: "1px solid #d9d9d9",
           margin: "2.4em auto 1.5em"
         }}
         className="c999 text-center"
