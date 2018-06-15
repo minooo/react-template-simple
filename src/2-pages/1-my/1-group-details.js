@@ -125,7 +125,13 @@ export default class extends Component {
   render() {
     const { isOpen, collageData, listData, surplusTime } = this.state;
     if (!collageData) return <RequestStatus />;
-    // 查看参加拼团要传的参数
+    if (!listData) return <RequestStatus />;
+    // 查看更多拼团要传的参数
+    const paramsObjGroup = {
+      id: collageData.goods.id,
+      num: listData.length
+    };
+    const paramsStrGroup = common.serializeParams(paramsObjGroup);
     return (
       <Layout title="拼团详情">
         <div className="equal overflow-y">
@@ -283,7 +289,7 @@ export default class extends Component {
                   人正在参与此拼单
                 </div>
                 <WrapLink
-                  path="/group_list"
+                  path={`/group_list?${paramsStrGroup}`}
                   className=" c999 font24 flex ai-center"
                 >
                   <span className=" mr10">查看更多</span>
@@ -329,7 +335,7 @@ export default class extends Component {
                   ))}
               <WrapLink
                 className=" h80 font30 c999 flex jc-center ai-center w-100"
-                path="/group_list"
+                path={`/group_list?${paramsStrGroup}`}
               >
                 查看更多
               </WrapLink>
