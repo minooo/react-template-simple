@@ -11,7 +11,7 @@ module.exports = {
   // https://webpack.js.org/configuration/target/
 
   entry: {
-    vendor: ["react", "react-dom", "react-router-dom", "redux"],
+    vendor: ["react-router-dom", "redux"],
     bundle: path.resolve(__dirname, "src/2-pages/app.js")
   },
   // https://webpack.js.org/configuration/entry-context/
@@ -144,7 +144,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       // Create HTML file that includes references to bundled CSS and JS.
       template: "src/index.html",
-      title: "嘟嘟商学院",
+      title: "拼团插件",
       hash: true,
       // 这样每次客户端页面就会根据这个hash来判断页面是否有必要刷新
       // 在项目后续过程中，经常需要做些改动更新什么的，一但有改动，客户端页面就会自动更新！

@@ -23,8 +23,8 @@ export default class extends PureComponent {
           clearInterval(this.click)
         } else {
           const { getdays, getHours, getMinutes, getSeconds } = nowDate
-          const str = `${getdays === 0 ? "" : `${getdays}天:`}${getHours}:${getMinutes}:${getSeconds}`
-          this.setState(() => ({ curTime: str }))
+          const str = getdays > 0 ? `${getdays}天` : `${getHours}:${getMinutes}:${getSeconds}`
+          if (this.click) this.setState(({ curTime: str }))
         }
       }, 1000)
     }

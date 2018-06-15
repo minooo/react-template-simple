@@ -1,43 +1,43 @@
 import React, { PureComponent } from "react";
 import { common } from "@utils";
-import { WrapLink } from "@components";
+import { WrapLink, OrderCountDown } from "@components";
 import { parse } from "date-fns";
 
 const { countDown } = common;
 export default class extends PureComponent {
   constructor(props) {
-    super(props);
-    const { item, maxNum } = this.props;
-    const surplusNum = Math.max(
-      (maxNum || 0) - ((item && parseInt(item.collage_num, 10)) || 0),
-      0
-    );
+    super(props)
+    const { item } = this.props
+    const remainNum = Math.max((+item.goods.offerd_num) - (+item.collage_num), 0)
+    const milliseconds = +parse(item.created_at) + (item.goods.available_time * 3600 * 1000)
+    let timeOver = false
+    const remainDate = countDown(milliseconds)
+    if (!remainDate) timeOver = true
     this.state = {
-      surplusTime: "",
-      surplusNum
-    };
+      remainNum,
+      timeOver,
+      milliseconds
+    }
   }
   componentDidMount() {
-    const {
-      item: { goods }
-    } = this.props;
-    const upDateParse = parse(goods && goods.end_time);
-    this.interval = setInterval(
-      () => this.timeUpdate(upDateParse, this.interval),
-      1000
-    );
+    const { item } = this.props;
+    const milliseconds = +parse(item.created_at) + (item.goods.available_time * 3600 * 1000)
+    const remainMilliseconds = milliseconds - new Date();
+    const remainDate = countDown(milliseconds);
+
+    if (remainDate) {
+      this.tick = setTimeout(() => {
+        this.setState(({ timeOver: true }))
+      }, remainMilliseconds)
+    }
   }
   componentWillUnmount() {
-    clearInterval(this.interval);
+    if (this.tick) clearInterval(this.tick);
   }
-  timeUpdate = (upDateParse, interval) => {
-    this.setState(() => ({
-      surplusTime: countDown(upDateParse, interval)
-    }));
-  };
+
   render() {
     const { item } = this.props;
-    const { surplusTime, surplusNum } = this.state;
+    const { remainNum, timeOver, milliseconds } = this.state;
     return (
       <div
         className="flex jc-between ai-center border-bottom-one"
@@ -65,25 +65,19 @@ export default class extends PureComponent {
         <div className="flex">
           <div className="flex column lh100 ">
             <div className="font28 pb15 text-right">
-              {surplusNum > 0 ? (
+              {remainNum > 0 ? (
                 <span>
-                  还差<span className="c-main plr5">{surplusNum}</span>人拼单完成
+                  还差<span className="c-main plr5">{remainNum}</span>人拼单完成
                 </span>
               ) : (
                 "拼单完成"
               )}
             </div>
             <div className="c999 font24 text-right">
-              {surplusTime && surplusNum > 0
-                ? surplusTime.getdays > 0
-                  ? `剩余时间 ${surplusTime.getdays}天`
-                  : `剩余时间 ${surplusTime.getHours}:${
-                      surplusTime.getMinutes
-                    }:${surplusTime.getSeconds}`
-                : "时间到"}
+              <OrderCountDown milliseconds={milliseconds} />
             </div>
           </div>
-          {surplusTime && surplusNum > 0 ? (
+          {(!timeOver && remainNum > 0) ? (
             <WrapLink
               path={`/details_${item.id}`}
               className="w120 h60 bg-main c-white font24 flex ai-center jc-center ml30 r10"
