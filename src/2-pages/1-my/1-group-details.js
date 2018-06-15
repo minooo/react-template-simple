@@ -133,7 +133,16 @@ export default class extends Component {
     };
     const paramsStrGroup = common.serializeParams(paramsObjGroup);
     return (
-      <Layout title="拼团详情">
+      <Layout
+        title={
+          surplusTime && collageData.status === 1
+            ? "拼团中"
+            : (surplusTime && collageData.status === 2) ||
+              (!surplusTime && collageData.status === 2)
+              ? "拼团完成"
+              : "拼团失败"
+        }
+      >
         <div className="equal overflow-y">
           {isOpen && (
             <div className="home-share" onClick={this.onSwitch}>
@@ -144,7 +153,16 @@ export default class extends Component {
               />
             </div>
           )}
-          <NavBar title="拼团详情" />
+          <NavBar
+            title={
+              surplusTime && collageData.status === 1
+                ? "拼团中"
+                : (surplusTime && collageData.status === 2) ||
+                  (!surplusTime && collageData.status === 2)
+                  ? "拼团完成"
+                  : "拼团失败"
+            }
+          />
           <div className=" plr30 ptb10 bg-white">
             {/* 获取拼团商品数据 */}
             {collageData && (
