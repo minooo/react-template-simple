@@ -33,7 +33,7 @@ export default class extends Component {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
       wxapi.uploadImage(localIds).then(resolve => {
-        console.info(resolve.serverId);
+        console.info(`serverId ${resolve.serverId}`);
         const images = resolve.serverId.join(",");
         http.postC(
           {
@@ -70,34 +70,26 @@ export default class extends Component {
       );
     }
   };
-  addPhoto = async () => {
-    const { localIds } = await wxapi.chooseImage({
-      count: 8 - this.localIds.length,
-      sizeType: "compressed"
-    });
-    console.info(localIds);
-    const imgData = await wxapi.getLocalImgData(localIds);
-    console.info(imgData);
-    this.setState(pre => ({
-      localIds: pre.localIds.concat(localIds),
-      photos: pre.photos.concat(imgData)
-    }));
+  addPhoto = () => {
+    const { localIds } = this.state;
+    wxapi
+      .chooseImage({
+        count: 8 - localIds.length,
+        sizeType: "compressed"
+      })
+      .then(resolve => {
+        console.info(`localIds  ${resolve}`);
+        this.setState(pre => ({
+          localIds: pre.localIds.concat(resolve.localIds)
+        }));
+        wxapi.getLocalImgData(resolve.localIds).then(resolve => {
+          console.info(`bese64  ${resolve}`);
+          this.setState(pre => ({
+            photos: pre.photos.concat(resolve)
+          }));
+        });
+      });
   };
-  // addPhoto = () => {
-  //   const { localIds } = this.state;
-  //   wxapi
-  //     .chooseImage({
-  //       count: 8 - localIds.length,
-  //       sizeType: "compressed"
-  //     })
-  //     .then(resolve => {
-  //       console.info(resolve);
-  //       this.setState(pre => ({
-  //         localIds: pre.localIds.concat(resolve.localIds),
-  //         photos: pre.photos.concat(wx.getLocalImgData(resolve.localIds))
-  //       }));
-  //     });
-  // };
   previewImage = item => {
     const { photos } = this.state;
     wxapi.previewImage(item, photos);
