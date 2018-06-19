@@ -76,7 +76,7 @@ export default class extends Component {
           );
           const paramsObj = { ...data.data, goods_id, pay_price, buy_type };
           const paramsStr = common.serializeParams(paramsObj);
-          location.href = `${location.origin}/#/pay?${paramsStr}`
+          location.href = `${location.origin}${location.pathname}/#/pay?${paramsStr}`
           // history.push(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
           // 订单已存在

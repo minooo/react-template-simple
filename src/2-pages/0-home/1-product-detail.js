@@ -156,7 +156,7 @@ export default class extends Component {
         buy_type // 单独买还是团购
       }
       const paramsStr = common.serializeParams(paramsObj)
-      location.href = `${location.origin}/#/submit_order?${paramsStr}`
+      location.href = `${location.origin}${location.pathname}/#/submit_order?${paramsStr}`
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`);
     }
