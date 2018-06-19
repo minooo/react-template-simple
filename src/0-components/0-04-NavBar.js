@@ -48,7 +48,7 @@ export default class extends React.PureComponent {
         )}
         {leftCon ? (
           <WrapLink
-            className="equal-auto text-left"
+            className="equal-auto text-left pt5"
             onClick={() => {
               if (leftClick) {
                 leftClick();
@@ -75,7 +75,7 @@ export default class extends React.PureComponent {
 
         {rightCon ||
           (rightShare ? (
-            <WrapLink className="equal-auto text-right" onClick={this.onSwitch}>
+            <WrapLink className="equal-auto text-right pt5" onClick={this.onSwitch}>
               <i className="i-share font40 c-white" />
             </WrapLink>
           ) : (

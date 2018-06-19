@@ -23,13 +23,14 @@ export default class extends PureComponent {
           clearInterval(this.click)
         } else {
           const { getdays, getHours, getMinutes, getSeconds } = nowDate
-          const str = `${getdays === 0 ? "" : `${getdays}天:`}${getHours}:${getMinutes}:${getSeconds}`
-          this.setState(() => ({ curTime: str }))
+          const str = getdays > 0 ? `${getdays}天` : `${getHours}:${getMinutes}:${getSeconds}`
+          if (!this.isCancelled) this.setState(({ curTime: str }))
         }
       }, 1000)
     }
   }
   componentWillUnmount() {
+    this.isCancelled = true;
     if (this.click) clearInterval(this.click)
   }
   render() {

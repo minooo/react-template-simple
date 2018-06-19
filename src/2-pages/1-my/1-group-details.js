@@ -58,9 +58,9 @@ export default class extends Component {
           () => {
             const { collageData } = this.state;
             const title = `【仅剩${collageData.goods.offerd_num -
-              collageData.collage_num}个名额 】我刚花了$${
+              collageData.collage_num}个名额 】我刚花了${
               collageData.goods.low_price
-            }买了${collageData.goods.title}`;
+            }元买了${collageData.goods.title}`;
             const desc = `${common.filterHtml(collageData.goods.caption)}`;
             wxapi.setShare({
               title,
@@ -143,16 +143,16 @@ export default class extends Component {
               : "拼团失败"
         }
       >
+        {isOpen && (
+          <div className="home-share" onClick={this.onSwitch}>
+            <img
+              src="http://public.duduapp.net/new-media/app/static/share.png"
+              className="w-100"
+              alt=""
+            />
+          </div>
+        )}
         <div className="equal overflow-y">
-          {isOpen && (
-            <div className="home-share" onClick={this.onSwitch}>
-              <img
-                src="http://public.duduapp.net/new-media/app/static/share.png"
-                className="w-100"
-                alt=""
-              />
-            </div>
-          )}
           <NavBar
             title={
               surplusTime && collageData.status === 1

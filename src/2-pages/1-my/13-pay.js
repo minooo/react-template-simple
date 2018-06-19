@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import { Checkbox, Toast } from "antd-mobile";
-import { Layout, NavBar, WrapLink } from "@components";
+import { Checkbox, Toast, Button } from "antd-mobile";
+import { Layout, NavBar } from "@components";
 import { common, http, wxapi } from "@utils"
-
-// const { alert } = Modal;
 
 export default class extends Component {
   state = { isLongLogin: true };
-  componentDidMount() {
-    common.setTitle("支付")
-    wxapi.setShare({
-      title: "标题",
-      desc: "副标题",
-    })
+  componentWillUnmount() {
+    Toast.hide()
   }
   onChange = (val, type) => {
     if (type === "login") {
@@ -26,26 +20,31 @@ export default class extends Component {
     http.post({ action: "wxpay", order_id }).then(response => {
       const { errcode, msg, data } = response
       if (errcode === 0) {
-        console.info(data, "success")
         const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
-        wxapi.pay({
+        const pay_param = {
+          appId: data.appId,
           timestamp: data.timestamp,
           nonceStr: data.nonceStr,
           package: data.package,
-          signType: "HMAC-SHA256",
-          paySign: data.sign
-        }).then(() => {
+          signType: data.signType,
+          paySign: data.paySign
+        }
+        wxapi.pay(pay_param).then(() => {
+          Toast.loading("订单处理中，请稍后...", 60)
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
             history.push(`/pay_details?${paramsStr}`)
           })
-        })
+        }, (err) => {
+          Toast.info(`抱歉，支付 reject 错误：${JSON.stringify(err)}`)
+        }).catch(err => { Toast.fail(`抱歉，支付 catch 错误：${JSON.stringify(err)}`) })
       } else {
-        Toast.fail(msg)
+        // 订单过期 回到订单详情中
+        Toast.fail(msg, 1, () => history.replace(`/order_details_${data.id}`))
       }
     }).catch(error => {
-      Toast.offline(error)
+      Toast.offline(error, 1, () => history.replace("/"))
     })
   }
   render() {
@@ -59,7 +58,7 @@ export default class extends Component {
           <div className=" flex jc-between ai-center bg-white h88 plr30">
             <div className=" font28 c000">订单金额</div>
             <div className="flex ai-end">
-              <div className="font24 c-main">
+              <div className="font28 c-main">
                 ￥<span className=" font34 pl10">{pay_price}</span>
               </div>
             </div>
@@ -73,7 +72,7 @@ export default class extends Component {
               <div className="flex ai-center">
                 <i style={{ fontSize: "0.7rem" }} className=" i-wechat mr20" />
                 <div>
-                  <div className=" font24 c000">微信支付</div>
+                  <div className=" font24 c000 mb10">微信支付</div>
                   <div className=" font20 c999">亿万用户的选择，更快更安全</div>
                 </div>
               </div>
@@ -86,12 +85,7 @@ export default class extends Component {
           </div>
           <div className="h52" />
           <div className="plr30 w-100">
-            <WrapLink
-              className={`h80 font30 c-white ${isLongLogin ? "bg-main" : "bg-d9"} bg-main r10 flex jc-center ai-center w-100`}
-              onClick={isLongLogin ? this.onPay : null}
-            >
-              立即支付
-            </WrapLink>
+            <Button type="primary" disabled={!isLongLogin} onClick={this.onPay}>立即支付</Button>
           </div>
         </div>
       </Layout>

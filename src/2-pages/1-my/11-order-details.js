@@ -460,7 +460,9 @@ export default class extends Component {
   deleOrder = id => {
     const { history } = this.props;
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
-      Toast.info("删除成功", 1, () => history.replace("/order_list"));
+      Toast.info("删除成功", 1, () =>
+        this.props.history.replace("/order_list")
+      );
     });
   };
   // 更新订单状态
@@ -497,6 +499,7 @@ export default class extends Component {
     const validOrderInfoList = orderInfoList.filter(x => {
       if (item[x.sign]) {
         x.caption = item[x.sign];
+        x.status=item.status
       }
       return item[x.sign] !== undefined;
     });
@@ -511,13 +514,12 @@ export default class extends Component {
           )}
 
           {/* 收货地址 */}
-          {item &&
-            item.delivery_type === 1 && (
-              <OrderAddress
-                title={item.member_region}
-                caption={item.member_address}
-              />
-            )}
+          {item && parseInt(item.delivery_type, 10) === 1 && (
+            <OrderAddress
+              title={item.member_region}
+              caption={item.member_address}
+            />
+          )}
 
           {/* 拼单成功 */}
           {item.launch_log_status &&
@@ -553,8 +555,8 @@ export default class extends Component {
             </div>
             <div className="h84 flex jc-end ai-center">
               <div className="font24 c333">
-                <span className="bold">小计:</span>
-                <span className="font20 c-main">￥</span>
+                <span className="bold">小计: </span>
+                <span className="font28 c-main">￥</span>
                 <span className="font40 bold c-main">
                   {item.pay_price && item.pay_price}
                 </span>
