@@ -5,7 +5,8 @@ import { Layout, WrapLink, NavBar } from "@components";
 
 export default class extends Component {
   state = {
-    localIds: []
+    localIds: [],
+    photos: []
   };
   componentDidMount() {
     this.onAddress();
@@ -32,6 +33,7 @@ export default class extends Component {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
       wxapi.uploadImages(localIds).then(resolve => {
+        console.info(resolve.serverId);
         const images = resolve.serverId.join(",");
         http.postC(
           {
@@ -76,15 +78,18 @@ export default class extends Component {
       })
       .then(resolve => {
         console.info(resolve);
-        this.setState(pre => ({ localIds: pre.localIds.concat(resolve.localIds) }));
+        this.setState(pre => ({
+          localIds: pre.localIds.concat(resolve.localIds),
+          photos: pre.photos.concat(resolve.tempFilePaths)
+        }));
       });
   };
   previewImage = item => {
-    const { localIds } = this.state;
-    wxapi.previewImage(item, localIds);
+    const { photos } = this.state;
+    wxapi.previewImage(item, photos);
   };
   render() {
-    const { reason, localIds } = this.state;
+    const { reason, localIds, photos } = this.state;
     return (
       <Layout title="申请退货">
         <div className="equal overflow-y">
@@ -98,12 +103,12 @@ export default class extends Component {
           />
           <div className=" h20" />
           <div className="bg-white pl30 pt30 pb10 flex wrap">
-            {localIds &&
-              localIds.length > 0 &&
-              localIds.map(item => (
+            {photos &&
+              photos.length > 0 &&
+              photos.map(item => (
                 <div
                   key={item}
-                  onClick={this.previewImage(item)}
+                  onClick={() => this.previewImage(item)}
                   style={{ backgroundImage: `url(${item})` }}
                   className="retreat-img"
                 />
