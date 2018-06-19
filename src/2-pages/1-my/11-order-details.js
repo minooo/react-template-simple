@@ -412,6 +412,7 @@ export default class extends Component {
   handle = type => {
     const { item } = this.state;
     const { history } = this.props;
+    const { location } = window
     const payState = {
       goods_id: item.goods.id,
       id: item.id,
@@ -427,7 +428,8 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-        history.push(`/pay?${payStr}`);
+        location.href = `${location.origin}/#/pay?${payStr}`
+        // history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         history.push(`/retreat_${item.order_id}`);

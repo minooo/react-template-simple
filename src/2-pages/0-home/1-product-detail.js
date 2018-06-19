@@ -134,7 +134,7 @@ export default class extends Component {
     }
   }
   onPaySure() {
-    const { history } = this.props
+    const { location } = window
     const { tipArrStr, skuId, sku, goods, payType } = this.state;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
@@ -156,7 +156,7 @@ export default class extends Component {
         buy_type // 单独买还是团购
       }
       const paramsStr = common.serializeParams(paramsObj)
-      history.push(`/submit_order?${paramsStr}`)
+      location.href = `${location.origin}/#/submit_order?${paramsStr}`
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`);
     }

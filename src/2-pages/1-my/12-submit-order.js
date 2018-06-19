@@ -68,6 +68,7 @@ export default class extends Component {
       })
       .then(data => {
         const { errcode, msg } = data;
+        const { location } = window
         if (parseInt(errcode, 10) === 0) {
           Toast.hide();
           const pay_price = common.clipPrice(
@@ -75,7 +76,8 @@ export default class extends Component {
           );
           const paramsObj = { ...data.data, goods_id, pay_price, buy_type };
           const paramsStr = common.serializeParams(paramsObj);
-          history.push(`/pay?${paramsStr}`);
+          location.href = `${location.origin}/#/pay?${paramsStr}`
+          // history.push(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
           // 订单已存在
           Toast.info(msg, 1, () => {
