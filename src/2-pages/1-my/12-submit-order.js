@@ -39,7 +39,7 @@ export default class extends Component {
   };
   // 提交订单
   onSetting = () => {
-    const { history } = this.props;
+    // const { history } = this.props;
     const { con, addressData } = this.state;
     const {
       goods_id,
