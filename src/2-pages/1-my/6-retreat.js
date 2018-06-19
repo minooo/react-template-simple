@@ -32,7 +32,7 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-      wxapi.uploadImages(localIds).then(resolve => {
+      wxapi.uploadImage(localIds).then(resolve => {
         console.info(resolve.serverId);
         const images = resolve.serverId.join(",");
         http.postC(
@@ -71,16 +71,17 @@ export default class extends Component {
     }
   };
   addPhoto = () => {
+    const { localIds } = this.state;
     wxapi
       .chooseImage({
-        count: 8,
+        count: 8 - localIds.length,
         sizeType: "compressed"
       })
       .then(resolve => {
         console.info(resolve);
         this.setState(pre => ({
           localIds: pre.localIds.concat(resolve.localIds),
-          photos: pre.photos.concat(resolve.tempFilePaths)
+          photos: pre.photos.concat(wx.getLocalImgData(resolve.localIds))
         }));
       });
   };
