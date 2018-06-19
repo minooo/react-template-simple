@@ -69,7 +69,7 @@ export const uploadImage = localId =>
 // 图片转换成bese64
 export const getLocalImgData = localIds => {
   if (window.__wxjs_is_wkwebview) {
-    return Promise.all(
+    Promise.all(
       localIds.map(
         n =>
           new Promise(resolve => {
@@ -83,6 +83,6 @@ export const getLocalImgData = localIds => {
       )
     );
   } else {
-    return Promise.resolve(localIds);
+    Promise.resolve(localIds);
   }
 };
