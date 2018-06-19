@@ -70,7 +70,7 @@ export default class extends Component {
       );
     }
   };
-  async addPhoto() {
+  addPhoto = async () => {
     const { localIds } = await wxapi.chooseImage({
       count: 8 - this.localIds.length,
       sizeType: "compressed"
@@ -82,7 +82,7 @@ export default class extends Component {
       localIds: pre.localIds.concat(localIds),
       photos: pre.photos.concat(imgData)
     }));
-  }
+  };
   // addPhoto = () => {
   //   const { localIds } = this.state;
   //   wxapi
