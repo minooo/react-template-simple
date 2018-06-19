@@ -439,7 +439,7 @@ export default class extends Component {
               商品描述
             </div>
             <div
-              className="c333 font30 lh150 ptb20 common-width100"
+              className="c333 font30 lh150 ptb20 common-width100 ql-editor"
               dangerouslySetInnerHTML={{
                 __html: goods.con
               }}

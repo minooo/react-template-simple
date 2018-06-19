@@ -53,12 +53,22 @@ export default class extends Component {
       Toast.offline(`wxpay 的catch信息：${error}`)
     })
   }
+  cancleOrder= () => {
+    const { history } = this.props;
+    history.replace("/order_list")
+  }
   render() {
     const { isLongLogin } = this.state;
     const { pay_price } = common.searchToObj()
     return (
       <Layout title="支付订单">
-        <NavBar title="支付订单" />
+        <NavBar
+          title="支付订单"
+          rightCon={
+          <WrapLink onClick={this.cancleOrder} className="equal-auto text-right c-white">
+            取消
+          </WrapLink>}
+        />
         <div className="equal overflow-y">
           <div className="h20" />
           <div className=" flex jc-between ai-center bg-white h88 plr30">

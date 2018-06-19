@@ -516,8 +516,9 @@ export default class extends Component {
           {/* 收货地址 */}
           {item && parseInt(item.delivery_type, 10) === 1 && (
             <OrderAddress
-              title={item.member_region}
-              caption={item.member_address}
+              nickname={item.member_nickname}
+              mobile={item.member_mobile}
+              address={item.member_address}
             />
           )}
 
