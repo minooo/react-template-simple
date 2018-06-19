@@ -70,21 +70,34 @@ export default class extends Component {
       );
     }
   };
-  addPhoto = () => {
-    const { localIds } = this.state;
-    wxapi
-      .chooseImage({
-        count: 8 - localIds.length,
-        sizeType: "compressed"
-      })
-      .then(resolve => {
-        console.info(resolve);
-        this.setState(pre => ({
-          localIds: pre.localIds.concat(resolve.localIds),
-          photos: pre.photos.concat(wx.getLocalImgData(resolve.localIds))
-        }));
-      });
-  };
+  async addPhoto() {
+    const { localIds } = await wxapi.chooseImage({
+      count: 8 - this.localIds.length,
+      sizeType: "compressed"
+    });
+    console.info(localIds);
+    const imgData = await wxapi.getLocalImgData(localIds);
+    console.info(imgData);
+    this.setState(pre => ({
+      localIds: pre.localIds.concat(localIds),
+      photos: pre.photos.concat(imgData)
+    }));
+  }
+  // addPhoto = () => {
+  //   const { localIds } = this.state;
+  //   wxapi
+  //     .chooseImage({
+  //       count: 8 - localIds.length,
+  //       sizeType: "compressed"
+  //     })
+  //     .then(resolve => {
+  //       console.info(resolve);
+  //       this.setState(pre => ({
+  //         localIds: pre.localIds.concat(resolve.localIds),
+  //         photos: pre.photos.concat(wx.getLocalImgData(resolve.localIds))
+  //       }));
+  //     });
+  // };
   previewImage = item => {
     const { photos } = this.state;
     wxapi.previewImage(item, photos);
