@@ -77,11 +77,17 @@ export default class extends Component {
           const paramsStr = common.serializeParams(paramsObj);
           history.push(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
+          // 订单已存在
           Toast.info(msg, 1, () => {
             history.push(`/order_details_${data.data.id}`);
           });
+        } else if (parseInt(errcode, 10) === 1) {
+          // 团购已结束
+          Toast.info(msg, 1, () => {
+            history.push("/");
+          });
         } else {
-          console.info(msg);
+          Toast.info(msg)
         }
       })
       .catch(err => {
