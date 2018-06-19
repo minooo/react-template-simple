@@ -428,8 +428,8 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-        location.href = `${location.origin}${location.pathname}/#/pay?${payStr}`
-        // history.push(`/pay?${payStr}`);
+        // location.href = `${location.origin}${location.pathname}#/pay?${payStr}`
+        history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         history.push(`/retreat_${item.order_id}`);

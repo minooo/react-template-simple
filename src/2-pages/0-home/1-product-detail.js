@@ -134,7 +134,8 @@ export default class extends Component {
     }
   }
   onPaySure() {
-    const { location } = window
+    const { history } = this.props
+    // const { location } = window
     const { tipArrStr, skuId, sku, goods, payType } = this.state;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
@@ -156,7 +157,8 @@ export default class extends Component {
         buy_type // 单独买还是团购
       }
       const paramsStr = common.serializeParams(paramsObj)
-      location.href = `${location.origin}${location.pathname}/#/submit_order?${paramsStr}`
+      history.push(`/submit_order?${paramsStr}`)
+      // location.href = `${location.origin}${location.pathname}#/submit_order?${paramsStr}`
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`);
     }
@@ -641,6 +643,7 @@ export default class extends Component {
                     </button>
                     <input
                       ref={this.input}
+                      disabled
                       maxLength={5}
                       className="w100 text-center bg-border font30 bold-mid product-input"
                       value={inputNum}
