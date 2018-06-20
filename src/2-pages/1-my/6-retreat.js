@@ -32,9 +32,9 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-      wxapi.uploadImage(localIds).then(resolve => {
-        console.info(`serverId ${resolve.serverId}`);
-        const images = resolve.serverId.join(",");
+      wxapi.uploadImages(localIds).then(resolve => {
+        console.info(`serverId ${resolve.serverIds}`);
+        const images = resolve.serverIds.join(",");
         http.postC(
           {
             action: "refund",
@@ -70,6 +70,15 @@ export default class extends Component {
       );
     }
   };
+  getImgData = id => {
+    console.info(id);
+    wxapi.getLocalImgData(id).then(resolve => {
+      console.info(`bese64  ${resolve}`);
+      this.setState(pre => ({
+        photos: pre.photos.concat(resolve)
+      }));
+    });
+  };
   addPhoto = () => {
     const { localIds } = this.state;
     wxapi
@@ -79,15 +88,14 @@ export default class extends Component {
       })
       .then(resolve => {
         console.info(`localIds  ${resolve}`);
-        this.setState(pre => ({
-          localIds: pre.localIds.concat(resolve.localIds)
-        }));
-        wxapi.getLocalImgData(resolve.localIds).then(resolve => {
-          console.info(`bese64  ${resolve}`);
-          this.setState(pre => ({
-            photos: pre.photos.concat(resolve)
-          }));
-        });
+        this.setState(
+          pre => ({
+            localIds: pre.localIds.concat(resolve.localIds)
+          }),
+          () => {
+            this.getImgData(resolve.localIds);
+          }
+        );
       });
   };
   previewImage = item => {
