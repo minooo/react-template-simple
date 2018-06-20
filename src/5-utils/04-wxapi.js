@@ -56,26 +56,9 @@ export const chooseImage = (params = {}) =>
     })
   );
 // 图片转换成bese64
-// export const getLocalImgData = localIds => {
-//   if (window.__wxjs_is_wkwebview) {
-//     return Promise.all(
-//       localIds.map(
-//         n =>
-//           new Promise(resolve => {
-//             wx.getLocalImgData({
-//               localId: n,
-//               success: res => {
-//                 resolve(res.localData);
-//               }
-//             });
-//           })
-//       )
-//     );
-//   }
-//   return Promise.resolve(localIds);
-// };
-export const getLocalImgData = localIds =>
-     Promise.all(
+export const getLocalImgData = localIds => {
+  if (window.__wxjs_is_wkwebview) {
+    return Promise.all(
       localIds.map(
         n =>
           new Promise(resolve => {
@@ -88,6 +71,9 @@ export const getLocalImgData = localIds =>
           })
       )
     );
+  }
+  return Promise.resolve(localIds);
+};
 // 上传图片接口
 const uploadImage = (params, serverIds, resolve) => {
   const localId = params.localIds.shift();
