@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Checkbox, Toast, Button } from "antd-mobile";
-import { Layout, NavBar } from "@components";
+import { Layout, NavBar, WrapLink } from "@components";
 import { common, http, wxapi } from "@utils"
 
 export default class extends Component {

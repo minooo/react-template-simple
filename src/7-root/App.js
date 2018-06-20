@@ -8,7 +8,7 @@ import { config, wxapi } from "@utils"
 )
 export default class extends React.Component {
   componentDidMount() {
-    wxapi.setConfig({ ...config("wx").jsConfig });
+    wxapi.setConfig({ ...config("wx").jsConfig, debug: true });
     let a = new VConsole()
   }
   render() {
