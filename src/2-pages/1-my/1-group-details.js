@@ -136,12 +136,11 @@ export default class extends Component {
     return (
       <Layout
         title={
-          surplusTime && collageData.status === 1
-            ? "拼团中"
-            : (surplusTime && collageData.status === 2) ||
-              (!surplusTime && collageData.status === 2)
-              ? "拼团完成"
-              : "拼团失败"
+          collageData.status === 1
+                ? "拼团中"
+                : collageData.status === 2
+                  ? "拼团完成"
+                  : collageData.status === 3 && "拼团失败"
         }
       >
         {isOpen && (
@@ -156,12 +155,11 @@ export default class extends Component {
         <div className="equal overflow-y">
           <NavBar
             title={
-              surplusTime && collageData.status === 1
+              collageData.status === 1
                 ? "拼团中"
-                : (surplusTime && collageData.status === 2) ||
-                  (!surplusTime && collageData.status === 2)
+                : collageData.status === 2
                   ? "拼团完成"
-                  : "拼团失败"
+                  : collageData.status === 3 && "拼团失败"
             }
           />
           <div className=" plr30 ptb10 bg-white">
