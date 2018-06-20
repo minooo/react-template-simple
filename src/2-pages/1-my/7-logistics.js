@@ -18,9 +18,16 @@ export default class extends Component {
   };
   // 获取输入数据
   onChange = (val, type) => {
-    if (type === "express_comp_name" || type === "express_code") {
+    if (type === "express_comp_name") {
       const { value } = val.target;
       this.setState(() => ({ [type]: value }));
+    }
+    if (type === "express_code") {
+      const { value } = val.target;
+      const reg = /^([0-9a-zA-Z]*)?$/;
+      if (reg.test(value)) {
+        this.setState(() => ({ [type]: value }));
+      }
     }
   };
   // 设置

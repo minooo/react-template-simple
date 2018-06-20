@@ -70,6 +70,7 @@ export default class extends Component {
       );
     }
   };
+  // 转换图片为bese64
   getImgData = id => {
     console.info(id);
     wxapi.getLocalImgData(id).then(resolve => {
@@ -79,6 +80,7 @@ export default class extends Component {
       }));
     });
   };
+  // 选择图片进行上传
   addPhoto = () => {
     const { localIds } = this.state;
     wxapi
@@ -87,7 +89,7 @@ export default class extends Component {
         sizeType: "compressed"
       })
       .then(resolve => {
-        console.info(`localIds  ${resolve}`);
+        console.info(resolve);
         this.setState(
           pre => ({
             localIds: pre.localIds.concat(resolve.localIds)
@@ -98,6 +100,7 @@ export default class extends Component {
         );
       });
   };
+  // 上传的图片进行预览
   previewImage = item => {
     const { photos } = this.state;
     wxapi.previewImage(item, photos);

@@ -12,7 +12,7 @@ export default ({ id, places, status, surplusTime, offerd_num, fans }) => (
         <div className=" font30 c333 lh100 mb30">
           {surplusTime && status === 1
             ? surplusTime.getdays > 0
-              ? `仅剩 ${places} 个名额，${surplusTime.getdays}天 后结束`
+              ? `仅剩 ${places} 个名额，${surplusTime.getdays}天后结束`
               : `仅剩 ${places} 个名额，${surplusTime.getHours}:${surplusTime.getMinutes}:${
                   surplusTime.getSeconds
                 } 后结束`
