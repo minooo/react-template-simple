@@ -87,7 +87,7 @@ export default class extends Component {
       },
       () => {
         Toast.info(text, 1);
-        this.setStatesetState(pre => ({
+        this.setState(pre => ({
           dataUpdata: !pre.dataUpdata
         }));
       }

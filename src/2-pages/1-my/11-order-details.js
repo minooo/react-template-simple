@@ -494,23 +494,6 @@ export default class extends Component {
       }
     );
   };
-  initState = item => {
-    const { created_at, goods, collage_num, available_time } = item;
-    const remainNum = Math.max(goods.offerd_num - collage_num || 0, 0);
-    const milliseconds = +parse(created_at) + (available_time * 3600 * 1000);
-    const remainMilliseconds = milliseconds - new Date();
-
-    // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
-    if (remainNum > 0) {
-      if (remainMilliseconds > 0) {
-        return 1;
-      }
-      return 3;
-    } else if (remainNum === 0) {
-      return 2;
-    }
-    return 0;
-  };
   renderOrderDetail = item => (
     <OrderDetailList
       key={item.sign}
