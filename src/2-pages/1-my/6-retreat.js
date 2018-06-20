@@ -33,8 +33,9 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-      wxapi.uploadImages(localIds).then(resolve => {
-        console.info(`serverId ${resolve.serverIds}`);
+      Toast.hide();
+      wxapi.uploadImages({ localIds }).then(resolve => {
+        console.info(resolve.serverIds);
         const images = resolve.serverIds.join(",");
         http.postC(
           {
@@ -75,7 +76,7 @@ export default class extends Component {
   getImgData = id => {
     console.info(id);
     wxapi.getLocalImgData(id).then(resolve => {
-      console.info(`bese64  ${resolve}`);
+      console.info(resolve);
       this.setState(pre => ({
         photos: pre.photos.concat(resolve)
       }));
@@ -140,7 +141,7 @@ export default class extends Component {
                     height: "1.6rem",
                     border: "dashed 2px #d9d9d9"
                   }}
-                  onClick={this.addPhoto}
+                  onClick={() => this.addPhoto()}
                 >
                   <i
                     className="i-add"
@@ -153,7 +154,7 @@ export default class extends Component {
           <div className="plr30">
             <WrapLink
               className="w-100 h80 bg-main r10 c-white font30"
-              onClick={this.onSetting}
+              onClick={() => this.onSetting()}
             >
               提交申请
             </WrapLink>

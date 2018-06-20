@@ -118,6 +118,7 @@ export default class extends React.Component {
     // scrollTop 元素卷起来的高度
     // scrollHeight 元素总高度，包括被overflow 遮挡的不可见部分的高度
     // clientHeight 元素的可见高度
+    if (this.isCancle) return
     if (this.state.isLoading || this.state.dataNoMore) return;
     const scrollPercent = Math.floor(
       e.scrollHeight - e.scrollTop - e.clientHeight
