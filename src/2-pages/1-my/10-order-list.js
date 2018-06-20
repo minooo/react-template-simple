@@ -51,7 +51,7 @@ export default class extends Component {
         });
         break;
       case "goComment": // 去评价
-        history.push(`/write_comment_${item.id}`);
+        history.push(`/write_comment_${item.id}?type=1`);
         break;
       case "backGoods": // 退还商品
         history.push(`logistics_${item.order_id}`);

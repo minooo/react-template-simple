@@ -29,12 +29,13 @@ export default class extends Component {
   // 设置
   onSetting = () => {
     const { reason, order_id, localIds } = this.state;
+    Toast.loading("提交中...");
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-      wxapi.uploadImage(localIds).then(resolve => {
-        console.info(`serverId ${resolve.serverId}`);
-        const images = resolve.serverId.join(",");
+      wxapi.uploadImages(localIds).then(resolve => {
+        console.info(`serverId ${resolve.serverIds}`);
+        const images = resolve.serverIds.join(",");
         http.postC(
           {
             action: "refund",
@@ -70,6 +71,17 @@ export default class extends Component {
       );
     }
   };
+  // 转换图片为bese64
+  getImgData = id => {
+    console.info(id);
+    wxapi.getLocalImgData(id).then(resolve => {
+      console.info(`bese64  ${resolve}`);
+      this.setState(pre => ({
+        photos: pre.photos.concat(resolve)
+      }));
+    });
+  };
+  // 选择图片进行上传
   addPhoto = () => {
     const { localIds } = this.state;
     wxapi
@@ -78,18 +90,18 @@ export default class extends Component {
         sizeType: "compressed"
       })
       .then(resolve => {
-        console.info(`localIds  ${resolve}`);
-        this.setState(pre => ({
-          localIds: pre.localIds.concat(resolve.localIds)
-        }));
-        wxapi.getLocalImgData(resolve.localIds).then(resolve => {
-          console.info(`bese64  ${resolve}`);
-          this.setState(pre => ({
-            photos: pre.photos.concat(resolve)
-          }));
-        });
+        console.info(resolve);
+        this.setState(
+          pre => ({
+            localIds: pre.localIds.concat(resolve.localIds)
+          }),
+          () => {
+            this.getImgData(resolve.localIds);
+          }
+        );
       });
   };
+  // 上传的图片进行预览
   previewImage = item => {
     const { photos } = this.state;
     wxapi.previewImage(item, photos);
