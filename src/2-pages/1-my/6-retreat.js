@@ -33,7 +33,7 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
-      wxapi.uploadImages(localIds).then(resolve => {
+      wxapi.uploadImages({ localIds }).then(resolve => {
         console.info(`serverId ${resolve.serverIds}`);
         const images = resolve.serverIds.join(",");
         http.postC(
@@ -75,7 +75,7 @@ export default class extends Component {
   getImgData = id => {
     console.info(id);
     wxapi.getLocalImgData(id).then(resolve => {
-      console.info(`bese64  ${resolve}`);
+      console.info(resolve);
       this.setState(pre => ({
         photos: pre.photos.concat(resolve)
       }));
