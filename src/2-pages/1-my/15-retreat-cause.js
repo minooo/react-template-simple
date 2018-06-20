@@ -10,10 +10,7 @@ export default class extends Component {
   };
   componentDidMount() {
     const { id } = this.props.match.params;
-    const {
-      location: { search }
-    } = this.props;
-    const searchObj = common.searchToObj(search)
+    const searchObj = common.searchToObj()
     const { history } = this.props;
     http
       .get({
@@ -27,7 +24,7 @@ export default class extends Component {
         if (parseInt(errcode, 10) === 0) {
           this.setState(() => ({
             data: response.data,
-            causeType: parseInt(search.type, 10)
+            causeType: parseInt(searchObj.type, 10)
           }));
         } else {
           Toast.fail("订单无效", 1, () => {
