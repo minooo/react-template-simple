@@ -144,21 +144,20 @@
   display: flex;
 }
 
-
 // my
-.my-input-reset::-webkit-input-placeholder{
+.my-input-reset::-webkit-input-placeholder {
   font-size: 0.24rem;
   color: #bfbfbf;
 }
-.my-input-reset:-moz-placeholder{
+.my-input-reset:-moz-placeholder {
   font-size: 0.24rem;
   color: #bfbfbf;
 }
-.my-input-reset::-moz-placeholder{
+.my-input-reset::-moz-placeholder {
   font-size: 0.24rem;
   color: #bfbfbf;
 }
-.my-input-reset:-ms-input-placeholder{
+.my-input-reset:-ms-input-placeholder {
   font-size: 0.24rem;
   color: #bfbfbf;
 }
@@ -174,11 +173,11 @@
 }
 
 .product-pay-show {
-  transform: translate3d(0, 0, 0)
+  transform: translate3d(0, 0, 0);
 }
 
 .product-pay-hide {
-  transform: translate3d(0, 100%, 0)
+  transform: translate3d(0, 100%, 0);
 }
 
 .product-input {
@@ -187,9 +186,10 @@
   border-left: 0.02rem solid #fff;
 }
 
-.retreat-img{
-  width: "1.6rem";
-  height: "1.6rem";
+.retreat-img {
+  width: 1.6rem;
+  height: 1.6rem;
   margin-right: 0.3rem;
   margin-bottom: 0.2rem;
+  background-size: cover;
 }

@@ -6,7 +6,9 @@ export const setShare = config => {
   const params = {
     title: config.title || "",
     desc: config.desc || "",
-    imgUrl: config.imgUrl || "http://public.duduapp.net/new-media/app/static/avatar.png",
+    imgUrl:
+      config.imgUrl ||
+      "http://public.duduapp.net/new-media/app/static/avatar.png",
     link: config.link || window.location.href
   };
   wx.ready(() => {
@@ -29,31 +31,58 @@ export const previewImage = (thumb, list) => {
   });
 };
 
-export const pay = params => new Promise((resolve, reject) =>
-  wx.chooseWXPay({
-    appId: params.appId,
-    timeStamp: params.timestamp,
-    nonceStr: params.nonceStr,
-    package: params.package,
-    signType: params.signType,
-    paySign: params.paySign,
-    success: resolve,
-    fail: reject
-  }))
+export const pay = params =>
+  new Promise((resolve, reject) =>
+    wx.chooseWXPay({
+      appId: params.appId,
+      timestamp: params.timestamp,
+      nonceStr: params.nonceStr,
+      package: params.package,
+      signType: params.signType,
+      paySign: params.paySign,
+      success: resolve,
+      fail: reject
+    })
+  );
 
 // 选择图片
-export const chooseImage = (params = {}) => new Promise((resolve) =>
-  wx.chooseImage({
-    count: params.count || 1,
-    sizeType: params.sizeType || ["original"], // 可以指定是原图还是压缩图，默认二者都有
-    sourceType: params.sourceType || ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
-    success: resolve // response.localIds 返回选定照片的本地ID列表，可作为img标签的src属性
-  }))
+export const chooseImage = (params = {}) =>
+  new Promise(resolve =>
+    wx.chooseImage({
+      count: params.count || 1,
+      sizeType: params.sizeType || ["original"], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: params.sourceType || ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+      success: resolve // response.localIds 返回选定照片的本地ID列表，可作为img标签的src属性
+    })
+  );
 
 // 上传图片接口
-export const uploadImage = localId => new Promise((resolve) =>
-  wx.uploadImage({
-    localId,
-    isShowProgressTips: 1,
-    success: resolve // response.serverId
-  }))
+export const uploadImage = localId =>
+  new Promise(resolve =>
+    wx.uploadImage({
+      localId,
+      isShowProgressTips: 1,
+      success: resolve // response.serverId
+    })
+  );
+
+// 图片转换成bese64
+export const getLocalImgData = localIds => {
+  if (window.__wxjs_is_wkwebview) {
+    Promise.all(
+      localIds.map(
+        n =>
+          new Promise(resolve => {
+            wx.getLocalImgData({
+              localId: n,
+              success: res => {
+                resolve(res.localData);
+              }
+            });
+          })
+      )
+    );
+  } else {
+    Promise.resolve(localIds);
+  }
+};

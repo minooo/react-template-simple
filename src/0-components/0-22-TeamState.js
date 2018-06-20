@@ -16,7 +16,9 @@ export default ({ id, places, status, surplusTime, offerd_num, fans }) => (
               : `剩余时间 ${surplusTime.getHours}:${surplusTime.getMinutes}:${
                   surplusTime.getSeconds
                 } 后结束`
-            : status === 3 ? "拼单时间到，未达到拼单人数" : ""}
+            : status === 3
+              ? "拼单时间到，未达到拼单人数"
+              : ""}
         </div>
       )}
       {/* 头像显示 */}
@@ -37,7 +39,9 @@ export default ({ id, places, status, surplusTime, offerd_num, fans }) => (
           ? "中"
           : (surplusTime && status === 2) || (!surplusTime && status === 2)
             ? "完成"
-            : "失败"}
+            : status === 3
+              ? "失败"
+              : ""}
       </div>
       <div className="h50  w-100" />
     </div>

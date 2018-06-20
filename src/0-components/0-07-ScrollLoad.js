@@ -41,6 +41,9 @@ export default class extends React.Component {
       this.loadMore(this.props, true);
     }
   }
+  componentWillUnmount() {
+    this.isCancle = true
+  }
   onScroll = debounce(() => {
     // listenBody 指定监听滚动元素是body还是该组件的最外层div
     // canwork 用于某些情况禁止该组件不必要的下拉加载
@@ -65,6 +68,7 @@ export default class extends React.Component {
       listenEle.scrollTop = 0;
       Toast.loading("加载中...");
     }
+    if (this.isCancle) return
     this.setState(
       () => ({ isLoading: true }),
       () => {
@@ -79,6 +83,7 @@ export default class extends React.Component {
               const data = response[dataName];
               const dataNoMore = data ? data.length < limit : true;
               // 记录滚动条位置
+              if (this.isCancle) return
               const h = listenEle.scrollTop;
               this.setState(
                 preState => ({
