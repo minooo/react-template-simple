@@ -55,7 +55,23 @@ export const chooseImage = (params = {}) =>
       success: resolve // response.localIds 返回选定照片的本地ID列表，可作为img标签的src属性
     })
   );
-
+// 图片转换成bese64
+export const getLocalImgData = localIds => {
+  if (window.__wxjs_is_wkwebview) {
+    return Promise.all(
+      localIds.map(
+        n =>
+          new Promise(resolve => {
+            wx.getLocalImgData({
+              localId: n,
+              success: resolve.localData
+            });
+          })
+      )
+    );
+  }
+  return Promise.resolve(localIds);
+};
 // 上传图片接口
 const uploadImage = (params, serverIds, resolve) => {
   const localId = params.localIds.shift();
@@ -80,24 +96,3 @@ export const uploadImages = (params = {}) =>
       uploadImage(params, [], resolve);
     }
   });
-
-// 图片转换成bese64
-export const getLocalImgData = localIds => {
-  if (window.__wxjs_is_wkwebview) {
-    Promise.all(
-      localIds.map(
-        n =>
-          new Promise(resolve => {
-            wx.getLocalImgData({
-              localId: n,
-              success: res => {
-                resolve(res.localData);
-              }
-            });
-          })
-      )
-    );
-  } else {
-    Promise.resolve(localIds);
-  }
-};
