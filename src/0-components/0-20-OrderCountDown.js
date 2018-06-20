@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from "react"
 import { common } from "@utils"
-import { setInterval } from "timers";
 
 export default class extends PureComponent {
   constructor(props) {
@@ -16,22 +15,23 @@ export default class extends PureComponent {
   componentDidMount() {
     const { milliseconds } = this.props
     const dateObj = common.countDown(milliseconds)
-    if (dateObj) {
-      this.click = setInterval(() => {
-        const nowDate = common.countDown(milliseconds)
-        if (!nowDate) {
-          clearInterval(this.click)
-        } else {
-          const { getdays, getHours, getMinutes, getSeconds } = nowDate
-          const str = getdays > 0 ? `${getdays}天` : `${getHours}:${getMinutes}:${getSeconds}`
-          if (!this.isCancelled) this.setState(({ curTime: str }))
-        }
-      }, 1000)
-    }
+    if (dateObj) this.tickDo()
   }
   componentWillUnmount() {
     this.isCancelled = true;
-    if (this.click) clearInterval(this.click)
+    if (this.tick) clearTimeout(this.tick)
+  }
+  tickDo = () => {
+    const { milliseconds } = this.props
+    const nowDate = common.countDown(milliseconds)
+    if (!nowDate) {
+      clearTimeout(this.tick)
+    } else {
+      const { getdays, getHours, getMinutes, getSeconds } = nowDate
+      const str = getdays > 0 ? `${getdays}天` : `${getHours}:${getMinutes}:${getSeconds}`
+      if (!this.isCancelled) this.setState(({ curTime: str }))
+      this.tick = setTimeout(this.tickDo, 1000)
+    }
   }
   render() {
     return (

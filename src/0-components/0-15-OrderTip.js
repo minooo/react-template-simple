@@ -18,18 +18,20 @@ export default class extends PureComponent {
     first: 0,
   }
   componentDidMount() {
-    const { data } = this.props
-    if (data && data.length > 1) {
-      this.tick = setInterval(() => {
-        const { first } = this.state;
-        const max = data.length - 1;
-        const currentFirst = first === max ? 0 : first + 1;
-        this.setState(() => ({ first: currentFirst }));
-      }, 3000);
-    }
+    this.tickDo()
   }
   componentWillUnmount() {
-    if (this.tick) clearInterval(this.tick)
+    if (this.tick) clearTimeout(this.tick)
+  }
+  tickDo = () => {
+    const { data } = this.props
+    if (data && data.length > 1) {
+      const { first } = this.state;
+      const max = data.length - 1;
+      const currentFirst = first === max ? 0 : first + 1;
+      this.setState(() => ({ first: currentFirst }));
+    }
+    this.tick = setTimeout(this.tickDo, 3000)
   }
   render() {
     const { data } = this.props

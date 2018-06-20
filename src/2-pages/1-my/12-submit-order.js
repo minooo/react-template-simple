@@ -61,15 +61,14 @@ export default class extends Component {
         operation: "store",
         goods_id,
         goods_sku_id,
-        buy_type,
-        ...(buy_type === "3" && { launch_log_id }), // buy_type 1 是拼团，拼团时，必须传 开团的id
+        buy_type, // 类型:1-发起拼团、2-单独购买、3-参团
+        ...(buy_type === "3" && { launch_log_id }), // 参团时，必须传关联团的id
         ...(delivery_type === "1" && { address_id: addressData.id }), // 配送属性为邮寄时，需要有配送地址。
         ...(con && { con }) // 留言
       })
       .then(data => {
         const { errcode, msg } = data;
         const { history } = this.props
-        // const { location } = window
         if (parseInt(errcode, 10) === 0) {
           Toast.hide();
           const pay_price = common.clipPrice(
@@ -77,7 +76,6 @@ export default class extends Component {
           );
           const paramsObj = { ...data.data, goods_id, pay_price, buy_type };
           const paramsStr = common.serializeParams(paramsObj);
-          // location.href = `${location.origin}${location.pathname}#/pay?${paramsStr}`
           history.push(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
           // 订单已存在

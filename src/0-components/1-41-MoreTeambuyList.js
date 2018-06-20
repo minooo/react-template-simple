@@ -16,14 +16,13 @@ export default class extends PureComponent {
     this.state = {
       remainNum,
       timeOver,
-      milliseconds
+      milliseconds,
+      remainDate
     }
   }
   componentDidMount() {
-    const { item } = this.props;
-    const milliseconds = +parse(item.created_at) + (item.goods.available_time * 3600 * 1000)
+    const { remainDate, milliseconds } = this.state;
     const remainMilliseconds = milliseconds - new Date();
-    const remainDate = countDown(milliseconds);
 
     if (remainDate) {
       this.tick = setTimeout(() => {
@@ -71,7 +70,7 @@ export default class extends PureComponent {
               )}
             </div>
             <div className="c999 font24 text-right">
-              <OrderCountDown milliseconds={milliseconds} />
+              { (!timeOver && remainNum > 0) ? <OrderCountDown milliseconds={milliseconds} /> : "已结束" }
             </div>
           </div>
           {(!timeOver && remainNum > 0) ? (
