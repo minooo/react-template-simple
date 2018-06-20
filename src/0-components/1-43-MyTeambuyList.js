@@ -1,7 +1,7 @@
 import React from "react";
 import { List } from "@components";
 
-// 0-待支付、1-确认中、2-已支付、3-交易关闭、4-支付失败、5-卖家已发货、6-买家确认收货、7-买家申请退货、8-卖家同意退货、9-卖家拒绝退货、10-买家确认退货、11-已核销 12-无货退款、13-交易已完成
+// 0 待支付 1确认中 2已支付 3订单关闭 4支付失败 5卖家已发货 6买家确认收货-（交易完成）7买家申请退货 8卖家同意退货 9卖家拒绝退货 10卖家拒绝退货，买家同意交易完成-（交易完成）11买家已退货 12卖家确认退货-（交易关闭）13卖家确认无货退款-（交易关闭）14已核销-（交易完成）15已过期 16已退款
 const btnStatus = {
   0: [
     { title: "删除", type: "delOrder" },
@@ -25,10 +25,12 @@ const btnStatus = {
   8: [{ title: "退还商品", type: "backGoods" }],
   9: [{ title: "完成交易", type: "finishOrder" }],
   10: [{ title: "评价", theme: "main", type: "goComment" }],
+  102: [],
   11: [{ title: "提醒买家收货", type: "tipReceipt" }],
   12: [{ title: "删除", type: "delOrder" }],
   13: [{ title: "删除", type: "delOrder" }],
-  14: [{ title: "评价", theme: "main", åtype: "goComment" }],
+  14: [{ title: "评价", theme: "main", type: "goComment" }],
+  141: [],
   15: [{ title: "删除", type: "delOrder" }],
   16: [{ title: "删除", type: "delOrder" }],
 };

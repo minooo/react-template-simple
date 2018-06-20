@@ -160,6 +160,16 @@ const statusConfig = {
     btns: [{ text: "评价", class: "equal bg-second", type: "goComment" }],
     showGroup: true
   },
+  102: {
+    status: {
+      title: "交易完成",
+      caption: "卖家拒绝退货，买家同意交易完成",
+      ico: "i-back font56 c-white",
+      bg: "bg-second"
+    },
+    btns: [{ text: "已评价", class: "equal equal bg-d9 c666" }],
+    showGroup: true
+  },
   11: {
     status: {
       title: "买家已退货",
@@ -240,7 +250,7 @@ const selectStatus = item => {
     case 10:
       return item.is_comment ? "102" : "10";
     case 14:
-      return item.is_comment ? "141" : "14";
+      return item.is_comment ? "142" : "14";
     default:
       return item.status;
   }
@@ -525,9 +535,7 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {item.launch_log_status &&
-            item.joins &&
-            item.launch_log_id && item.buy_type && (
+          {item.buy_type !== 2 && (
               <OrderGroup
                 status={item.launch_log_status}
                 list={item.joins}
