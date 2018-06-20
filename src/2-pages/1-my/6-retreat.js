@@ -33,8 +33,9 @@ export default class extends Component {
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
+      Toast.hide();
       wxapi.uploadImages({ localIds }).then(resolve => {
-        console.info(`serverId ${resolve.serverIds}`);
+        console.info(resolve.serverIds);
         const images = resolve.serverIds.join(",");
         http.postC(
           {

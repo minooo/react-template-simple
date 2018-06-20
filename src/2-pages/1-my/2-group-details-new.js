@@ -111,7 +111,7 @@ export default class extends Component {
     } else if (type === "share") {
       this.setState(pre => ({ isOpen: !pre.isOpen }));
     } else if (type === "joinThis") {
-      this.onSwitchAlertBg()
+      this.onSwitchAlertBg();
     } else if (type === "goGroupPay") {
       history.push(`/product_detail_${collageData.goods_id}`);
     } else {
@@ -149,7 +149,7 @@ export default class extends Component {
     } else {
       Toast.info(`请选择 ${tipArrStr[0]}`, 1);
     }
-  }
+  };
 
   // 点击规格组合
   onItem = (parentId, curItem) => {
@@ -252,7 +252,7 @@ export default class extends Component {
   };
   // 确定底部按钮状态
   btnStatus = collageData => {
-    const { status } = this.state
+    const { status } = this.state;
     const { is_self, goods } = collageData;
     let btns = null;
     if (is_self && status === 2) {
@@ -275,25 +275,25 @@ export default class extends Component {
   };
   // 初始化 剩余名额，结束日期总毫秒数，距离结束剩余毫秒数，状态
   initState = collageData => {
-    const { goods, created_at, fans } = collageData
+    const { goods, created_at, fans } = collageData;
     const remainNum = Math.max(
       +goods.offerd_num - ((fans && fans.length) || 0),
       0
     );
     const milliseconds =
-      +parse(created_at) + (goods.available_time * 3600 * 1000);
+      +parse(created_at) + goods.available_time * 3600 * 1000;
     const remainMilliseconds = milliseconds - new Date();
 
     // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
-    let status = 0
+    let status = 0;
     if (remainNum > 0) {
       if (remainMilliseconds > 0) {
-        status = 1
+        status = 1;
       } else {
-        status = 3
+        status = 3;
       }
     } else if (remainNum === 0) {
-      status = 2
+      status = 2;
     }
     this.setState(() => ({
       remainNum,
@@ -409,8 +409,14 @@ export default class extends Component {
     } = this.state;
     if (!collageData) return <RequestStatus />;
     return (
-      <Layout title="拼单详情">
-        <NavBar title="拼团详情" />
+      <Layout
+        title={`拼单${status === 2 ? "完成" : status === 1 ? "中" : "未完成"}`}
+      >
+        <NavBar
+          title={`拼单${
+            status === 2 ? "完成" : status === 1 ? "中" : "未完成"
+          }`}
+        />
         <div className="equal overflow-y">
           {/* 商品 */}
           {collageData.goods && (
@@ -438,7 +444,10 @@ export default class extends Component {
                   <span className="font30 bold c-main plr10">
                     {remainNum}
                   </span>个名额，
-                  { milliseconds !== undefined && <OrderCountDown milliseconds={milliseconds} /> } 后结束
+                  {milliseconds !== undefined && (
+                    <OrderCountDown milliseconds={milliseconds} />
+                  )}{" "}
+                  后结束
                 </span>
               )}
             </div>
@@ -449,11 +458,7 @@ export default class extends Component {
             />
             <div className="font30 c333" style={{ marginTop: "0.6rem" }}>
               <span className="c-main">{collageData.goods.offerd_num}人团</span>
-              ·拼单{status === 2
-                ? "完成"
-                : status === 1
-                  ? "中"
-                  : "未完成"}
+              ·拼单{status === 2 ? "完成" : status === 1 ? "中" : "未完成"}
             </div>
             <div className="h40" />
             {btns &&
@@ -484,19 +489,20 @@ export default class extends Component {
                 {/* 标题 */}
                 <div className="border-bottom-one flex jc-between font24 c333 ptb25">
                   <div>
-                    有<span className="plr10 c-main">{collageData.goods.sold_num}</span>人参与拼单
+                    有<span className="plr10 c-main">
+                      {collageData.goods.sold_num}
+                    </span>人参与拼单
                   </div>
-                  {
-                    listData.length > 2 && (
-                      <WrapLink
-                        path={`/group_list?id=${collageData.goods_id}&num=${
-                          collageData.goods.sold_num
-                        }`}
-                        className="c999"
-                      >
-                        查看更多&nbsp;<i className="i-right" />
-                      </WrapLink>
-                    )}
+                  {listData.length > 2 && (
+                    <WrapLink
+                      path={`/group_list?id=${collageData.goods_id}&num=${
+                        collageData.goods.sold_num
+                      }`}
+                      className="c999"
+                    >
+                      查看更多&nbsp;<i className="i-right" />
+                    </WrapLink>
+                  )}
                 </div>
                 <SyncList
                   items={listData.slice(0, 2)}
