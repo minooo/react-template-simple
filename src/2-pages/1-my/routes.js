@@ -14,7 +14,7 @@ export default [
   },
   {
     path: "/details_:id",
-    component: loadPage("1-group-details")
+    component: loadPage("2-group-details-new")
   },
   {
     path: "/group_members_:id",

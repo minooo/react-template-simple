@@ -20,7 +20,6 @@ export default class extends Component {
       focus: 0,
       show: false,
       showOth: false,
-      inputNum: 1,
       selectPrice: 1,
       stock: 1
     };
@@ -29,24 +28,38 @@ export default class extends Component {
     this.onAlertBg = this.onPay.bind(this, "no");
     this.onPaySure = this.onPaySure.bind(this);
     this.onImages = this.onImages.bind(this);
-    this.input = React.createRef();
   }
   async componentDidMount() {
-    const { match: { params } } = this.props
-    const { id } = params
+    const {
+      match: { params }
+    } = this.props;
+    const { id } = params;
 
     // 为了优化商品的渲染速度
     http.getC({ action: "goods", operation: "show", id }, response => {
-      const goods = response.data
-      this.setState(() => ({ goods }))
-      const desc = common.filterHtml(goods.con)
-      wxapi.setShare({ title: `火热拼团中-${goods.title}`, desc, imgUrl: goods.thumb })
-    })
+      const goods = response.data;
+      this.setState(() => ({ goods }));
+      const desc = common.filterHtml(goods.con);
+      wxapi.setShare({
+        title: `火热拼团中-${goods.title}`,
+        desc,
+        imgUrl: goods.thumb
+      });
+    });
     try {
       const skuDataP = http.get({ action: "goods", operation: "sku", id }); // 有效商品组合
       const attrDataP = http.get({ action: "goods", operation: "attr", id }); // 所有基础分类
-      const currentGroupDataP = http.get({ action: "collage", operation: "list", goods_id: id, limit: 2 }); // 该商品的拼团列表
-      const currentCommentDataP = http.get({ action: "goods", operation: "comment", id }); // 该商品的评论列表
+      const currentGroupDataP = http.get({
+        action: "collage",
+        operation: "list",
+        goods_id: id,
+        limit: 3
+      }); // 该商品的拼团列表
+      const currentCommentDataP = http.get({
+        action: "goods",
+        operation: "comment",
+        id
+      }); // 该商品的评论列表
       const [
         skuData,
         attrData,
@@ -59,55 +72,49 @@ export default class extends Component {
         currentCommentDataP
       ]);
       if (!skuData || !skuData.data || !attrData || !attrData.data) {
-        console.info("必要数据获取失败！")
-        return
+        console.info("必要数据获取失败！");
+        return;
       }
       const tipArrStr = [];
       const attrObj = {};
 
       const newSku = skuData.data.slice();
       let newAttr = attrData.data ? [...attrData.data] : [];
-      attrData.data
-        .filter(item1 => item1.attr_type === 2)
-        .forEach(item2 => {
-          // 对 newAttr 处理后获取最新值
-          newAttr = newAttr.map(item3 => {
-            // 新旧 attr 在同一类别中
-            if (item3.id === item2.id) {
-              // 比如，在剩下的尺寸中
-              item3.values.forEach(item4 => {
-                let flag = false;
-                // 核心，基于当前循环体中的类别id, 以及点击选中的类别id, 在所有的可用组合中，是否存在某个组合包含这两个id，或者val 是否为空
-                // 如果是，则当前的类别是可用状态。
-                newSku.forEach(item5 => {
-                  if (
-                    item5.attr.some(x => x.value.id === item4.id)
-                  ) {
-                    flag = true;
-                  }
-                });
-                // eslint-disable-next-line
-                item4.valid = flag ? 1 : 2;
+      attrData.data.filter(item1 => item1.attr_type === 2).forEach(item2 => {
+        // 对 newAttr 处理后获取最新值
+        newAttr = newAttr.map(item3 => {
+          // 新旧 attr 在同一类别中
+          if (item3.id === item2.id) {
+            // 比如，在剩下的尺寸中
+            item3.values.forEach(item4 => {
+              let flag = false;
+              // 核心，基于当前循环体中的类别id, 以及点击选中的类别id, 在所有的可用组合中，是否存在某个组合包含这两个id，或者val 是否为空
+              // 如果是，则当前的类别是可用状态。
+              newSku.forEach(item5 => {
+                if (item5.attr.some(x => x.value.id === item4.id)) {
+                  flag = true;
+                }
               });
-            }
-            return item3;
-          });
+              // eslint-disable-next-line
+              item4.valid = flag ? 1 : 2;
+            });
+          }
+          return item3;
         });
+      });
 
       if (newAttr && newAttr.length > 0) {
-        newAttr
-          .filter(item => item.attr_type === 2)
-          .reduce((init, item) => {
-            // 如果类别只有一个选项，则默认选中
-            if (item.values && item.values.length === 1) {
-              attrObj[`focus_${item.id}`] = item.values[0].id;
-            }
-            // 由于类别只有一个选项默认选中，所以只考虑有多个选项的
-            if (item.values && item.values.length > 1) {
-              init.push(item.title);
-            }
-            return init;
-          }, tipArrStr);
+        newAttr.filter(item => item.attr_type === 2).reduce((init, item) => {
+          // 如果类别只有一个选项，则默认选中
+          if (item.values && item.values.length === 1) {
+            attrObj[`focus_${item.id}`] = item.values[0].id;
+          }
+          // 由于类别只有一个选项默认选中，所以只考虑有多个选项的
+          if (item.values && item.values.length > 1) {
+            init.push(item.title);
+          }
+          return init;
+        }, tipArrStr);
       }
       // 当前拼单信息
       // eslint-disable-next-line
@@ -117,9 +124,11 @@ export default class extends Component {
         currentGroup: currentGroupData.data,
         currentComment: currentCommentData.data,
         ...attrObj,
-        tipArrStr,
-      }))
-    } catch (error) { console.info(error) }
+        tipArrStr
+      }));
+    } catch (error) {
+      console.info(error);
+    }
   }
   onPay(type) {
     this.setState(
@@ -128,39 +137,37 @@ export default class extends Component {
     );
   }
   onImages() {
-    const { goods } = this.state
+    const { goods } = this.state;
     if (goods.images && goods.images.length > 0) {
-      wxapi.previewImage(goods.images[0], goods.images)
+      wxapi.previewImage(goods.images[0], goods.images);
     }
   }
   onPaySure() {
-    const { history } = this.props
-    // const { location } = window
-    const { tipArrStr, skuId, sku, goods, payType } = this.state;
+    const { history } = this.props;
+    const { tipArrStr, skuId, sku, goods, payType, selectPrice } = this.state;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
     } else if (tipArrStr.length === 0) {
-      const goods_id = goods.id
-      const goods_sku_id = skuId || sku[0].id
-      const buy_type = payType === "single" ? 2 : 1
-      const price = payType === "single" ? goods.real_price : goods.low_price
+      const goods_id = goods.id;
+      const goods_sku_id = skuId || sku[0].id;
+      const buy_type = payType === "single" ? 2 : 1;
+      // const price = payType === "single" ? goods.real_price : goods.low_price
 
       // 首先发起拼团，然后跳转到订单页面
       const paramsObj = {
         title: goods.title,
         thumb: goods.thumb,
-        price,
-        delivery_type: goods.delivery_type, // 1 邮寄 2 核销
-        delivery_fee: goods.delivery_fee, // 配送属性
+        price: selectPrice,
+        delivery_type: goods.delivery_type, // 配送属性 1 邮寄 2 核销
+        delivery_fee: goods.delivery_fee, // 运费
         goods_id,
         goods_sku_id,
-        buy_type // 单独买还是团购
-      }
-      const paramsStr = common.serializeParams(paramsObj)
-      history.push(`/submit_order?${paramsStr}`)
-      // location.href = `${location.origin}${location.pathname}#/submit_order?${paramsStr}`
+        buy_type // 类型:1-发起拼团、2-单独购买、3-参团
+      };
+      const paramsStr = common.serializeParams(paramsObj);
+      history.push(`/submit_order?${paramsStr}`);
     } else {
-      Toast.info(`请选择 ${tipArrStr[0]}`);
+      Toast.info(`请选择 ${tipArrStr[0]}`, 1);
     }
   }
   onItem = (parentId, curItem) => {
@@ -218,26 +225,6 @@ export default class extends Component {
       }
     );
   };
-  onBuyNum = type => {
-    // const { stock } = this.state;
-    const val = this.input.current.value;
-    const inputNum =
-      type === "reduce" ? Math.max(+val - 1, 1) : Math.min(+val + 1, 1);
-    this.setState(() => ({ inputNum }));
-  };
-  onInputChange = () => {
-    const val = this.input.current.value;
-    const reg = /^([1-9][0-9]*)?$/;
-    if (reg.test(val)) {
-      this.setState(() => ({ inputNum: val }));
-    }
-  };
-  onBlur = () => {
-    const { stock } = this.state;
-    const val = this.input.current.value;
-    const inputNum = val > stock ? stock : val <= 1 ? 1 : val;
-    this.setState(() => ({ inputNum }));
-  };
 
   // 切换商品参数展示层
   onProductParam = () => {
@@ -255,18 +242,15 @@ export default class extends Component {
         .filter(item => item.attr_type === 2)
         .every(item => this.state[`focus_${item.id}`] !== undefined)
     ) {
-      const { id, real_price, low_price, stock } = newSku.find(item =>
+      const { id, real_price, low_price } = newSku.find(item =>
         item.attr
           .filter(item => item.attr_type === 2)
           .every(item => this.state[`focus_${item.id}`] === item.value.id)
       );
       const newSelectPrice = payType === "single" ? real_price : low_price;
-      const inputNum =
-        stock <= this.state.inputNum ? stock : this.state.inputNum;
       this.setState(() => ({
         selectPrice: newSelectPrice,
         stock: 1,
-        inputNum,
         skuId: id
       }));
     } else {
@@ -313,37 +297,28 @@ export default class extends Component {
   );
 
   // 渲染当前的拼单列表
-  renderGroup = item => {
-    const { goods } = this.state;
-    return (
-      <HomeMoreTeambuyList
-        key={item.id}
-        item={item}
-        maxNum={goods.offerd_num}
-      />
-    );
-  };
+  renderGroup = item => <HomeMoreTeambuyList key={item.id} item={item} />;
   // 渲染评论
   renderComment = item => <Comment key={item.id} item={item} />;
   render() {
     const {
       show,
       showOth,
-      inputNum,
       attr,
       selectPrice,
       tipArrStr,
-      stock,
-      goods, currentGroup, currentComment
+      goods,
+      currentGroup,
+      currentComment
     } = this.state;
     if (!goods) return <RequestStatus />;
 
     // 查看更多拼团要传的参数
     const paramsObjGroup = {
       id: goods.id,
-      num: goods.collage_num
-    }
-    const paramsStrGroup = common.serializeParams(paramsObjGroup)
+      num: goods.sold_num
+    };
+    const paramsStrGroup = common.serializeParams(paramsObjGroup);
     return (
       <Layout title={goods.title}>
         {/* 头部 */}
@@ -406,10 +381,10 @@ export default class extends Component {
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div>
-                有<span className="plr10 c-main">{goods.collage_num}</span>人正在拼单
+                有<span className="plr10 c-main">{goods.sold_num}</span>人参与拼单
               </div>
               {currentGroup &&
-                currentGroup.length > 1 && (
+                currentGroup.length > 2 && (
                   <WrapLink
                     path={`/group_list?${paramsStrGroup}`}
                     className="c999"
@@ -526,7 +501,8 @@ export default class extends Component {
               商品参数
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {attr && goods.attr &&
+              {attr &&
+                goods.attr &&
                 goods.attr.length > 0 &&
                 goods.attr.filter(x => x.attr_type === 1).length > 0 && (
                   <SyncList
@@ -578,20 +554,18 @@ export default class extends Component {
                   <div className="font24 c999 ptb15">
                     <span className="font22 c-main">¥</span>
                     <span className="font40 bold c-main mr30">
-                      {common.clipPrice(selectPrice * inputNum)}
+                      {selectPrice}
                     </span>
                     {goods.offerd_num}人拼团
                     {/* &nbsp;&nbsp;&nbsp;&nbsp;库存：{stock} */}
                   </div>
-                  {
-                    tipArrStr !== undefined && (
-                      <div className="font24 c666 ptb10">
-                        {tipArrStr.length === 0
-                          ? "可以立即购买啦！"
-                          : `请选择 ${tipArrStr.map(item => item)}`}
-                      </div>
-                    )
-                  }
+                  {tipArrStr !== undefined && (
+                    <div className="font24 c666 ptb10">
+                      {tipArrStr.length === 0
+                        ? "可以立即购买啦！"
+                        : `请选择 ${tipArrStr.map(item => item)}`}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -630,37 +604,7 @@ export default class extends Component {
                   ))}
                 <div className="flex jc-between ai-center pt20 pr30">
                   <div className="font24 c666">购买数量</div>
-                  <div className="flex">
-                    <button
-                      className="w50 h50 bg-border"
-                      onClick={() => this.onBuyNum("reduce")}
-                    >
-                      <i
-                        className={`i-reduce font24 ${
-                          inputNum <= 1 ? "c999" : "c333"
-                        }`}
-                      />
-                    </button>
-                    <input
-                      ref={this.input}
-                      disabled
-                      maxLength={5}
-                      className="w100 text-center bg-border font30 bold-mid product-input"
-                      value={inputNum}
-                      onChange={this.onInputChange}
-                      onBlur={this.onBlur}
-                    />
-                    <button
-                      className="w50 h50 bg-border"
-                      onClick={() => this.onBuyNum("add")}
-                    >
-                      <i
-                        className={`i-add font24 ${
-                          inputNum < stock ? "c333" : "c999"
-                        }`}
-                      />
-                    </button>
-                  </div>
+                  <div className="font30 bold-mid">1</div>
                 </div>
                 <div className="h40" />
               </div>

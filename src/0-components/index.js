@@ -25,7 +25,7 @@ export { default as Comment } from "./0-42-Comment";
 export { default as Rate } from "./0-41-Rate";
 export { default as MyList } from "./0-23-MyList";
 export { default as HideImg } from "./0-43-HideImg";
-export { default as StateImg } from "./1-22-HideImg";
+export { default as StateImg } from "./1-22-StateImg";
 // home
 export { default as HomeMoreTeambuyList } from "./1-41-MoreTeambuyList";
 export { default as HomeFilter } from "./1-42-Filter";
