@@ -60,7 +60,7 @@ const statusConfig = {
   22: {
     status: {
       title: "买家已付款",
-      caption: "等待使用",
+      caption: "等待核销",
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
@@ -254,8 +254,8 @@ const orderInfoList = [
   { sign: "pay_price", title: "支付金额" },
   { sign: "source_val", title: "支付方式" },
   { sign: "delivery_created_at", title: "发货时间" },
-  { sign: "delivery_express_comp_name", title: "发货物流" },
-  { sign: "delivery_express_code", title: "发货单号" },
+  { sign: "delivery_express_comp_name", title: "物流公司" },
+  { sign: "delivery_express_code", title: "物流单号" },
   { sign: "refund_created_at", title: "退货申请时间" },
   { sign: "reson", title: "退货原因", type: "reason" },
   { sign: "refund_refused_updated_at", title: "退货拒绝时间" },
@@ -510,7 +510,7 @@ export default class extends Component {
         <div className="equal overflow-y">
           {/* 订单状态 */}
           {config[item.status] && (
-            <OrderStatus item={config[item.status].status} />
+            <OrderStatus item={config[selectStatus(item)].status} />
           )}
 
           {/* 收货地址 */}
@@ -525,7 +525,7 @@ export default class extends Component {
           {/* 拼单成功 */}
           {item.launch_log_status &&
             item.joins &&
-            item.launch_log_id && (
+            item.launch_log_id && item.buy_type && (
               <OrderGroup
                 status={item.launch_log_status}
                 list={item.joins}
@@ -537,8 +537,7 @@ export default class extends Component {
           <div className="plr30 bg-white mb20">
             {item.goods && (
               <List
-                as={`/product_detail_${item.goods.goods_id}`}
-                isOrder={{ price: item.goods.low_price, buy_num: item.buy_num }}
+                as={`/product_detail_${item.goods.id}`}
                 item={item.goods}
               />
             )}
@@ -585,7 +584,7 @@ export default class extends Component {
             href={`tel:${item.user_mobile}`}
             className="w230 flex column jc-center ai-center c999 bg-white"
           >
-            <i className="i-comment font34 mb10" />
+            <i className="i-phone font34 mb10" />
             <span className="font28">联系客服</span>
           </a>
           {config[item.status] &&

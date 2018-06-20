@@ -174,8 +174,6 @@ export default class extends Component {
                 placeholder="请填写给卖家的留言（选填）"
                 value={con || ""}
                 onChange={val => this.onChange(val, "con")}
-                // onBlur={this.footHide}
-                // onFocus={this.footHide}
               />
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">

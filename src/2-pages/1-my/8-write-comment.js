@@ -48,21 +48,16 @@ export default class extends Component {
         con,
         order_id: data.order_id
       },
-      data => {
+      () => {
         const { history } = this.props;
-        if (parseInt(data.errcode, 10) === 0) {
           Toast.info("评分成功", 2, () => {
-            const {
-              location: { search }
-            } = this.props;
-            const searchObj = common.searchToObj(search)
+            const searchObj = common.searchToObj();
             if (searchObj.type && parseInt(searchObj.type, 10) === 1) {
-              history.replace("/order_list")
+              history.replace("/order_list");
             } else {
               history.replace(`/order_details_${this.state.data.id}`);
             }
           });
-        }
       }
     );
   };
@@ -108,8 +103,10 @@ export default class extends Component {
               <div>￥{data.delivery_fee && data.delivery_fee}</div>
             </div>
             <div className="h84 flex ai-center font24 c333 border-bottom-one">
-              <div style={{ paddingRight: "0.45rem" }}>留言</div>
-              <div>{data.con || "什么也没说"}</div>
+              <span className="pr20">留言</span>
+              <div className="pl20 text-overflow-1 equal">
+                {data.con || "什么也没说"}
+              </div>
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">
               <div className="flex ai-end">
