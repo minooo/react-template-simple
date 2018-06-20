@@ -26,7 +26,6 @@ export default class extends Component {
     return (
       <Layout title="我的拼团">
         <NavBar title="我的拼团" />
-        <div className="equal overflow-y">
           <HomeFilter
             focusId={focusId}
             filters={tabs}
@@ -36,7 +35,6 @@ export default class extends Component {
             dataParam={{ action: "collage", operation: "my_collages", status: focusId }}
             renderItem={this.renderItem}
           />
-        </div>
       </Layout>
     );
   }

@@ -1,15 +1,15 @@
 // 拼单列表
 import React from "react";
-import { List, WrapLink, HideImg } from "@components";
+import { List, WrapLink, HideImg, } from "@components";
 
-export default ({ item }) => (
+export default ({ item, status }) => (
   <div className="bg-white plr30 mb20">
     <div className="h90 border-bottom-one font24 bold-mid c000 flex jc-between ai-center">
       <span>{item.from_fan_id === item.fan_id ? "发起" : "参与"}了拼单</span>
       <span className="c-main font24 pr20">
-        {item.status === 1
+        {status === 1
           ? "拼团中"
-          : item.status === 2
+          : status === 2
             ? "拼团成功"
             : "拼团失败"}
       </span>
