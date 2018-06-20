@@ -30,6 +30,7 @@ export default class extends Component {
   onTime = () => {
     // 格式化传入时间
     const { collageData } = this.state;
+
     const upDateParse = parse(
       collageData && collageData.goods && collageData.goods.end_time
     );
@@ -135,12 +136,11 @@ export default class extends Component {
     return (
       <Layout
         title={
-          surplusTime && collageData.status === 1
-            ? "拼团中"
-            : (surplusTime && collageData.status === 2) ||
-              (!surplusTime && collageData.status === 2)
-              ? "拼团完成"
-              : "拼团失败"
+          collageData.status === 1
+                ? "拼团中"
+                : collageData.status === 2
+                  ? "拼团完成"
+                  : collageData.status === 3 && "拼团失败"
         }
       >
         {isOpen && (
@@ -155,12 +155,11 @@ export default class extends Component {
         <div className="equal overflow-y">
           <NavBar
             title={
-              surplusTime && collageData.status === 1
+              collageData.status === 1
                 ? "拼团中"
-                : (surplusTime && collageData.status === 2) ||
-                  (!surplusTime && collageData.status === 2)
+                : collageData.status === 2
                   ? "拼团完成"
-                  : "拼团失败"
+                  : collageData.status === 3 && "拼团失败"
             }
           />
           <div className=" plr30 ptb10 bg-white">
@@ -298,7 +297,13 @@ export default class extends Component {
           </div>
           <div className="h20" />
           {/* 更多拼单 */}
-          {collageData && collageData.is_self && collageData.status === 3 ? (
+          {collageData && !collageData.is_self && collageData.status === 1 ? (
+            ""
+          ) : collageData.is_self && collageData.status === 1 ? (
+            ""
+          ) : collageData.is_self && collageData.status === 2 ? (
+            ""
+          ) : (
             <div className=" plr30 bg-white">
               <div className="flex jc-between ai-center border-bottom-one h84">
                 <div className=" font24 c333">
@@ -328,38 +333,6 @@ export default class extends Component {
                 查看更多
               </WrapLink>
             </div>
-          ) : collageData && collageData.status === 2 ? (
-            <div className=" plr30 bg-white">
-              <div className="flex jc-between ai-center border-bottom-one h84">
-                <div className=" font24 c333">
-                  <span>有</span>
-                  <span className=" c-main">{listData && listData.length}</span>
-                  人正在参与此拼单
-                </div>
-                <WrapLink
-                  path="/group_list"
-                  className=" c999 font24 flex ai-center"
-                >
-                  <span className=" mr10">查看更多</span>
-                  <i className="i-right" />
-                </WrapLink>
-              </div>
-              {listData &&
-                listData.length > 0 &&
-                listData
-                  .slice(0, 2)
-                  .map(item => (
-                    <HomeMoreTeambuyList key={item.id} item={item} />
-                  ))}
-              <WrapLink
-                className=" h80 font30 c999 flex jc-center ai-center w-100"
-                path={`/group_list?${paramsStrGroup}`}
-              >
-                查看更多
-              </WrapLink>
-            </div>
-          ) : (
-            ""
           )}
         </div>
       </Layout>

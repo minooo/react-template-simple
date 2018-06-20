@@ -57,14 +57,29 @@ export const chooseImage = (params = {}) =>
   );
 
 // 上传图片接口
-export const uploadImage = localId =>
-  new Promise(resolve =>
-    wx.uploadImage({
-      localId,
-      isShowProgressTips: 1,
-      success: resolve // response.serverId
-    })
-  );
+const uploadImage = (params, serverIds, resolve) => {
+  const localId = params.localIds.shift();
+  wx.uploadImage({
+    localId,
+    isShowProgressTips: params.isShowProgressTips || 1,
+    success: f => {
+      serverIds.push(f.serverId);
+      if (params.localIds.length > 0) {
+        uploadImage(params, serverIds, resolve);
+      } else {
+        resolve({ serverIds });
+      }
+    }
+  });
+};
+export const uploadImages = (params = {}) =>
+  new Promise(resolve => {
+    if (params.localIds.length === 0) {
+      resolve({ serverIds: [] });
+    } else {
+      uploadImage(params, [], resolve);
+    }
+  });
 
 // 图片转换成bese64
 export const getLocalImgData = localIds => {
