@@ -96,7 +96,7 @@ export default class extends Component {
             localIds: pre.localIds.concat(resolve.localIds)
           }),
           () => {
-            this.getImgData(resolve.localIds);
+            // this.getImgData(resolve.localIds);
           }
         );
       });
@@ -121,9 +121,9 @@ export default class extends Component {
           />
           <div className=" h20" />
           <div className="bg-white pl30 pt30 pb10 flex wrap">
-            {photos &&
-              photos.length > 0 &&
-              photos.map(item => (
+            {localIds &&
+              localIds.length > 0 &&
+              localIds.map(item => (
                 <div
                   key={item}
                   onClick={() => this.previewImage(item)}
@@ -140,7 +140,7 @@ export default class extends Component {
                     height: "1.6rem",
                     border: "dashed 2px #d9d9d9"
                   }}
-                  onClick={this.addPhoto}
+                  onClick={() => this.addPhoto}
                 >
                   <i
                     className="i-add"
@@ -153,7 +153,7 @@ export default class extends Component {
           <div className="plr30">
             <WrapLink
               className="w-100 h80 bg-main r10 c-white font30"
-              onClick={this.onSetting}
+              onClick={() => this.onSetting}
             >
               提交申请
             </WrapLink>
