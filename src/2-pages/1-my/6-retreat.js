@@ -29,6 +29,7 @@ export default class extends Component {
   // 设置
   onSetting = () => {
     const { reason, order_id, localIds } = this.state;
+    Toast.loading("提交中...");
     if (!reason) {
       Toast.info("请填写退货原因", 1);
     } else if (localIds.length > 0) {
