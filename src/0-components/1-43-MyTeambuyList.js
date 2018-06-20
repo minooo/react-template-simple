@@ -76,7 +76,9 @@ export default ({ item, handle }) => (
         {btnStatus[item.status] &&
           btnStatus[
            selectStatus(item)
-          ].map(x => (
+          ] && btnStatus[
+            selectStatus(item)
+           ].map(x => (
             <button
               key={x.type}
               className={`w150 h50 r10 font24 ml20 ${
