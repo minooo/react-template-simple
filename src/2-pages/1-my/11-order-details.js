@@ -486,7 +486,7 @@ export default class extends Component {
       },
       () => {
         Toast.info(text, 1);
-        getData(item.id, data => {
+        this.getData(item.id, data => {
           this.setState(() => ({
             item: data
           }));

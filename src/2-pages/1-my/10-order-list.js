@@ -111,13 +111,11 @@ export default class extends Component {
           <span className="font24">我的拼团</span>
         </WrapLink>
         {/* 列表 */}
-        <div className="equal overflow-y">
           <ScrollLoad
             dataParam={{ action: "order", operation: "list" }}
             renderItem={this.renderItem}
             forceUpdate={dataUpdata}
           />
-        </div>
       </Layout>
     );
   }
