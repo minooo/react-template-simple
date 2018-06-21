@@ -114,7 +114,7 @@ export default class extends Component {
     return (
       <Layout title="填写订单">
         <NavBar title="填写订单" />
-        <div className="equal overflow-y" style={{ marginTop: `${isFoot ? "0rem" : "-3rem"}` }}>
+        <div className="equal overflow-y" style={{ marginTop: `${isFoot ? "0rem" : "-2rem"}` }}>
           {/* 地址 */}
           {delivery_type === "1" && (
             <WrapLink
