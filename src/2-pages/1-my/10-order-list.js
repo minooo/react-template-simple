@@ -17,6 +17,10 @@ const commonAlert = (text, handle) =>
   ]);
 
 export default class extends Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
   state = {
     dataUpdata: false
   };
@@ -69,11 +73,10 @@ export default class extends Component {
   // 删除订单
   deleOrder = id => {
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
-      Toast.info("删除成功", 1, () =>
-        this.setState(pre => ({
-          dataUpdata: !pre.dataUpdata
-        }))
-      );
+      this.setState(pre => ({
+        dataUpdata: !pre.dataUpdata
+      }));
+      Toast.info("删除成功", 1);
     });
   };
   // 更新订单状态
@@ -103,19 +106,21 @@ export default class extends Component {
       <Layout title="商品订单">
         <NavBar title="商品订单" />
         {/* 拼团订单按钮 */}
-        <WrapLink
-          className="flex column jc-center ai-center c-white bg-main circle home-order-btn"
-          path="/my"
-        >
-          <i className="font40 i-group font40 mb10" />
-          <span className="font24">我的拼团</span>
-        </WrapLink>
+        <div className="c-white bg-main circle home-order-btn" ref={this.myRef}>
+          <WrapLink
+            className="w-100 h-100 flex column jc-center ai-center"
+            path="/my"
+          >
+            <i className="font40 i-group font40 mb10" />
+            <span className="font24">我的拼团</span>
+          </WrapLink>
+        </div>
         {/* 列表 */}
-          <ScrollLoad
-            dataParam={{ action: "order", operation: "list" }}
-            renderItem={this.renderItem}
-            forceUpdate={dataUpdata}
-          />
+        <ScrollLoad
+          dataParam={{ action: "order", operation: "list" }}
+          renderItem={this.renderItem}
+          forceUpdate={dataUpdata}
+        />
       </Layout>
     );
   }
