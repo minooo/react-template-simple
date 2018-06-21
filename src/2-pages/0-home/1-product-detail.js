@@ -383,7 +383,7 @@ export default class extends Component {
             )}
 
           {/* 拼团进度条 */}
-          <Steps step={1} />
+          <Steps step={1} time={goods.end_time} />
           <div className="h20" />
 
           {/* 商品的正在拼单信息 */}

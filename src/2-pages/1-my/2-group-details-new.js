@@ -414,7 +414,7 @@ export default class extends Component {
           )}
 
           {/* 拼团状态 */}
-          <Steps step={status === 2 ? 4 : 3} />
+          <Steps step={status === 2 ? 4 : 3} time={collageData.goods && collageData.goods.end_time} />
           <div className="h20" />
 
           <div className="flex bg-white column ai-center pt10 plr30">
