@@ -16,7 +16,7 @@ export default class extends Component {
       .get({
         action: "refund",
         operation: "reason",
-        id,
+        order_id: id,
         type: (searchObj && searchObj.type) || 1
       })
       .then(response => {
