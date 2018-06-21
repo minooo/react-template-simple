@@ -267,7 +267,7 @@ const orderInfoList = [
   { sign: "delivery_express_comp_name", title: "物流公司" },
   { sign: "delivery_express_code", title: "物流单号" },
   { sign: "refund_created_at", title: "退货申请时间" },
-  { sign: "reson", title: "退货原因", type: "reason" },
+  { sign: "reason", title: "退货原因", type: "reason" },
   { sign: "refund_refused_updated_at", title: "退货拒绝时间" },
   { sign: "refused_reason", title: "退货拒绝原因", type: "rejectReason" },
   { sign: "refund_updated_at", title: "退货同意时间" },
@@ -393,9 +393,9 @@ export default class extends Component {
     const { history } = this.props;
     // 查看退货原因和拒绝退货原因
     if (type === "reason") {
-      history.push(`/retreat_cause_${item.order_id}?type=1`);
+      history.push(`/back_cause_${item.order_id}?type=1`);
     } else {
-      history.push(history.push(`/retreat_cause_${item.order_id}?type=2`));
+      history.push(history.push(`/back_cause_${item.order_id}?type=2`));
     }
   };
   // 获取数据
@@ -532,7 +532,7 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {item.buy_type !== 2 && (
+          {item.buy_type !== 2 && item.launch_log_id && (
               <OrderGroup
                 status={item.launch_log_status}
                 list={item.joins}
@@ -548,12 +548,17 @@ export default class extends Component {
                 item={item.goods}
               />
             )}
-            {item.delivery_type === 1 && (
-              <div className="h86 font28 c333 flex jc-between ai-center border-bottom-one">
-                <span>运费</span>
-                <span>￥{item.goods && item.goods.delivery_fee}</span>
-              </div>
-            )}
+            {item.delivery_type === 1 && item.goods &&
+              item.goods.delivery_fee !== undefined && (
+                <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
+                  <div>运费</div>
+                  <div>
+                    {parseFloat(item.goods.delivery_fee, 10) === 0
+                      ? "免运费"
+                      : `￥${item.goods.delivery_fee}`}
+                  </div>
+                </div>
+              )}
             <div className="h86 font28 c333 flex ai-center border-bottom-one">
               <span className="pr20">留言</span>
               <div className="pl20 text-overflow-1 equal">

@@ -306,6 +306,6 @@ export const filterHtml = (text, num = 30) => {
     return "";
   }
   console.info(num);
-  const m = `${text.replace(/<[^>]+>/g, "").substr(0, num)}}`;
+  const m = `${text.replace(/<[^>]+>/g, "").substr(0, num)}`;
   return m;
 };

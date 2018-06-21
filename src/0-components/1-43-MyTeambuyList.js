@@ -53,9 +53,9 @@ export default ({ item, handle }) => (
   <div className="plr30 mb20 bg-white">
     <div className="h90 border-bottom-one font24 c999 flex ai-center">
       <i className="i-order font30 mr25" />
-      <div className="flex jc-between equal">
-        <span>订单号：{item.order_id}</span>
-        <span className="c-main bold-mid">{item.status_val}</span>
+      <div className="flex jc-between equal overflow-h">
+        <div className="text-overflow-one equal">订单号：{item.order_id}</div>
+        <div className="c-main bold-mid text-right text-overflow-one" style={{ width: "1.6rem" }}>{item.status_val}</div>
       </div>
     </div>
     <div className="pt20 lh100 font24">{item.created_at}</div>
