@@ -418,9 +418,9 @@ export default class extends Component {
     const { history } = this.props;
     // 查看退货原因和拒绝退货原因
     if (type === "reason") {
-      history.push(`/back_cause_${item.id}?type=1`);
+      history.push(`/back_cause_${item.order_id}?type=1`);
     } else {
-      history.push(history.push(`/back_cause_${item.id}?type=2`));
+      history.push(history.push(`/back_cause_${item.order_id}?type=2`));
     }
   };
   // 获取数据
