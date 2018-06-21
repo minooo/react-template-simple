@@ -14,9 +14,9 @@ export default class extends Component {
     const { history } = this.props;
     http
       .get({
-        action: "order",
-        operation: "show",
-        order_id: id,
+        action: "refund",
+        operation: "reason",
+        id,
         type: (searchObj && searchObj.type) || 1
       })
       .then(response => {
