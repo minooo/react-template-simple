@@ -116,6 +116,8 @@ export default class extends Component {
     const { name, mobile, sValue, address } = this.state;
     if (!name) {
       Toast.info("请输入收货人姓名", 1);
+    } else if (mobile.length > 0) {
+      Toast.info("您的联系电话不能为空。", 1);
     } else if (!common.isMobile(mobile)) {
       Toast.info("您的联系电话格式有误，请检查。", 1);
     } else if (!address) {
