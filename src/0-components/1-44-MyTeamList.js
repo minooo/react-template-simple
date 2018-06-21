@@ -14,6 +14,7 @@ export default ({ item }) => (
             : "拼团失败"}
       </span>
     </div>
+    <div className="pt20 lh100 font24">{item.created_at}</div>
     {item.goods && (
       <List item={item.goods} as={`/product_detail_${item.goods_id}`} />
     )}

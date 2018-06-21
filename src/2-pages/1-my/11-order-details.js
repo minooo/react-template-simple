@@ -65,7 +65,7 @@ const statusConfig = {
       bg: "bg-white"
     },
     btns: [
-      { text: "申请退货", class: "equal bg-second", type: "returnGoods" },
+      { text: "申请退款", class: "equal bg-second", type: "returnGoods" },
       { text: "查看核销码", class: "equal bg-main", type: "checkCode" }
     ]
   },
@@ -120,6 +120,7 @@ const statusConfig = {
     },
     btns: [{ text: "申请退货", class: "equal bg-second", type: "returnGoods" }]
   },
+
   7: {
     status: {
       title: "买家申请退货",
@@ -128,6 +129,16 @@ const statusConfig = {
       bg: "bg-second"
     },
     btns: [{ text: "等待卖家同意退货", class: "equal bg-d9 c666" }],
+    showGroup: true
+  },
+  72:{
+    status: {
+      title: "买家申请退款",
+      caption: "等待卖家同意退款",
+      ico: "i-used font56 c-white",
+      bg: "bg-second"
+    },
+    btns: [{ text: "等待卖家同意退款", class: "equal bg-d9 c666" }],
     showGroup: true
   },
   8: {
@@ -143,6 +154,16 @@ const statusConfig = {
   9: {
     status: {
       title: "卖家拒绝退货",
+      caption: "等待买家完成交易",
+      ico: "i-fail font60 c-white",
+      bg: "bg-second"
+    },
+    btns: [{ text: "完成交易", class: "equal bg-second", type: "finishOrder" }],
+    showGroup: true
+  },
+  92:{
+    status: {
+      title: "卖家拒绝退款",
       caption: "等待买家完成交易",
       ico: "i-fail font60 c-white",
       bg: "bg-second"
@@ -247,6 +268,10 @@ const selectStatus = item => {
       return item.delivery_type === 1 ? "2" : "22";
     case 6:
       return item.is_comment ? "62" : "6";
+    case 7:
+      return  item.delivery_type === 1 ? "7" :"72"
+    case 9:
+      return  item.delivery_type === 1 ? "9" :"92"
     case 10:
       return item.is_comment ? "102" : "10";
     case 14:
@@ -264,8 +289,8 @@ const orderInfoList = [
   { sign: "pay_price", title: "支付金额" },
   { sign: "source_val", title: "支付方式" },
   { sign: "delivery_created_at", title: "发货时间" },
-  { sign: "delivery_express_comp_name", title: "物流公司" },
-  { sign: "delivery_express_code", title: "物流单号" },
+  { sign: "delivery_express_comp_name", title: "发货物流" },
+  { sign: "delivery_express_code", title: "发货单号" },
   { sign: "refund_created_at", title: "退货申请时间" },
   { sign: "reason", title: "退货原因", type: "reason" },
   { sign: "refund_refused_updated_at", title: "退货拒绝时间" },
@@ -442,7 +467,7 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}`);
+        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
         alert("核销码", item.verify_code, [{ text: "确定" }]);
