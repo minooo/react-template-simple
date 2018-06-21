@@ -56,6 +56,7 @@ export default class extends Component {
         action: "collage",
         operation: "list",
         goods_id: id,
+        status: 1,
         limit: 3
       }); // 该商品的拼团列表
       const currentCommentDataP = http.get({
@@ -144,9 +145,9 @@ export default class extends Component {
       this.updatePrice
     );
   }
-  onImages(e) {
-    e.stopPropagation()
+  onImages() {
     const { goods } = this.state;
+    console.log(123)
     if (goods.images && goods.images.length > 0) {
       wxapi.previewImage(goods.images[0], goods.images);
     }
@@ -345,7 +346,8 @@ export default class extends Component {
               {home_collage &&
                 home_collage.length > 0 && <OrderTip data={home_collage} />}
             </div> */}
-            <div onClick={this.onImages} className="common-img-bg h-100">
+            <div className="common-img-bg h-100">
+              <div onClick={this.onImages} style={{ position: "absolute", zIndex: 200, top: 0, right: 0, bottom: 0, left: 0 }} />
               {goods.images &&
                 goods.images.length > 0 && (
                   <Fragment>

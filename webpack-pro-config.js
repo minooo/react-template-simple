@@ -11,7 +11,7 @@ module.exports = {
   // https://webpack.js.org/configuration/target/
 
   entry: {
-    vendor: ["react-router-dom", "redux"],
+    vendor: ["react", "react-dom", "react-router-dom", "redux", "react-redux", "react-router-redux", "redux-saga"],
     bundle: path.resolve(__dirname, "src/2-pages/app.js")
   },
   // https://webpack.js.org/configuration/entry-context/
