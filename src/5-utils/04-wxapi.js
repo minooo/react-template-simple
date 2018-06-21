@@ -3,13 +3,14 @@ export const setConfig = config => {
   wx.config(config);
 };
 export const setShare = config => {
+  const { location: { href } } = window
   const params = {
     title: config.title || "",
     desc: config.desc || "",
     imgUrl:
       config.imgUrl ||
       "http://public.duduapp.net/new-media/app/static/avatar.png",
-    link: config.link || window.location.href
+      link: config.link || `${href.split("#")[0]}#${href.split("#")[1]}`
   };
   wx.ready(() => {
     wx.onMenuShareAppMessage(params); // 分享给朋友
@@ -57,6 +58,7 @@ export const chooseImage = (params = {}) =>
   );
 // 图片转换成bese64
 export const getLocalImgData = localIds => {
+  // eslint-disable-next-line
   if (window.__wxjs_is_wkwebview) {
     return Promise.all(
       localIds.map(

@@ -41,6 +41,11 @@ export default class extends Component {
   componentDidMount() {
     this.onAddress();
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.onAddress();
+    }
+  }
   // 结束时消除定时器
   componentWillUnmount() {
     if (this.tick) clearInterval(this.tick);
@@ -54,9 +59,6 @@ export default class extends Component {
         () => ({ collageData: data.data }),
         () => {
           const { collageData } = this.state;
-
-          // 确定按钮状态
-          this.btnStatus(collageData);
 
           // 初始化 剩余名额，结束日期总毫秒数，距离结束剩余毫秒数，状态
           this.initState(collageData);
@@ -82,23 +84,6 @@ export default class extends Component {
         }));
       }
     );
-  };
-  // 提交订单
-  onTuxedo = () => {
-    const { history } = this.props;
-    const { collageData } = this.state;
-    const paramsObjGroup = {
-      title: collageData.goods.title,
-      thumb: collageData.goods.thumb,
-      goods_id: collageData.goods_id,
-      price: collageData.goods.low_price,
-      goods_sku_id: collageData.goods_sku_id,
-      delivery_type: collageData.goods.delivery_type,
-      delivery_fee: collageData.goods.delivery_fee,
-      buy_type: 3
-    };
-    const paramsStrGroup = common.serializeParams(paramsObjGroup);
-    history.push(`/submit_order?${paramsStrGroup}`);
   };
   // 底部按钮逻辑
   onBtn = type => {
@@ -251,9 +236,8 @@ export default class extends Component {
     this.setState(() => ({ tipArrStr }));
   };
   // 确定底部按钮状态
-  btnStatus = collageData => {
-    const { status } = this.state;
-    const { is_self, goods } = collageData;
+  btnStatus = () => {
+    const { status, collageData: { is_self, goods } } = this.state;
     let btns = null;
     if (is_self && status === 2) {
       btns = btnStatus["1"];
@@ -281,7 +265,7 @@ export default class extends Component {
       0
     );
     const milliseconds =
-      +parse(created_at) + goods.available_time * 3600 * 1000;
+      +parse(created_at) + (goods.available_time * 3600 * 1000);
     const remainMilliseconds = milliseconds - new Date();
 
     // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
@@ -300,7 +284,10 @@ export default class extends Component {
       milliseconds,
       remainMilliseconds,
       status
-    }));
+    }), () => {
+      // 确定按钮状态
+      this.btnStatus();
+    });
 
     if (remainMilliseconds > 0) {
       this.tick = setTimeout(() => {
@@ -409,9 +396,7 @@ export default class extends Component {
     } = this.state;
     if (!collageData) return <RequestStatus />;
     return (
-      <Layout
-        title={`拼单${status === 2 ? "完成" : status === 1 ? "中" : "未完成"}`}
-      >
+      <Layout title="拼单详情">
         <NavBar
           title={`拼单${
             status === 2 ? "完成" : status === 1 ? "中" : "未完成"
@@ -489,7 +474,8 @@ export default class extends Component {
                 {/* 标题 */}
                 <div className="border-bottom-one flex jc-between font24 c333 ptb25">
                   <div>
-                    有<span className="plr10 c-main">
+                    有
+                    <span className="plr10 c-main">
                       {collageData.goods.sold_num}
                     </span>人参与拼单
                   </div>
@@ -505,7 +491,7 @@ export default class extends Component {
                   )}
                 </div>
                 <SyncList
-                  items={listData.slice(0, 2)}
+                  items={listData.filter(x => x.id !== collageData.id)}
                   renderItem={this.renderGroup}
                 />
               </div>

@@ -491,8 +491,7 @@ export default class extends Component {
             item: data
           }));
         });
-        });
-      }
+      })
   };
   renderOrderDetail = item => (
     <OrderDetailList

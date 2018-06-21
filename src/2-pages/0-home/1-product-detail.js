@@ -1,6 +1,7 @@
 // /* eslint-disable */
 import React, { Component, Fragment } from "react";
 import { Toast } from "antd-mobile";
+import { parse } from "date-fns";
 import {
   Layout,
   NavBar,
@@ -38,7 +39,9 @@ export default class extends Component {
     // 为了优化商品的渲染速度
     http.getC({ action: "goods", operation: "show", id }, response => {
       const goods = response.data;
-      this.setState(() => ({ goods }));
+      // 商品是否过期
+      const isOver = +parse(goods.end_time) - new Date() < 0
+      this.setState(() => ({ goods, isOver }));
       const desc = common.filterHtml(goods.con);
       wxapi.setShare({
         title: `火热拼团中-${goods.title}`,
@@ -131,12 +134,18 @@ export default class extends Component {
     }
   }
   onPay(type) {
+    const { isOver } = this.state
+    if ((type === "single" || type === "group") && isOver) {
+      Toast.fail("该商品已过期！", 2)
+      return
+    }
     this.setState(
       pre => ({ show: !pre.show, payType: type }),
       this.updatePrice
     );
   }
-  onImages() {
+  onImages(e) {
+    e.stopPropagation()
     const { goods } = this.state;
     if (goods.images && goods.images.length > 0) {
       wxapi.previewImage(goods.images[0], goods.images);
@@ -309,7 +318,8 @@ export default class extends Component {
       tipArrStr,
       goods,
       currentGroup,
-      currentComment
+      currentComment,
+      isOver
     } = this.state;
     if (!goods) return <RequestStatus />;
 
@@ -459,7 +469,7 @@ export default class extends Component {
             <span className="font28">联系卖家</span>
           </a>
           <WrapLink
-            className="equal3 bg-second c-white flex jc-center ai-center column font28"
+            className={`equal3 ${isOver ? "bg-d9" : "bg-second"} c-white flex jc-center ai-center column font28`}
             onClick={this.onSinglePay}
           >
             <span className="font24">
@@ -471,7 +481,7 @@ export default class extends Component {
             <span className="lh100 mt5">单独购买</span>
           </WrapLink>
           <WrapLink
-            className="equal4 bg-main c-white flex jc-center ai-center column font28"
+            className={`equal4 ${isOver ? "bg-d9" : "bg-main"} c-white flex jc-center ai-center column font28`}
             onClick={this.onGroupPay}
           >
             <span className="font24">
@@ -501,15 +511,15 @@ export default class extends Component {
               商品参数
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {attr &&
+              {(attr &&
                 goods.attr &&
                 goods.attr.length > 0 &&
-                goods.attr.filter(x => x.attr_type === 1).length > 0 && (
+                goods.attr.filter(x => x.attr_type === 1).length > 0) ? (
                   <SyncList
                     items={attr.filter(x => x.attr_type === 1)}
                     renderItem={this.renderParam}
                   />
-                )}
+                ) : "暂无描述"}
             </div>
             {/* 按钮 */}
             <button
