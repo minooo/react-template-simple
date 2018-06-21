@@ -76,6 +76,7 @@ export default class extends Component {
         action: "collage",
         operation: "list",
         goods_id: id,
+        status: 1,
         limit: 3
       },
       data => {
@@ -94,7 +95,7 @@ export default class extends Component {
     } else if (type === "checkOrder") {
       history.push(`/order_details_${collageData.order_id}`);
     } else if (type === "share") {
-      this.setState(pre => ({ isOpen: !pre.isOpen }));
+      this.onSwitchShareBg();
     } else if (type === "joinThis") {
       this.onSwitchAlertBg();
     } else if (type === "goGroupPay") {
@@ -110,13 +111,13 @@ export default class extends Component {
   onPaySure = () => {
     const { history } = this.props;
     const { tipArrStr, skuId, sku, collageData, selectPrice } = this.state;
-    const { goods } = collageData;
+    const { goods, fans } = collageData;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
     } else if (tipArrStr.length === 0) {
       const goods_id = goods.id;
       const goods_sku_id = skuId || sku[0].id;
-
+      const isFull = goods.offerd_num - fans.length === 1
       // 首先发起拼团，然后跳转到订单页面
       const paramsObj = {
         title: goods.title,
@@ -126,7 +127,8 @@ export default class extends Component {
         delivery_fee: goods.delivery_fee, // 运费
         goods_id,
         goods_sku_id,
-        buy_type: 3, // // 类型:1-发起拼团、2-单独购买、3-参团
+        isFull, // isFull 等于1，即表示，加上本次够买就会满员了
+        buy_type: 3, // 类型:1-发起拼团、2-单独购买、3-参团
         launch_log_id: collageData.id
       };
       const paramsStr = common.serializeParams(paramsObj);
@@ -195,6 +197,9 @@ export default class extends Component {
   // 弹层背景
   onSwitchAlertBg = () => {
     this.setState(pre => ({ show: !pre.show }));
+  };
+  onSwitchShareBg = () => {
+    this.setState(pre => ({ isOpen: !pre.isOpen }));
   };
   // 根据筛选条件，更新价格,
   updatePrice = () => {
@@ -499,7 +504,7 @@ export default class extends Component {
         </div>
         {/* 分享弹窗 */}
         {isOpen && (
-          <div className="home-share" onClick={this.onSwitch}>
+          <div className="home-share" onClick={this.onSwitchShareBg}>
             <img
               src="http://public.duduapp.net/new-media/app/static/share.png"
               className="w-100"

@@ -16,11 +16,11 @@ export default class extends Component {
   };
   onPay = () => {
     const { history } = this.props
-    const { order_id, id, goods_id, pay_price, buy_type } = common.searchToObj()
+    const { order_id, id, goods_id, pay_price, buy_type, isFull } = common.searchToObj()
     http.post({ action: "wxpay", order_id }).then(response => {
       const { errcode, msg, data } = response
       if (errcode === 0) {
-        const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id }
+        const paramsObj = { id, goods_id, pay_price, buy_type, launch_log_id: data.launch_log_id, isFull }
         const paramsStr = common.serializeParams(paramsObj)
         // history.push(`/pay_details?${paramsStr}`)
         const pay_param = {

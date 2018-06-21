@@ -10,7 +10,7 @@ export const setShare = config => {
     imgUrl:
       config.imgUrl ||
       "http://public.duduapp.net/new-media/app/static/avatar.png",
-      link: config.link || `${href.split("#")[0]}#${href.split("#")[1]}`
+      link: config.link || encodeURIComponent(`${href.split("#")[0]}#${href.split("#")[1]}`)
   };
   wx.ready(() => {
     wx.onMenuShareAppMessage(params); // 分享给朋友

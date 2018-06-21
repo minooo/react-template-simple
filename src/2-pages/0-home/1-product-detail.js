@@ -56,6 +56,7 @@ export default class extends Component {
         action: "collage",
         operation: "list",
         goods_id: id,
+        status: 1,
         limit: 3
       }); // 该商品的拼团列表
       const currentCommentDataP = http.get({

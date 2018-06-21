@@ -422,12 +422,14 @@ export default class extends Component {
   handle = type => {
     const { item } = this.state;
     const { history } = this.props;
+    const isFull = item.buy_type !== 2 && item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1
     const payState = {
       goods_id: item.goods.id,
       id: item.id,
       order_id: item.order_id,
       pay_price: item.pay_price,
-      buy_type: item.buy_type
+      buy_type: item.buy_type,
+      isFull
     };
     const payStr = common.serializeParams(payState);
     switch (type) {
