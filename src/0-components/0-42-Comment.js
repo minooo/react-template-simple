@@ -22,7 +22,7 @@ export default ({ item }) => (
         />
       </div>
     </div>
-    <div className="font28 text-overflow-2 mb25">{item.con}</div>
+    <div className="font28 pb25">{item.con}</div>
     <div className="flex jc-between c999">
       <div className="equal mr20">
         规格：{item.sku &&
