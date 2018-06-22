@@ -30,16 +30,6 @@ export default class extends Component {
           </div>
           <div className="h72" />
           <div className=" plr30">
-            {
-              (buy_type === "1" || isFull === "true") && (
-                <WrapLink
-                  className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
-                  path={`/details_${launch_log_id}`}
-                >
-                  邀请好友参团
-                </WrapLink>
-              )
-            }
             <WrapLink
               className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
               path={`/details_${launch_log_id}`}
