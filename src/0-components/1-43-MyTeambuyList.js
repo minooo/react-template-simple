@@ -25,7 +25,7 @@ const btnStatus = {
   8: [{ title: "退还商品", type: "backGoods" }],
   9: [{ title: "完成交易", type: "finishOrder" }],
   10: [{ title: "评价", theme: "main", type: "goComment" }],
-  11: [{ title: "提醒买家收货", type: "tipReceipt" }],
+  11: [{ title: "提醒卖家收货", type: "tipReceipt" }],
   12: [{ title: "删除", type: "delOrder" }],
   13: [{ title: "删除", type: "delOrder" }],
   14: [{ title: "评价", theme: "main", type: "goComment" }],

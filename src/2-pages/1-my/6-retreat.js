@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Toast } from "antd-mobile";
-import { http, wxapi } from "@utils";
+import { http, wxapi, common } from "@utils";
 import { Layout, WrapLink, NavBar } from "@components";
 
 export default class extends Component {
@@ -72,6 +72,19 @@ export default class extends Component {
       );
     }
   };
+  onDeleteImg = (e, index) => {
+    e.stopPropagation();
+    console.info(index);
+    const { localIds, photos } = this.state;
+    const localIdNew = localIds.filter((n, i) => i !== index);
+    const photosNew = photos.filter((n, i) => i !== index);
+    console.info(localIdNew);
+    console.info(photosNew);
+    this.setState(() => ({
+      localIds: localIdNew,
+      photos: photosNew
+    }));
+  };
   // 转换图片为bese64
   getImgData = id => {
     console.info(id);
@@ -103,14 +116,16 @@ export default class extends Component {
       });
   };
   // 上传的图片进行预览
-  previewImage = item => {
+  previewImage = (e, item) => {
+    e.stopPropagation();
     const { photos } = this.state;
     wxapi.previewImage(item, photos);
   };
   render() {
     const { reason, localIds, photos } = this.state;
+    const searchObj = common.searchToObj();
     return (
-      <Layout title="申请退货">
+      <Layout title={searchObj && parseInt(searchObj.type, 10) === 2 ? "申请退款" : "申请退货"}>
         <div className="equal overflow-y">
           <NavBar title="申请退货" />
           <textarea
@@ -124,13 +139,27 @@ export default class extends Component {
           <div className="bg-white pl30 pt30 pb10 flex wrap">
             {photos &&
               photos.length > 0 &&
-              photos.map(item => (
+              photos.map((item, index) => (
                 <div
                   key={item}
-                  onClick={() => this.previewImage(item)}
+                  onClick={e => this.previewImage(e, item)}
                   style={{ backgroundImage: `url(${item})` }}
-                  className="retreat-img"
-                />
+                  className="retreat-img relative"
+                >
+                  <div
+                    className=" absolute z-100 c-white circle flex jc-center ai-center"
+                    style={{
+                      width: "0.36rem",
+                      height: "0.36rem",
+                      background: "rgba(0, 0, 0, 0.6)",
+                      top: "0.06rem",
+                      right: "0.06rem"
+                    }}
+                    onClick={e => this.onDeleteImg(e, index)}
+                  >
+                    <i className=" i-close" style={{ fontSize: "0.12rem" }} />
+                  </div>
+                </div>
               ))}
             {localIds &&
               localIds.length < 8 && (

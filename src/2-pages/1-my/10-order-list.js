@@ -24,6 +24,25 @@ export default class extends Component {
   state = {
     dataUpdata: false
   };
+  componentDidMount() {
+    // touchstart,touchmove ,touchend
+    const allWidth = document.body.offsetWidth;
+    const allHeight = document.body.offsetHeight;
+    const width = this.myRef.current.offsetWidth;
+    const height = this.myRef.current.offsetHeight;
+    const mixLeft = width / 2
+    const maxLeft = allWidth - (width / 2)
+    const mixTop = height / 2
+    const maxTop = allHeight - (height / 2)
+    this.myRef.current.addEventListener("touchmove", e => {
+      e.preventDefault()
+      const { pageX, pageY } = e.changedTouches[0]
+      if (pageX > mixLeft && pageX < maxLeft && pageY > mixTop && pageY < maxTop) {
+        this.myRef.current.style.left = `${pageX - (width / 2)}px`;
+        this.myRef.current.style.top = `${pageY - (height / 2)}px`;
+      }
+    }, false);
+  }
   handle = (type, item) => {
     const { history } = this.props;
     const payState = {
@@ -44,7 +63,7 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}`);
+        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
         alert("核销码", item.verify_code, [{ text: "确定" }]);
@@ -96,6 +115,7 @@ export default class extends Component {
       }
     );
   };
+
   renderItem = item => (
     <HomeMyTeambuyList key={item.id} item={item} handle={this.handle} />
   );
@@ -106,7 +126,7 @@ export default class extends Component {
       <Layout title="商品订单">
         <NavBar title="商品订单" />
         {/* 拼团订单按钮 */}
-        <div className="c-white bg-main circle home-order-btn" ref={this.myRef}>
+        <div className="c-white bg-main circle home-order-btn z100" ref={this.myRef}>
           <WrapLink
             className="w-100 h-100 flex column jc-center ai-center"
             path="/my"
