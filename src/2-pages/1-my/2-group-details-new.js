@@ -52,7 +52,6 @@ export default class extends Component {
   }
   // 拼团数据 和 更多拼团列表
   onAddress = () => {
-    console.info(this.props.match);
     const { id } = this.props.match.params;
     http.getC({ action: "collage", operation: "show", id }, data => {
       this.setState(

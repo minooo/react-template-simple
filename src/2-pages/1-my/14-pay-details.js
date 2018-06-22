@@ -41,6 +41,14 @@ export default class extends Component {
               )
             }
             <WrapLink
+              className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
+              path={`/details_${launch_log_id}`}
+            >
+              {
+                (buy_type === "1" || isFull === "true") ? "邀请好友参团" : "查看本次拼团"
+              }
+            </WrapLink>
+            <WrapLink
               className="h80 font30 c-white bg-second r10 flex jc-center ai-center w-100"
               path={`/order_details_${id}`}
             >

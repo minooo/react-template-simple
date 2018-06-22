@@ -431,7 +431,7 @@ export default class extends Component {
   handle = type => {
     const { item } = this.state;
     const { history } = this.props;
-    const isFull = item.buy_type !== 2 && item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1
+    const isFull = item.buy_type !== 2 && (item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1)
     const payState = {
       goods_id: item.goods.id,
       id: item.id,
