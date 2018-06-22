@@ -12,7 +12,7 @@ const btnStatus = {
   ],
   2: [{ title: "申请退货", type: "returnGoods" }],
   22: [
-    { title: "申请退货", type: "returnGoods" },
+    { title: "申请退款", type: "returnGoods" },
     { title: "查看核销码", theme: "main", type: "checkCode" }
   ],
   3: [{ title: "删除", type: "delOrder" }],

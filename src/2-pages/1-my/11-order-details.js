@@ -131,16 +131,6 @@ const statusConfig = {
     btns: [{ text: "等待卖家同意退货", class: "equal bg-d9 c666" }],
     showGroup: true
   },
-  72:{
-    status: {
-      title: "买家申请退款",
-      caption: "等待卖家同意退款",
-      ico: "i-used font56 c-white",
-      bg: "bg-second"
-    },
-    btns: [{ text: "等待卖家同意退款", class: "equal bg-d9 c666" }],
-    showGroup: true
-  },
   8: {
     status: {
       title: "卖家同意退货",
@@ -154,16 +144,6 @@ const statusConfig = {
   9: {
     status: {
       title: "卖家拒绝退货",
-      caption: "等待买家完成交易",
-      ico: "i-fail font60 c-white",
-      bg: "bg-second"
-    },
-    btns: [{ text: "完成交易", class: "equal bg-second", type: "finishOrder" }],
-    showGroup: true
-  },
-  92:{
-    status: {
-      title: "卖家拒绝退款",
       caption: "等待买家完成交易",
       ico: "i-fail font60 c-white",
       bg: "bg-second"
@@ -258,6 +238,15 @@ const statusConfig = {
     },
     btns: [{ text: "删除订单", class: "equal bg-d9 c666" }],
     showGroup: true
+  },
+  18:{
+    status: {
+      title: "退款中",
+      caption: "等待卖家确认退款",
+      ico: "i-back font56 c-white",
+      bg: "bg-d9"
+    },
+    btns: [{ text: "等待卖家退款", class: "equal equal bg-d9 c666" }],
   }
 };
 
@@ -268,10 +257,6 @@ const selectStatus = item => {
       return item.delivery_type === 1 ? "2" : "22";
     case 6:
       return item.is_comment ? "62" : "6";
-    case 7:
-      return  item.delivery_type === 1 ? "7" :"72"
-    case 9:
-      return  item.delivery_type === 1 ? "9" :"92"
     case 10:
       return item.is_comment ? "102" : "10";
     case 14:
@@ -283,7 +268,6 @@ const selectStatus = item => {
 // 订单信息列表
 const orderInfoList = [
   { sign: "order_id", title: "订单编号" },
-  { sign: "verify_code", title: "核销码" },
   { sign: "created_at", title: "创建时间" },
   { sign: "pay_at", title: "支付时间" },
   { sign: "pay_price", title: "支付金额" },
@@ -470,7 +454,7 @@ export default class extends Component {
         history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
-        alert("核销码", item.verify_code, [{ text: "确定" }]);
+        this.lookCheckCode(item)
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
@@ -498,7 +482,7 @@ export default class extends Component {
     const { history } = this.props;
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
       Toast.info("删除成功", 1, () =>
-        this.props.history.replace("/order_list")
+        history.replace("/order_list")
       );
     });
   };
@@ -527,7 +511,13 @@ export default class extends Component {
       onClick={() => this.onOrderDetailList(item.type)}
     />
   );
-
+  lookCheckCode = item => {
+    if(item.launch_log_status && item.launch_log_status !==2){
+      alert("", "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
+    }else{
+      alert("核销码", item.verify_code, [{ text: "确定" }]);
+    }
+  }
   render() {
     const { item, config, netBad } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;

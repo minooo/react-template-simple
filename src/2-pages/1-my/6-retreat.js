@@ -127,7 +127,7 @@ export default class extends Component {
     return (
       <Layout title={searchObj && parseInt(searchObj.type, 10) === 2 ? "申请退款" : "申请退货"}>
         <div className="equal overflow-y">
-          <NavBar title="申请退货" />
+          <NavBar title={searchObj && parseInt(searchObj.type, 10) === 2 ? "申请退款" : "申请退货"} />
           <textarea
             className="ptb30 plr30 reset w-100 my-input-reset"
             placeholder="请输入退货理由……"
