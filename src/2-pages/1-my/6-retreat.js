@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Toast } from "antd-mobile";
-import { http, wxapi } from "@utils";
+import { http, wxapi, common } from "@utils";
 import { Layout, WrapLink, NavBar } from "@components";
 
 export default class extends Component {
@@ -109,8 +109,9 @@ export default class extends Component {
   };
   render() {
     const { reason, localIds, photos } = this.state;
+    const searchObj = common.searchToObj();
     return (
-      <Layout title="申请退货">
+      <Layout title={searchObj && parseInt(searchObj.type, 10) === 2 ? "申请退款" : "申请退货"}>
         <div className="equal overflow-y">
           <NavBar title="申请退货" />
           <textarea

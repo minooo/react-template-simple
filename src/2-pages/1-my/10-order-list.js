@@ -63,7 +63,7 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}`);
+        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
         alert("核销码", item.verify_code, [{ text: "确定" }]);
