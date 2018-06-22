@@ -9,7 +9,7 @@ export default class extends React.Component {
     const { children } = this.props;
     return (
       <div
-        className="box bg-border h-full flex column overflow-y"
+        className="common-touch-no box bg-border h-full flex column overflow-y"
       >
         {children}
       </div>

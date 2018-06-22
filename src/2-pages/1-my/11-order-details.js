@@ -573,6 +573,7 @@ export default class extends Component {
               <List
                 as={`/product_detail_${item.goods.id}`}
                 item={item.goods}
+                isOrder={{ price: item.pay_price }}
               />
             )}
             {item.delivery_type === 1 && item.goods &&
@@ -589,7 +590,7 @@ export default class extends Component {
             <div className="h86 font28 c333 flex ai-center border-bottom-one">
               <span className="pr20">留言</span>
               <div className="pl20 text-overflow-1 equal">
-                {item.con || "什么也没说"}
+                {item.con || "用户很懒，什么也没说"}
               </div>
             </div>
             <div className="h84 flex jc-end ai-center">

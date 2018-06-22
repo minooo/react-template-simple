@@ -481,13 +481,13 @@ export default class extends Component {
                   <div>
                     有
                     <span className="plr10 c-main">
-                      {collageData.goods.sold_num}
+                      {collageData.goods.being_collage_num}
                     </span>人参与拼单
                   </div>
                   {listData.length > 2 && (
                     <WrapLink
                       path={`/group_list?id=${collageData.goods_id}&num=${
-                        collageData.goods.sold_num
+                        collageData.goods.being_collage_num
                       }`}
                       className="c999"
                     >
