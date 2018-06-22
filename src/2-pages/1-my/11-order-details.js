@@ -55,7 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "申请退货", class: "equal bg-second", type: "returnGoods" }]
+    btns: [{ text: "无货退款", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
@@ -239,7 +239,7 @@ const statusConfig = {
     btns: [{ text: "删除订单", class: "equal bg-d9 c666" }],
     showGroup: true
   },
-  18:{
+  18: {
     status: {
       title: "退款中",
       caption: "等待卖家确认退款",
