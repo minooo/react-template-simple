@@ -35,7 +35,7 @@ export default class extends Component {
               path={`/details_${launch_log_id}`}
             >
               {
-                (buy_type === "1" || isFull === "true") ? "邀请好友参团" : "查看本次拼团"
+                (buy_type === "2" || isFull === "false") ? "邀请好友参团" : "查看本次拼团"
               }
             </WrapLink>
             <WrapLink
