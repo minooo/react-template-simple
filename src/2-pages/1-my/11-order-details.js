@@ -283,7 +283,6 @@ const selectStatus = item => {
 // 订单信息列表
 const orderInfoList = [
   { sign: "order_id", title: "订单编号" },
-  { sign: "verify_code", title: "核销码" },
   { sign: "created_at", title: "创建时间" },
   { sign: "pay_at", title: "支付时间" },
   { sign: "pay_price", title: "支付金额" },
