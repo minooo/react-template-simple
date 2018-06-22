@@ -126,9 +126,9 @@ export default class extends Component {
       <Layout title="商品订单">
         <NavBar title="商品订单" />
         {/* 拼团订单按钮 */}
-        <div className="c-white bg-main circle home-order-btn z100" ref={this.myRef}>
+        <div className="c-white bg-main home-order-btn circle" ref={this.myRef}>
           <WrapLink
-            className="w-100 h-100 flex column jc-center ai-center"
+            className="w-100 h-100 flex column jc-center ai-center "
             path="/my"
           >
             <i className="font40 i-group font40 mb10" />
