@@ -468,7 +468,7 @@ export default class extends Component {
         history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
-        alert("核销码", item.verify_code, [{ text: "确定" }]);
+        this.lookCheckCode(item)
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
@@ -496,7 +496,7 @@ export default class extends Component {
     const { history } = this.props;
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
       Toast.info("删除成功", 1, () =>
-        this.props.history.replace("/order_list")
+        history.replace("/order_list")
       );
     });
   };
@@ -526,7 +526,13 @@ export default class extends Component {
       onClick={() => this.onOrderDetailList(item.type)}
     />
   );
-
+  lookCheckCode = item => {
+    if(item.launch_log_status && item.launch_log_status !==2){
+      alert("", "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
+    }else{
+      alert("核销码", item.verify_code, [{ text: "确定" }]);
+    }
+  }
   render() {
     const { item, config, netBad } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;

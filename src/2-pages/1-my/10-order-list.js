@@ -30,18 +30,27 @@ export default class extends Component {
     const allHeight = document.body.offsetHeight;
     const width = this.myRef.current.offsetWidth;
     const height = this.myRef.current.offsetHeight;
-    const mixLeft = width / 2
-    const maxLeft = allWidth - (width / 2)
-    const mixTop = height / 2
-    const maxTop = allHeight - (height / 2)
-    this.myRef.current.addEventListener("touchmove", e => {
-      e.preventDefault()
-      const { pageX, pageY } = e.changedTouches[0]
-      if (pageX > mixLeft && pageX < maxLeft && pageY > mixTop && pageY < maxTop) {
-        this.myRef.current.style.left = `${pageX - (width / 2)}px`;
-        this.myRef.current.style.top = `${pageY - (height / 2)}px`;
-      }
-    }, false);
+    const mixLeft = width / 2;
+    const maxLeft = allWidth - (width / 2);
+    const mixTop = height / 2;
+    const maxTop = allHeight - (height / 2);
+    this.myRef.current.addEventListener(
+      "touchmove",
+      e => {
+        e.preventDefault();
+        const { pageX, pageY } = e.changedTouches[0];
+        if (
+          pageX > mixLeft &&
+          pageX < maxLeft &&
+          pageY > mixTop &&
+          pageY < maxTop
+        ) {
+          this.myRef.current.style.left = `${pageX - (width / 2)}px`;
+          this.myRef.current.style.top = `${pageY - (height / 2)}px`;
+        }
+      },
+      false
+    );
   }
   handle = (type, item) => {
     const { history } = this.props;
@@ -66,7 +75,7 @@ export default class extends Component {
         history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
-        alert("核销码", item.verify_code, [{ text: "确定" }]);
+        this.lookCheckCode(item)
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
@@ -115,7 +124,15 @@ export default class extends Component {
       }
     );
   };
-
+  lookCheckCode = item => {
+    if (item.launch_log_status && item.launch_log_status !== 2) {
+      alert("", "拼单未满员，待拼单成功后才能查看核销码哦~", [
+        { text: "确定" }
+      ]);
+    } else {
+      alert("核销码", item.verify_code, [{ text: "确定" }]);
+    }
+  };
   renderItem = item => (
     <HomeMyTeambuyList key={item.id} item={item} handle={this.handle} />
   );
