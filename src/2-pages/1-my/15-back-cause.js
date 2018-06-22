@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { common, http } from "@utils";
+import { common, http, wxapi } from "@utils";
 import { Toast } from "antd-mobile";
 import { Layout, RequestStatus, NavBar } from "@components";
 
@@ -37,6 +37,10 @@ export default class extends Component {
         console.info(err);
       });
   }
+  onImages=(item) => {
+    const { data } = this.state;
+    wxapi.previewImage(item, data.images);
+  }
   render() {
     const { data, netBad, causeType } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
@@ -57,6 +61,7 @@ export default class extends Component {
                 data.images.length > 0 &&
                 data.images.map(item => (
                   <div
+                    onClick={() => this.onImages(item)}
                     className="mb30"
                     style={{ width: "2.2rem", height: "2.2rem" }}
                   >
