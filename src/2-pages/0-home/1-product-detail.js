@@ -147,7 +147,6 @@ export default class extends Component {
   }
   onImages() {
     const { goods } = this.state;
-    console.log(123)
     if (goods.images && goods.images.length > 0) {
       wxapi.previewImage(goods.images[0], goods.images);
     }
@@ -244,7 +243,7 @@ export default class extends Component {
   // 根据筛选条件，更新价格,
   updatePrice = () => {
     const { payType, attr, sku, goods } = this.state;
-    const newSku = sku.slice();
+    const newSku = sku && sku.slice();
     if (
       attr &&
       attr.length > 0 &&
@@ -393,7 +392,11 @@ export default class extends Component {
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div>
-                有<span className="plr10 c-main">{goods.sold_num}</span>人参与拼单
+                {
+                  goods.sold_num === 0 ? "还木有人拼单，快来发起拼单吧！" : (
+                    <Fragment>有<span className="plr10 c-main">{goods.sold_num}</span>人参与拼单</Fragment>
+                  )
+                }
               </div>
               {currentGroup &&
                 currentGroup.length > 2 && (
@@ -442,7 +445,11 @@ export default class extends Component {
           <div className="plr30 bg-white mb20">
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
-              <div className="font28 bold">用户评价</div>
+              <div className="font28 bold">
+                {
+                  currentComment && currentComment.length === 0 ? "还木有人评价" : "用户评价"
+                }
+              </div>
               {currentComment &&
                 currentComment.length > 1 && (
                   <WrapLink path={`/comment_list_${goods.id}`} className="c999">

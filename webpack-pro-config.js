@@ -114,7 +114,7 @@ module.exports = {
 
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": '"production"',
+      "process.env.NODE_ENV": JSON.stringify("production"),
       __DEV__: false
     }),
     // 很多库的内部，有process.NODE_ENV的判断语句，

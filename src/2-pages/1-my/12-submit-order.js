@@ -14,6 +14,9 @@ export default class extends Component {
     if (delivery_type === "1") this.onAddress();
     window.addEventListener("resize", this.footHide)
   }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.footHide)
+  }
   // 获取默认地址
   onAddress = () => {
     http.getC(
