@@ -5,14 +5,8 @@ import { Layout, WrapLink, NavBar } from "@components";
 
 export default class extends Component {
   state = {
-    localIds: [
-      "https://p3a.pstatp.com/weili/l/259499286991208495.webp",
-      "https://p3a.pstatp.com/weili/l/259499286991208495.webp"
-    ],
-    photos: [
-      "https://p3a.pstatp.com/weili/l/259499286991208495.webp",
-      "https://p3a.pstatp.com/weili/l/259499286991208495.webp"
-    ]
+    localIds: [],
+    photos: []
   };
   componentDidMount() {
     this.onAddress();
