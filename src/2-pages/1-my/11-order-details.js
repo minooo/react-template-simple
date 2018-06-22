@@ -55,7 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "申请退货", class: "equal bg-second", type: "returnGoods" }]
+    btns: [{ text: "无货退货", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
