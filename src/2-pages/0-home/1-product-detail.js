@@ -467,7 +467,7 @@ export default class extends Component {
             href={`tel:${config("custom")}`}
             className="equal3 flex column jc-center ai-center c999 bg-white"
           >
-            <i className="i-comment font34 mb10" />
+            <i className="i-phone font34 mb10" />
             <span className="font28">联系卖家</span>
           </a>
           <WrapLink

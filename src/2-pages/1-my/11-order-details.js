@@ -198,7 +198,7 @@ const statusConfig = {
       ico: "i-back font56 c-white",
       bg: "bg-second"
     },
-    btns: [{ text: "提醒收货", class: "equal bg-second", type: "tipReceipt" }],
+    btns: [{ text: "提醒卖家收货", class: "equal bg-second", type: "tipReceipt" }],
     showGroup: true
   },
   12: {
