@@ -26,7 +26,7 @@ const commonAlert = (text, handle) =>
 const { countDown } = common;
 
 // 4-支付失败 的列表不会出现，所以此情况不再考虑
-// 0 待支付 1确认中 2已支付 3订单关闭 4支付失败 5卖家已发货 6买家确认收货-（交易完成）7买家申请退货 8卖家同意退货 9卖家拒绝退货 10卖家拒绝退货，买家同意交易完成-（交易完成）11买家已退货 12卖家确认退货-（交易关闭）13卖家确认无货退款-（交易关闭）14已核销-（交易完成）15已过期 16已退款
+// 0 待支付 1确认中 2已支付 3订单关闭 4支付失败 5卖家已发货 6买家确认收货-（交易完成）7买家申请退货 8卖家同意退货 9卖家拒绝退货 10卖家拒绝退货，买家同意交易完成-（交易完成）11买家已退货 12卖家确认退货-（交易关闭）13卖家确认无货退款-（交易关闭）14已核销-（交易完成）15已过期 16已退款 18退款中
 const statusConfig = {
   0: {
     status: {
@@ -55,7 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "无货退货", class: "equal bg-second", type: "returnGoods" }]
+    btns: [{ text: "无货退款", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
@@ -239,7 +239,7 @@ const statusConfig = {
     btns: [{ text: "删除订单", class: "equal bg-d9 c666" }],
     showGroup: true
   },
-  18:{
+  18: {
     status: {
       title: "退款中",
       caption: "等待卖家确认退款",
@@ -392,9 +392,15 @@ export default class extends Component {
           }
           this.setState(() => ({ config: newConfig }));
         }
-        this.setState(() => ({ item: response }));
+        this.setState(() => ({ item: response }), ()=>{
+          const { item }=this.state
+          this.initState(item)});
       });
     });
+  }
+
+  componentWillUnmount() {
+    if (this.tick) clearInterval(this.tick);
   }
   // 订单详情的操作
   onOrderDetailList = type => {
@@ -451,7 +457,11 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
+        if (item.delivery_type === 2 || item.status === 2) {
+          history.push(`/retreat_${item.order_id}?type=2`);
+        } else {
+          history.push(`/retreat_${item.order_id}?type=1`);
+        }
         break;
       case "checkCode": // 查看核销码
         this.lookCheckCode(item)
@@ -500,7 +510,12 @@ export default class extends Component {
           Toast.info(text, 1)
           this.setState(() => ({
             item: data
-          }));
+          }), () => {
+            () => {
+              const {item}=this.state
+              this.initState(item)
+            }
+          });
         });
       })
   };
@@ -518,8 +533,49 @@ export default class extends Component {
       alert("核销码", item.verify_code, [{ text: "确定" }]);
     }
   }
+  // 初始化拼团状态
+  initState = item => {
+    const { goods, joins_num, launch_log_created_at } = item;
+    if(launch_log_created_at){
+      return
+    }
+    const remainNum = Math.max(
+      +goods.offerd_num - ((joins_num && joins_num.length) || 0),
+      0
+    );
+    const milliseconds =
+      +parse(launch_log_created_at) + (goods.available_time * 3600 * 1000);
+    const remainMilliseconds = milliseconds - new Date();
+
+    // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
+    let status = 0;
+    if (remainNum > 0) {
+      if (remainMilliseconds > 0) {
+        status = 1;
+      } else {
+        status = 3;
+      }
+    } else if (remainNum === 0) {
+      status = 2;
+    }
+    this.setState(() => ({
+      status
+    }))
+    if (remainMilliseconds > 0) {
+      this.tick = setTimeout(() => {
+        this.getData(id, data => {
+          this.setState(() => ({
+            item: data
+          }),()=>{
+            const {item}=this.state
+            this.initState(item)
+          } );
+        });
+      }, remainMilliseconds);
+    }
+  };
   render() {
-    const { item, config, netBad } = this.state;
+    const { item, config, netBad, status } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
     if (!item) return <RequestStatus />;
     const validOrderInfoList = orderInfoList.filter(x => {
@@ -549,9 +605,9 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {item.buy_type !== 2 && item.launch_log_id && (
+          {item.buy_type !== 2 && item.launch_log_id && status && (
               <OrderGroup
-                status={item.launch_log_status}
+                status={status}
                 list={item.joins}
                 groupId={item.launch_log_id}
               />

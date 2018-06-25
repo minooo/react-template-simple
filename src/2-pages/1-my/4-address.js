@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Checkbox, Toast, Modal } from "antd-mobile";
-import { http } from "@utils";
+import { http, common } from "@utils";
 import { Layout, NavBar, WrapLink } from "@components";
 
 const { alert } = Modal;
@@ -52,12 +52,18 @@ export default class extends Component {
       }
     }
   };
+  goSubmitOrder = () => {
+    const paramsObj = common.searchToObj();
+    const { history } = this.props;
+    const paramsStr = common.serializeParams(paramsObj);
+    history.replace(`/submit_order?${paramsStr}`);
+  };
   render() {
     const { data } = this.state;
     return (
       <Layout title="地址管理">
         <div className="equal overflow-y">
-          <NavBar title="地址管理" />
+          <NavBar title="地址管理" leftClick={this.goSubmitOrder} />
           {data &&
             data.length > 0 &&
             data.map(item => (
