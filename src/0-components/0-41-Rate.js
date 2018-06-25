@@ -9,7 +9,7 @@ export default ({ value, activeIcon, defaultIcon, onChange, total = 5 }) => {
       {count &&
         count.length > 0 &&
         count.map((item, index) => (
-          <div key={uuid()} className="equal flex jc-center">
+          <div key={uuid()} className="equal flex jc-center pt5">
             {index <= value - 1 ? (
               <WrapLink onClick={onChange ? () => onChange(index) : null}>
                 {activeIcon || "★"}
