@@ -15,7 +15,7 @@ export const setShare = config => {
     imgUrl:
       config.imgUrl ||
       "http://public.duduapp.net/new-media/app/static/avatar.png",
-      link: config.link || transferPath(search.slice(1), hash.split("#")[1]),
+      link: config.link || transferPath(search, hash.split("#")[1]),
     success: () => {
       if (config.successCall) config.successCall()
     }
