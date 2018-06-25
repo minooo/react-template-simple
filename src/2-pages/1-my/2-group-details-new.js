@@ -41,22 +41,23 @@ export default class extends Component {
   componentDidMount() {
     this.onAddress();
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.onAddress();
+    }
+  }
   // 结束时消除定时器
   componentWillUnmount() {
     if (this.tick) clearInterval(this.tick);
   }
   // 拼团数据 和 更多拼团列表
   onAddress = () => {
-    console.info(this.props.match);
     const { id } = this.props.match.params;
     http.getC({ action: "collage", operation: "show", id }, data => {
       this.setState(
         () => ({ collageData: data.data }),
         () => {
           const { collageData } = this.state;
-
-          // 确定按钮状态
-          this.btnStatus(collageData);
 
           // 初始化 剩余名额，结束日期总毫秒数，距离结束剩余毫秒数，状态
           this.initState(collageData);
@@ -74,6 +75,7 @@ export default class extends Component {
         action: "collage",
         operation: "list",
         goods_id: id,
+        status: 1,
         limit: 3
       },
       data => {
@@ -82,23 +84,6 @@ export default class extends Component {
         }));
       }
     );
-  };
-  // 提交订单
-  onTuxedo = () => {
-    const { history } = this.props;
-    const { collageData } = this.state;
-    const paramsObjGroup = {
-      title: collageData.goods.title,
-      thumb: collageData.goods.thumb,
-      goods_id: collageData.goods_id,
-      price: collageData.goods.low_price,
-      goods_sku_id: collageData.goods_sku_id,
-      delivery_type: collageData.goods.delivery_type,
-      delivery_fee: collageData.goods.delivery_fee,
-      buy_type: 3
-    };
-    const paramsStrGroup = common.serializeParams(paramsObjGroup);
-    history.push(`/submit_order?${paramsStrGroup}`);
   };
   // 底部按钮逻辑
   onBtn = type => {
@@ -109,7 +94,7 @@ export default class extends Component {
     } else if (type === "checkOrder") {
       history.push(`/order_details_${collageData.order_id}`);
     } else if (type === "share") {
-      this.setState(pre => ({ isOpen: !pre.isOpen }));
+      this.onSwitchShareBg();
     } else if (type === "joinThis") {
       this.onSwitchAlertBg();
     } else if (type === "goGroupPay") {
@@ -125,13 +110,13 @@ export default class extends Component {
   onPaySure = () => {
     const { history } = this.props;
     const { tipArrStr, skuId, sku, collageData, selectPrice } = this.state;
-    const { goods } = collageData;
+    const { goods, fans } = collageData;
     if (!sku || sku.length === 0) {
       Toast.fail("抱歉，商品sku异常，请稍后再试");
     } else if (tipArrStr.length === 0) {
       const goods_id = goods.id;
       const goods_sku_id = skuId || sku[0].id;
-
+      const isFull = goods.offerd_num - fans.length === 1
       // 首先发起拼团，然后跳转到订单页面
       const paramsObj = {
         title: goods.title,
@@ -141,7 +126,8 @@ export default class extends Component {
         delivery_fee: goods.delivery_fee, // 运费
         goods_id,
         goods_sku_id,
-        buy_type: 3, // // 类型:1-发起拼团、2-单独购买、3-参团
+        isFull, // isFull 等于1，即表示，加上本次够买就会满员了
+        buy_type: 3, // 类型:1-发起拼团、2-单独购买、3-参团
         launch_log_id: collageData.id
       };
       const paramsStr = common.serializeParams(paramsObj);
@@ -211,6 +197,9 @@ export default class extends Component {
   onSwitchAlertBg = () => {
     this.setState(pre => ({ show: !pre.show }));
   };
+  onSwitchShareBg = () => {
+    this.setState(pre => ({ isOpen: !pre.isOpen }));
+  };
   // 根据筛选条件，更新价格,
   updatePrice = () => {
     const { attr, sku, collageData } = this.state;
@@ -251,9 +240,8 @@ export default class extends Component {
     this.setState(() => ({ tipArrStr }));
   };
   // 确定底部按钮状态
-  btnStatus = collageData => {
-    const { status } = this.state;
-    const { is_self, goods } = collageData;
+  btnStatus = () => {
+    const { status, collageData: { is_self, goods } } = this.state;
     let btns = null;
     if (is_self && status === 2) {
       btns = btnStatus["1"];
@@ -281,7 +269,7 @@ export default class extends Component {
       0
     );
     const milliseconds =
-      +parse(created_at) + goods.available_time * 3600 * 1000;
+      +parse(created_at) + (goods.available_time * 3600 * 1000);
     const remainMilliseconds = milliseconds - new Date();
 
     // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
@@ -300,7 +288,10 @@ export default class extends Component {
       milliseconds,
       remainMilliseconds,
       status
-    }));
+    }), () => {
+      // 确定按钮状态
+      this.btnStatus();
+    });
 
     if (remainMilliseconds > 0) {
       this.tick = setTimeout(() => {
@@ -409,9 +400,7 @@ export default class extends Component {
     } = this.state;
     if (!collageData) return <RequestStatus />;
     return (
-      <Layout
-        title={`拼单${status === 2 ? "完成" : status === 1 ? "中" : "未完成"}`}
-      >
+      <Layout title="拼单详情">
         <NavBar
           title={`拼单${
             status === 2 ? "完成" : status === 1 ? "中" : "未完成"
@@ -429,7 +418,7 @@ export default class extends Component {
           )}
 
           {/* 拼团状态 */}
-          <Steps step={status === 2 ? 4 : 3} />
+          <Steps step={status === 2 ? 4 : 3} time={collageData.goods && collageData.goods.end_time} />
           <div className="h20" />
 
           <div className="flex bg-white column ai-center pt10 plr30">
@@ -489,14 +478,15 @@ export default class extends Component {
                 {/* 标题 */}
                 <div className="border-bottom-one flex jc-between font24 c333 ptb25">
                   <div>
-                    有<span className="plr10 c-main">
-                      {collageData.goods.sold_num}
+                    有
+                    <span className="plr10 c-main">
+                      {collageData.goods.being_collage_num}
                     </span>人参与拼单
                   </div>
                   {listData.length > 2 && (
                     <WrapLink
                       path={`/group_list?id=${collageData.goods_id}&num=${
-                        collageData.goods.sold_num
+                        collageData.goods.being_collage_num
                       }`}
                       className="c999"
                     >
@@ -505,7 +495,7 @@ export default class extends Component {
                   )}
                 </div>
                 <SyncList
-                  items={listData.slice(0, 2)}
+                  items={listData.filter(x => x.id !== collageData.id)}
                   renderItem={this.renderGroup}
                 />
               </div>
@@ -513,7 +503,7 @@ export default class extends Component {
         </div>
         {/* 分享弹窗 */}
         {isOpen && (
-          <div className="home-share" onClick={this.onSwitch}>
+          <div className="home-share" onClick={this.onSwitchShareBg}>
             <img
               src="http://public.duduapp.net/new-media/app/static/share.png"
               className="w-100"

@@ -5,6 +5,9 @@
   bottom: 0;
   left: 0;
 }
+.common-touch-no {
+  touch-action: none;
+}
 .common-hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

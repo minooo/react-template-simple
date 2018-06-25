@@ -54,14 +54,9 @@ export default class extends Component {
   };
   goSubmitOrder = () => {
     const paramsObj = common.searchToObj();
-    const { con } = paramsObj
     const { history } = this.props;
-    if (con) {
-      const paramsStr = common.serializeParams(paramsObj);
-      history.push(`/submit_order?${paramsStr}`);
-    } else {
-      window.history.go(-1);
-    }
+    const paramsStr = common.serializeParams(paramsObj);
+    history.replace(`/submit_order?${paramsStr}`);
   };
   render() {
     const { data } = this.state;

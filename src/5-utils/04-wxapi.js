@@ -1,15 +1,21 @@
 // 思考，把配置信息缓存
+import { config } from "@utils"
+
 export const setConfig = config => {
   wx.config(config);
 };
+
+const transferPath = (query, path) => `${config("transferUrl")}?id=${config("id")}&q=${query}&path=${encodeURIComponent(path)}&uid=${config("user.id")}`
+
 export const setShare = config => {
+  const { location: { search, hash } } = window
   const params = {
     title: config.title || "",
     desc: config.desc || "",
     imgUrl:
       config.imgUrl ||
       "http://public.duduapp.net/new-media/app/static/avatar.png",
-    link: config.link || window.location.href
+      link: config.link || transferPath(search, hash.split("#")[1])
   };
   wx.ready(() => {
     wx.onMenuShareAppMessage(params); // 分享给朋友
@@ -57,6 +63,7 @@ export const chooseImage = (params = {}) =>
   );
 // 图片转换成bese64
 export const getLocalImgData = localIds => {
+  // eslint-disable-next-line
   if (window.__wxjs_is_wkwebview) {
     return Promise.all(
       localIds.map(

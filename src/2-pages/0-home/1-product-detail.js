@@ -1,6 +1,7 @@
 // /* eslint-disable */
 import React, { Component, Fragment } from "react";
 import { Toast } from "antd-mobile";
+import { parse } from "date-fns";
 import {
   Layout,
   NavBar,
@@ -38,7 +39,9 @@ export default class extends Component {
     // 为了优化商品的渲染速度
     http.getC({ action: "goods", operation: "show", id }, response => {
       const goods = response.data;
-      this.setState(() => ({ goods }));
+      // 商品是否过期
+      const isOver = +parse(goods.end_time) - new Date() < 0
+      this.setState(() => ({ goods, isOver }));
       const desc = common.filterHtml(goods.con);
       wxapi.setShare({
         title: `火热拼团中-${goods.title}`,
@@ -53,6 +56,7 @@ export default class extends Component {
         action: "collage",
         operation: "list",
         goods_id: id,
+        status: 1,
         limit: 3
       }); // 该商品的拼团列表
       const currentCommentDataP = http.get({
@@ -131,6 +135,11 @@ export default class extends Component {
     }
   }
   onPay(type) {
+    const { isOver } = this.state
+    if ((type === "single" || type === "group") && isOver) {
+      Toast.fail("该商品已过期！", 2)
+      return
+    }
     this.setState(
       pre => ({ show: !pre.show, payType: type }),
       this.updatePrice
@@ -234,7 +243,7 @@ export default class extends Component {
   // 根据筛选条件，更新价格,
   updatePrice = () => {
     const { payType, attr, sku, goods } = this.state;
-    const newSku = sku.slice();
+    const newSku = sku && sku.slice();
     if (
       attr &&
       attr.length > 0 &&
@@ -309,7 +318,8 @@ export default class extends Component {
       tipArrStr,
       goods,
       currentGroup,
-      currentComment
+      currentComment,
+      isOver
     } = this.state;
     if (!goods) return <RequestStatus />;
 
@@ -335,7 +345,8 @@ export default class extends Component {
               {home_collage &&
                 home_collage.length > 0 && <OrderTip data={home_collage} />}
             </div> */}
-            <div onClick={this.onImages} className="common-img-bg h-100">
+            <div className="common-img-bg h-100">
+              <div onClick={this.onImages} style={{ position: "absolute", zIndex: 200, top: 0, right: 0, bottom: 0, left: 0 }} />
               {goods.images &&
                 goods.images.length > 0 && (
                   <Fragment>
@@ -373,7 +384,7 @@ export default class extends Component {
             )}
 
           {/* 拼团进度条 */}
-          <Steps step={1} />
+          <Steps step={1} time={goods.end_time} />
           <div className="h20" />
 
           {/* 商品的正在拼单信息 */}
@@ -381,7 +392,11 @@ export default class extends Component {
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div>
-                有<span className="plr10 c-main">{goods.sold_num}</span>人参与拼单
+                {
+                  goods.being_collage_num === 0 ? "还木有人拼单，快来发起拼单吧！" : (
+                    <Fragment>有<span className="plr10 c-main">{goods.being_collage_num}</span>人正在参与拼单</Fragment>
+                  )
+                }
               </div>
               {currentGroup &&
                 currentGroup.length > 2 && (
@@ -430,7 +445,11 @@ export default class extends Component {
           <div className="plr30 bg-white mb20">
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
-              <div className="font28 bold">用户评价</div>
+              <div className="font28 bold">
+                {
+                  currentComment && currentComment.length === 0 ? "还木有人评价" : "用户评价"
+                }
+              </div>
               {currentComment &&
                 currentComment.length > 1 && (
                   <WrapLink path={`/comment_list_${goods.id}`} className="c999">
@@ -459,7 +478,7 @@ export default class extends Component {
             <span className="font28">联系卖家</span>
           </a>
           <WrapLink
-            className="equal3 bg-second c-white flex jc-center ai-center column font28"
+            className={`equal3 ${isOver ? "bg-d9" : "bg-second"} c-white flex jc-center ai-center column font28`}
             onClick={this.onSinglePay}
           >
             <span className="font24">
@@ -471,7 +490,7 @@ export default class extends Component {
             <span className="lh100 mt5">单独购买</span>
           </WrapLink>
           <WrapLink
-            className="equal4 bg-main c-white flex jc-center ai-center column font28"
+            className={`equal4 ${isOver ? "bg-d9" : "bg-main"} c-white flex jc-center ai-center column font28`}
             onClick={this.onGroupPay}
           >
             <span className="font24">
@@ -501,15 +520,15 @@ export default class extends Component {
               商品参数
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {attr &&
+              {(attr &&
                 goods.attr &&
                 goods.attr.length > 0 &&
-                goods.attr.filter(x => x.attr_type === 1).length > 0 && (
+                goods.attr.filter(x => x.attr_type === 1).length > 0) ? (
                   <SyncList
                     items={attr.filter(x => x.attr_type === 1)}
                     renderItem={this.renderParam}
                   />
-                )}
+                ) : "暂无描述"}
             </div>
             {/* 按钮 */}
             <button

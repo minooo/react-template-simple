@@ -20,6 +20,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
+    this.btnMove = this.btnMove.bind(this)
   }
   state = {
     dataUpdata: false
@@ -34,24 +35,32 @@ export default class extends Component {
     const maxLeft = allWidth - (width / 2);
     const mixTop = height / 2;
     const maxTop = allHeight - (height / 2);
+    this.myRef.current.removeEventListener("touchmove", this.btnMove);
     this.myRef.current.addEventListener(
       "touchmove",
-      e => {
-        e.preventDefault();
-        const { pageX, pageY } = e.changedTouches[0];
-        if (
-          pageX > mixLeft &&
-          pageX < maxLeft &&
-          pageY > mixTop &&
-          pageY < maxTop
-        ) {
-          this.myRef.current.style.left = `${pageX - (width / 2)}px`;
-          this.myRef.current.style.top = `${pageY - (height / 2)}px`;
-        }
-      },
+      this.btnMove(mixLeft, maxLeft, mixTop, maxTop, width, height),
       false
     );
   }
+  // 移除监听事件
+  componentWillUnmount() {
+    this.myRef.current.removeEventListener("touchmove", this.btnMove);
+  }
+  // 按钮滑动事件
+  btnMove = (mixLeft, maxLeft, mixTop, maxTop, width, height) =>
+    e => {
+      e.preventDefault();
+      const { pageX, pageY } = e.changedTouches[0];
+      if (
+        pageX > mixLeft &&
+        pageX < maxLeft &&
+        pageY > mixTop &&
+        pageY < maxTop
+      ) {
+        this.myRef.current.style.left = `${pageX - (width / 2)}px`;
+        this.myRef.current.style.top = `${pageY - (height / 2)}px`;
+      }
+    };
   handle = (type, item) => {
     const { history } = this.props;
     const payState = {
@@ -75,7 +84,7 @@ export default class extends Component {
         history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
         break;
       case "checkCode": // 查看核销码
-        this.lookCheckCode(item)
+        this.lookCheckCode(item);
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {

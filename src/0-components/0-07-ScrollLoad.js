@@ -22,14 +22,6 @@ export default class extends React.Component {
     listenEle.onscroll = this.onScroll;
     this.loadMore(this.props, false);
   }
-  // componentWillReceiveProps(nextProps) {
-  //   const diffDataPath = !isEqual(this.props.dataPath, nextProps.dataPath);
-  //   const diffDataParam = !isEqual(this.props.dataParam, nextProps.dataParam);
-  //   const diffRequest = !isEqual(this.props.request, nextProps.request);
-  //   if ((diffDataPath || diffDataParam || diffRequest) && nextProps.canwork) {
-  //     this.loadMore(nextProps, true);
-  //   }
-  // }
   componentDidUpdate(prevProps) {
     // forceUpdate 是布尔值，用于某些情况的强制刷新，比如订单列表的某些操作，通过将 forceUpdate 取反即可达到强制刷新的效果
     // canwork 用于某些情况禁止该组件不必要的下拉加载

@@ -55,7 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "无货退款", class: "equal bg-second", type: "returnGoods" }]
+    btns: [{ text: "无货退货", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
@@ -392,9 +392,15 @@ export default class extends Component {
           }
           this.setState(() => ({ config: newConfig }));
         }
-        this.setState(() => ({ item: response }));
+        this.setState(() => ({ item: response }), ()=>{
+          const { item }=this.state
+          this.initState(item)});
       });
     });
+  }
+
+  componentWillUnmount() {
+    if (this.tick) clearInterval(this.tick);
   }
   // 订单详情的操作
   onOrderDetailList = type => {
@@ -431,12 +437,14 @@ export default class extends Component {
   handle = type => {
     const { item } = this.state;
     const { history } = this.props;
+    const isFull = item.buy_type !== 2 && (item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1)
     const payState = {
       goods_id: item.goods.id,
       id: item.id,
       order_id: item.order_id,
       pay_price: item.pay_price,
-      buy_type: item.buy_type
+      buy_type: item.buy_type,
+      isFull
     };
     const payStr = common.serializeParams(payState);
     switch (type) {
@@ -498,10 +506,14 @@ export default class extends Component {
           Toast.info(text, 1)
           this.setState(() => ({
             item: data
-          }));
+          }), () => {
+            () => {
+              const {item}=this.state
+              this.initState(item)
+            }
+          });
         });
-      }
-    );
+      })
   };
   renderOrderDetail = item => (
     <OrderDetailList
@@ -517,8 +529,49 @@ export default class extends Component {
       alert("核销码", item.verify_code, [{ text: "确定" }]);
     }
   }
+  // 初始化拼团状态
+  initState = item => {
+    const { goods, joins_num, launch_log_created_at } = item;
+    if(launch_log_created_at){
+      return
+    }
+    const remainNum = Math.max(
+      +goods.offerd_num - ((joins_num && joins_num.length) || 0),
+      0
+    );
+    const milliseconds =
+      +parse(launch_log_created_at) + (goods.available_time * 3600 * 1000);
+    const remainMilliseconds = milliseconds - new Date();
+
+    // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
+    let status = 0;
+    if (remainNum > 0) {
+      if (remainMilliseconds > 0) {
+        status = 1;
+      } else {
+        status = 3;
+      }
+    } else if (remainNum === 0) {
+      status = 2;
+    }
+    this.setState(() => ({
+      status
+    }))
+    if (remainMilliseconds > 0) {
+      this.tick = setTimeout(() => {
+        this.getData(id, data => {
+          this.setState(() => ({
+            item: data
+          }),()=>{
+            const {item}=this.state
+            this.initState(item)
+          } );
+        });
+      }, remainMilliseconds);
+    }
+  };
   render() {
-    const { item, config, netBad } = this.state;
+    const { item, config, netBad, status } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
     if (!item) return <RequestStatus />;
     const validOrderInfoList = orderInfoList.filter(x => {
@@ -548,9 +601,9 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {item.buy_type !== 2 && item.launch_log_id && (
+          {item.buy_type !== 2 && item.launch_log_id && status && (
               <OrderGroup
-                status={item.launch_log_status}
+                status={status}
                 list={item.joins}
                 groupId={item.launch_log_id}
               />
@@ -562,6 +615,7 @@ export default class extends Component {
               <List
                 as={`/product_detail_${item.goods.id}`}
                 item={item.goods}
+                isOrder={{ price: item.pay_price }}
               />
             )}
             {item.delivery_type === 1 && item.goods &&
@@ -578,7 +632,7 @@ export default class extends Component {
             <div className="h86 font28 c333 flex ai-center border-bottom-one">
               <span className="pr20">留言</span>
               <div className="pl20 text-overflow-1 equal">
-                {item.con || "什么也没说"}
+                {item.con || "用户很懒，什么也没说"}
               </div>
             </div>
             <div className="h84 flex jc-end ai-center">

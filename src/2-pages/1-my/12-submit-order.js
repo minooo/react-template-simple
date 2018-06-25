@@ -10,10 +10,17 @@ export default class extends Component {
     isFoot: true
   };
   componentDidMount() {
-    this.getCon()
+    this.getCon();
     const { delivery_type } = common.searchToObj();
     if (delivery_type === "1") this.onAddress();
-    window.addEventListener("resize", this.footHide);
+    if (common.isAndroid) {
+      window.addEventListener("resize", this.footHide);
+    }
+  }
+  componentWillUnmount() {
+    if (common.isAndroid) {
+      window.removeEventListener("resize", this.footHide);
+    }
   }
   // 获取默认地址
   onAddress = () => {
@@ -24,7 +31,6 @@ export default class extends Component {
         is_default: 1
       },
       data => {
-        console.info(data);
         this.setState(() => ({
           addressData: data.data[0]
         }));
@@ -45,6 +51,7 @@ export default class extends Component {
     const {
       goods_id,
       price,
+      isFull,
       goods_sku_id,
       buy_type,
       launch_log_id,
@@ -75,7 +82,13 @@ export default class extends Component {
           const pay_price = common.clipPrice(
             (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
           );
-          const paramsObj = { ...data.data, goods_id, pay_price, buy_type };
+          const paramsObj = {
+            ...data.data,
+            goods_id,
+            pay_price,
+            buy_type,
+            isFull
+          };
           const paramsStr = common.serializeParams(paramsObj);
           history.push(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
@@ -108,6 +121,7 @@ export default class extends Component {
   };
   // 软键盘弹起事件
   footHide = () => {
+    Toast.info("全屏resize事件触发了.");
     this.setState(pre => ({
       isFoot: !pre.isFoot
     }));
@@ -116,13 +130,10 @@ export default class extends Component {
   goAdress = () => {
     const { history } = this.props;
     const { con } = this.state;
-    if (con) {
-      const paramsObj = common.searchToObj();
-      const paramsStr = common.serializeParams(paramsObj);
-      history.push(`/address?&${paramsStr}`);
-    } else {
-      history.push("/address");
-    }
+    const getObj = common.searchToObj();
+    const paramsObj = { ...getObj, con };
+    const paramsStr = common.serializeParams(paramsObj);
+    history.replace(`/address?${paramsStr}`);
   };
   render() {
     const { addressData, con, isFoot } = this.state;
