@@ -81,7 +81,11 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
+        if (item.delivery_type === 2 || item.status === 2) {
+          history.push(`/retreat_${item.order_id}?type=2`);
+        } else {
+          history.push(`/retreat_${item.order_id}?type=1`);
+        }
         break;
       case "checkCode": // 查看核销码
         this.lookCheckCode(item);

@@ -55,7 +55,7 @@ const statusConfig = {
       ico: "i-tag font100 c-main",
       bg: "bg-white"
     },
-    btns: [{ text: "无货退货", class: "equal bg-second", type: "returnGoods" }]
+    btns: [{ text: "无货退款", class: "equal bg-second", type: "returnGoods" }]
   },
   22: {
     status: {
@@ -457,7 +457,11 @@ export default class extends Component {
         history.push(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
-        history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);
+        if (item.delivery_type === 2 || item.status === 2) {
+          history.push(`/retreat_${item.order_id}?type=2`);
+        } else {
+          history.push(`/retreat_${item.order_id}?type=1`);
+        }
         break;
       case "checkCode": // 查看核销码
         this.lookCheckCode(item)
