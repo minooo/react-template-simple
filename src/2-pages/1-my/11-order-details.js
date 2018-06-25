@@ -275,15 +275,15 @@ const orderInfoList = [
   { sign: "delivery_created_at", title: "发货时间" },
   { sign: "delivery_express_comp_name", title: "发货物流" },
   { sign: "delivery_express_code", title: "发货单号" },
-  { sign: "refund_created_at", title: "退货申请时间" },
-  { sign: "reason", title: "退货原因", type: "reason" },
-  { sign: "refund_refused_updated_at", title: "退货拒绝时间" },
-  { sign: "refused_reason", title: "退货拒绝原因", type: "rejectReason" },
-  { sign: "refund_updated_at", title: "退货同意时间" },
+  { sign: "refund_created_at", title: "退款（退货）申请时间" },
+  { sign: "reason", title: "退款（退货）原因", type: "reason" },
+  { sign: "refund_refused_updated_at", title: "退款（退货）拒绝时间" },
+  { sign: "refused_reason", title: "退款（退货）原因", type: "rejectReason" },
+  { sign: "refund_updated_at", title: "退款（退货）同意时间" },
   { sign: "refund_express_comp_name", title: "退货物流" },
   { sign: "refund_express_code", title: "退货单号" },
-  { sign: "refund_refunded_at", title: "退货时间" },
-  { sign: "refund_completed_at", title: "退货完成时间" }
+  { sign: "refund_refunded_at", title: "退款（退货）时间" },
+  { sign: "refund_completed_at", title: "退款（退货）完成时间" }
 ];
 
 // const util = require("util");
