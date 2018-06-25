@@ -10,12 +10,17 @@ export default class extends Component {
     isFoot: true
   };
   componentDidMount() {
+    this.getCon();
     const { delivery_type } = common.searchToObj();
     if (delivery_type === "1") this.onAddress();
-    window.addEventListener("resize", this.footHide)
+    if (common.isAndroid) {
+      window.addEventListener("resize", this.footHide);
+    }
   }
   componentWillUnmount() {
-    window.removeEventListener("resize", this.footHide)
+    if (common.isAndroid) {
+      window.removeEventListener("resize", this.footHide);
+    }
   }
   // 获取默认地址
   onAddress = () => {
@@ -71,13 +76,19 @@ export default class extends Component {
       })
       .then(data => {
         const { errcode, msg } = data;
-        const { history } = this.props
+        const { history } = this.props;
         if (parseInt(errcode, 10) === 0) {
           Toast.hide();
           const pay_price = common.clipPrice(
             (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
           );
-          const paramsObj = { ...data.data, goods_id, pay_price, buy_type, isFull };
+          const paramsObj = {
+            ...data.data,
+            goods_id,
+            pay_price,
+            buy_type,
+            isFull
+          };
           const paramsStr = common.serializeParams(paramsObj);
           history.replace(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
@@ -91,7 +102,7 @@ export default class extends Component {
             history.replace("/");
           });
         } else {
-          Toast.info(msg)
+          Toast.info(msg);
         }
       })
       .catch(err => {
@@ -99,10 +110,29 @@ export default class extends Component {
         console.error(err);
       });
   };
+  // 获取留言
+  getCon = () => {
+    const { con } = common.searchToObj();
+    if (con) {
+      this.setState(() => ({
+        con
+      }));
+    }
+  };
+  // 软键盘弹起事件
   footHide = () => {
     this.setState(pre => ({
       isFoot: !pre.isFoot
     }));
+  };
+  // 进入地址保存留言
+  goAdress = () => {
+    const { history } = this.props;
+    const { con } = this.state;
+    const getObj = common.searchToObj();
+    const paramsObj = { ...getObj, con };
+    const paramsStr = common.serializeParams(paramsObj);
+    history.replace(`/address?${paramsStr}`);
   };
   render() {
     const { addressData, con, isFoot } = this.state;
@@ -117,11 +147,14 @@ export default class extends Component {
     return (
       <Layout title="填写订单">
         <NavBar title="填写订单" />
-        <div className="equal overflow-y" style={{ marginTop: `${isFoot ? "0rem" : "-2.6rem"}` }}>
+        <div
+          className="equal overflow-y"
+          style={{ marginTop: `${isFoot ? "0rem" : "-2.6rem"}` }}
+        >
           {/* 地址 */}
           {delivery_type === "1" && (
             <WrapLink
-              path="/address"
+              onClick={this.goAdress}
               className="bg-white flex jc-between ai-center mb20 plr30 ptb30 w-100"
             >
               <div className=" flex ai-center">
@@ -158,14 +191,11 @@ export default class extends Component {
           )}
           {/* 商品详情 */}
           <div className="bg-white mb20 plr30">
-            {/* {isFoot && ( */}
-              <List
-                as={`/product_detail_${goods_id}`}
-                item={{ title, thumb }}
-                isOrder={{ price }}
-              />
-            {/* )} */}
-
+            <List
+              as={`/product_detail_${goods_id}`}
+              item={{ title, thumb }}
+              isOrder={{ price }}
+            />
             {delivery_type === "1" &&
               delivery_fee !== undefined && (
                 <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
@@ -193,7 +223,7 @@ export default class extends Component {
                   ￥
                   <span className="font40 bold">
                     {common.clipPrice(
-                      (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
+                      (delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)
                     )}
                   </span>
                 </span>
@@ -215,7 +245,7 @@ export default class extends Component {
                   ￥
                   <span className="font40 pl5">
                     {common.clipPrice(
-                      (delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)
+                      (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
                     )}
                   </span>
                 </div>
