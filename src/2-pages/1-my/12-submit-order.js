@@ -121,7 +121,6 @@ export default class extends Component {
   };
   // 软键盘弹起事件
   footHide = () => {
-    Toast.info("全屏resize事件触发了.");
     this.setState(pre => ({
       isFoot: !pre.isFoot
     }));
