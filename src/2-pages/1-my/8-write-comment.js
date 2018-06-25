@@ -107,7 +107,7 @@ export default class extends Component {
             <div className="h84 flex ai-center font24 c333 border-bottom-one">
               <span className="pr20">留言</span>
               <div className="pl20 text-overflow-1 equal">
-                {data.con || "什么也没说"}
+                {data.con || "用户很懒，什么也没说"}
               </div>
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">
