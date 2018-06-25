@@ -22,7 +22,8 @@ export default class extends Component {
       show: false,
       showOth: false,
       selectPrice: 1,
-      stock: 1
+      stock: 1,
+      isInit: false,
     };
     this.onSinglePay = this.onPay.bind(this, "single");
     this.onGroupPay = this.onPay.bind(this, "group");
@@ -46,7 +47,10 @@ export default class extends Component {
       wxapi.setShare({
         title: `火热拼团中-${goods.title}`,
         desc,
-        imgUrl: goods.thumb
+        imgUrl: goods.thumb,
+        successCall: () => {
+          this.setState(pre => ({ isInit: !pre.isInit }))
+        }
       });
     });
     try {
@@ -319,7 +323,8 @@ export default class extends Component {
       goods,
       currentGroup,
       currentComment,
-      isOver
+      isOver,
+      isInit
     } = this.state;
     if (!goods) return <RequestStatus />;
 
@@ -332,7 +337,7 @@ export default class extends Component {
     return (
       <Layout title={goods.title}>
         {/* 头部 */}
-        <NavBar title={goods.title} rightShare />
+        <NavBar title={goods.title} rightShare isInit={isInit} />
 
         {/* 中间 */}
         <div className="equal overflow-y">

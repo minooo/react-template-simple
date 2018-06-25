@@ -448,7 +448,7 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-        history.push(`/pay?${payStr}`);
+        history.replace(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         history.push(`/retreat_${item.order_id}?type=${item.delivery_type}`);

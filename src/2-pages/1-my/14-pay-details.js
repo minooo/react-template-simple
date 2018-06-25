@@ -30,14 +30,19 @@ export default class extends Component {
           </div>
           <div className="h72" />
           <div className=" plr30">
-            <WrapLink
-              className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
-              path={`/details_${launch_log_id}`}
-            >
-              {
-                (buy_type === "2" || isFull === "false") ? "邀请好友参团" : "查看本次拼团"
-              }
-            </WrapLink>
+            {
+              buy_type !== "2" && (
+                <WrapLink
+                  className="h80 font30 c-white bg-main r10 flex jc-center ai-center w-100 mb30"
+                  path={`/details_${launch_log_id}`}
+                >
+                  {
+                    (buy_type === "1" || isFull === "false") ? "邀请好友参团" : "查看本次拼团"
+                  }
+                </WrapLink>
+              )
+            }
+
             <WrapLink
               className="h80 font30 c-white bg-second r10 flex jc-center ai-center w-100"
               path={`/order_details_${id}`}

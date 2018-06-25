@@ -79,16 +79,16 @@ export default class extends Component {
           );
           const paramsObj = { ...data.data, goods_id, pay_price, buy_type, isFull };
           const paramsStr = common.serializeParams(paramsObj);
-          history.push(`/pay?${paramsStr}`);
+          history.replace(`/pay?${paramsStr}`);
         } else if (parseInt(errcode, 10) === 2) {
           // 订单已存在
           Toast.info(msg, 1, () => {
-            history.push(`/order_details_${data.data.id}`);
+            history.replace(`/order_details_${data.data.id}`);
           });
         } else if (parseInt(errcode, 10) === 1) {
           // 团购已结束
           Toast.info(msg, 1, () => {
-            history.push("/");
+            history.replace("/");
           });
         } else {
           Toast.info(msg)
