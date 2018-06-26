@@ -18,6 +18,9 @@ export default class extends React.PureComponent {
       this.setState(() => ({ isOpen: false }))
     }
   }
+  componentWillUnmount() {
+    this.isLeave = true
+  }
   onSwitch() {
     this.setState(
       pre => ({ isOpen: !pre.isOpen }),
@@ -61,9 +64,12 @@ export default class extends React.PureComponent {
               } else if (
                 window &&
                 window.history &&
-                window.history.length > 2
+                window.history.length > 1
               ) {
                 window.history.go(-1);
+                setTimeout(() => {
+                  if (!this.isLeave) this.props.history.push("/")
+                }, 100)
               } else {
                 this.props.history.push("/")
               }
