@@ -151,6 +151,18 @@ const statusConfig = {
     btns: [{ text: "完成交易", class: "equal bg-second", type: "finishOrder" }],
     showGroup: true
   },
+  92: {
+    status: {
+      title: "卖家拒绝退款",
+      caption: "等待买家核销",
+      ico: "i-fail font60 c-white",
+      bg: "bg-second"
+    },
+    btns: [
+      { text: "查看核销码", class: "equal bg-main", type: "checkCode" }
+    ],
+    showGroup: true
+  },
   10: {
     status: {
       title: "交易完成",
@@ -257,6 +269,8 @@ const selectStatus = item => {
       return item.delivery_type === 1 ? "2" : "22";
     case 6:
       return item.is_comment ? "62" : "6";
+    case 9:
+      return item.delivery_type === 1 ? "9" : "92";
     case 10:
       return item.is_comment ? "102" : "10";
     case 14:
