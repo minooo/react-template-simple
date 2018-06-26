@@ -46,7 +46,7 @@ export default class extends Component {
     if (netBad) return <RequestStatus type="no-net" />;
     if (!data) return <RequestStatus />;
     return (
-      <Layout title={`${causeType === 1 ? "退货" : "拒绝退货"}原因`}>
+      <Layout title={`${causeType === 1 ? "退款（退货）" : "拒绝退款（退货）"}原因`}>
         <NavBar title={`${causeType === 1 ? "退货" : "拒绝退货"}原因`} />
         <div className="equal overflow-y">
           <div
