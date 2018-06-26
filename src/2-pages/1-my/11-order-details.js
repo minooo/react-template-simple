@@ -291,8 +291,8 @@ const orderInfoList = [
   { sign: "delivery_express_code", title: "发货单号" },
   { sign: "refund_created_at", title: "退款（退货）申请时间" },
   { sign: "reason", title: "退款（退货）原因", type: "reason" },
-  { sign: "refund_refused_updated_at", title: "退款（退货）拒绝时间" },
-  { sign: "refused_reason", title: "退款（退货）拒绝原因", type: "rejectReason" },
+  { sign: "refund_refused_updated_at", title: "拒绝退款（退货）时间" },
+  { sign: "refused_reason", title: "拒绝退款（退货）原因", type: "rejectReason" },
   { sign: "refund_updated_at", title: "退款（退货）同意时间" },
   { sign: "refund_express_comp_name", title: "退货物流" },
   { sign: "refund_express_code", title: "退货单号" },
@@ -525,11 +525,9 @@ export default class extends Component {
   // 初始化拼团状态
   initState = item => {
     const { goods, joins_num, launch_log_created_at } = item;
-    if(!launch_log_created_at){
-      return
-    }
+
     const remainNum = Math.max(
-      +goods.offerd_num - ((joins_num && joins_num.length) || 0),
+      +goods.offerd_num - ((joins_num) || 0),
       0
     );
     const milliseconds =
@@ -548,7 +546,7 @@ export default class extends Component {
       status = 2;
     }
     this.setState(() => ({
-      status
+      collageStatus: status
     }))
     if (remainMilliseconds > 0) {
       this.tick = setTimeout(() => {
@@ -564,7 +562,7 @@ export default class extends Component {
     }
   };
   render() {
-    const { item, config, netBad, status } = this.state;
+    const { item, config, netBad, collageStatus } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
     if (!item) return <RequestStatus />;
     const validOrderInfoList = orderInfoList.filter(x => {
@@ -594,9 +592,9 @@ export default class extends Component {
           )}
 
           {/* 拼单成功 */}
-          {item.buy_type !== 2 && item.launch_log_id && status && (
+          {item.buy_type !== 2 && item.launch_log_id && collageStatus !== undefined && (
               <OrderGroup
-                status={status}
+                status={collageStatus}
                 list={item.joins}
                 groupId={item.launch_log_id}
               />
