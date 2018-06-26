@@ -24,6 +24,7 @@ const btnStatus = {
   62: [{ title: "申请退货", type: "returnGoods" }],
   8: [{ title: "退还商品", type: "backGoods" }],
   9: [{ title: "完成交易", type: "finishOrder" }],
+  92: [{ title: "查看核销码", theme: "main", type: "checkCode" }],
   10: [{ title: "评价", theme: "main", type: "goComment" }],
   11: [{ title: "提醒卖家收货", type: "tipReceipt" }],
   12: [{ title: "删除", type: "delOrder" }],
@@ -40,6 +41,8 @@ const selectStatus = item => {
     return (item.delivery_type === 1 ? "2" : "22")
     case 6:
     return item.is_comment ? "62" : "6"
+    case 9:
+    return item.delivery_type === 1 ? "9" : "92";
     case 10:
     return item.is_comment ? "102" : "10"
     case 14:
