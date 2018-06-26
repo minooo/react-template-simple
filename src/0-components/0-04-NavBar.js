@@ -12,6 +12,12 @@ export default class extends React.PureComponent {
 
     this.onSwitch = this.onSwitch.bind(this);
   }
+  componentDidUpdate(preProps) {
+    if (this.props.isInit !== preProps.isInit) {
+      // eslint-disable-next-line
+      this.setState(() => ({ isOpen: false }))
+    }
+  }
   onSwitch() {
     this.setState(
       pre => ({ isOpen: !pre.isOpen }),

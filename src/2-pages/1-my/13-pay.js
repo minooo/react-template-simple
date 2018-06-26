@@ -34,7 +34,7 @@ export default class extends Component {
         wxapi.pay(pay_param).then(() => {
           Toast.loading("订单处理中，请稍后...", 60)
           http.postC({ action: "wxpay_query_order", out_trade_no: data.out_trade_no }, () => {
-            history.push(`/pay_details?${paramsStr}`)
+            history.replace(`/pay_details?${paramsStr}`)
           })
         }, (err) => {
           Toast.info(`抱歉，支付 reject 错误：${JSON.stringify(err)}`)

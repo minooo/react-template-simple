@@ -378,7 +378,10 @@ export default class extends Component {
     wxapi.setShare({
       title,
       desc,
-      imgUrl: collageData.goods.thumb
+      imgUrl: collageData.goods.thumb,
+      successCall: () => {
+        this.setState(() => ({ isOpen: false }))
+      }
     });
   };
   // 渲染当前的拼单列表

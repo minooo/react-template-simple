@@ -286,27 +286,6 @@ const orderInfoList = [
   { sign: "refund_completed_at", title: "退款（退货）完成时间" }
 ];
 
-// const util = require("util");
-
-// const initData = {
-//   id: 1,
-//   status: 0,
-//   member_region: "郑州市金水区",
-//   member_address: "受到法律卡机了撒旦发啊打发打发上的",
-//   launch_log_id: 2, // 拼团id
-//   goods: {
-//     thumb: "https://dummyimage.com/600x600",
-//     title: "的法律受到法律",
-//     low_price: 20
-//   },
-//   order_id: 123412341,
-//   verify_code: 123456,
-//   created_at: "2018-06-11 09:44:09",
-//   pay_at: "2018-11-12 12:12:00",
-//   pay_price: 40,
-//   reson: 1
-// };
-
 export default class extends Component {
   constructor(props) {
     super(props);
@@ -435,7 +414,7 @@ export default class extends Component {
   };
   // 底部按钮
   handle = type => {
-    const { item } = this.state;
+    const { item, status } = this.state;
     const { history } = this.props;
     const isFull = item.buy_type !== 2 && (item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1)
     const payState = {
@@ -454,7 +433,7 @@ export default class extends Component {
         });
         break;
       case "goPay": // 去支付
-        history.push(`/pay?${payStr}`);
+        history.replace(`/pay?${payStr}`);
         break;
       case "returnGoods": // 申请退货
         if (item.delivery_type === 2 || item.status === 2) {
@@ -527,11 +506,7 @@ export default class extends Component {
     />
   );
   lookCheckCode = item => {
-    if(item.launch_log_status && item.launch_log_status !==2){
-      alert("", "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
-    }else{
-      alert("核销码", item.verify_code, [{ text: "确定" }]);
-    }
+    alert(item.verify_code ? "核销码" : "", item.verify_code || "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
   }
   // 初始化拼团状态
   initState = item => {

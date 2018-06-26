@@ -9,7 +9,7 @@ import { common, config, wxapi } from "@utils"
 )
 export default class extends React.Component {
   componentDidMount() {
-    if (common.isIOS()) {
+    if (common && common.isIOS()) {
       wxapi.setConfig({ ...config("wx").jsConfig });
     }
     // let a = new VConsole()
