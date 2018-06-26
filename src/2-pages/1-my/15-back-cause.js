@@ -63,11 +63,11 @@ export default class extends Component {
             <div className="flex wrap">
               {data.images &&
                 data.images.length > 0 &&
-                data.images.map(item => (
+                data.images.map((item, index) => (
                   <div
                     key={item}
                     onClick={() => this.onImages(item)}
-                    className="mb30 mr30"
+                    className={`mb30 mr20 ${index % 3 !== 2 ? "mr20" : ""}`}
                     style={{ width: "2.2rem", height: "2.2rem" }}
                   >
                     <img
