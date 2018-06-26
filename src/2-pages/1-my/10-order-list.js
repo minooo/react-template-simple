@@ -138,13 +138,7 @@ export default class extends Component {
     );
   };
   lookCheckCode = item => {
-    if (item.launch_log_status && item.launch_log_status !== 2) {
-      alert("", "拼单未满员，待拼单成功后才能查看核销码哦~", [
-        { text: "确定" }
-      ]);
-    } else {
-      alert("核销码", item.verify_code, [{ text: "确定" }]);
-    }
+    alert(item.verify_code ? "核销码" : "", item.verify_code || "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
   };
   renderItem = item => (
     <HomeMyTeambuyList key={item.id} item={item} handle={this.handle} />
