@@ -403,7 +403,7 @@ export default class extends Component {
     if (type === "reason") {
       history.push(`/back_cause_${item.order_id}?type=1`);
     } else {
-      history.push(history.push(`/back_cause_${item.order_id}?type=2`));
+      history.push(`/back_cause_${item.order_id}?type=2`);
     }
   };
   // 获取数据

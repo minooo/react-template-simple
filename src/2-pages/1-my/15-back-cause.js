@@ -10,7 +10,7 @@ export default class extends Component {
   };
   componentDidMount() {
     const { id } = this.props.match.params;
-    const searchObj = common.searchToObj()
+    const searchObj = common.searchToObj();
     const { history } = this.props;
     http
       .get({
@@ -37,17 +37,21 @@ export default class extends Component {
         console.info(err);
       });
   }
-  onImages=(item) => {
+  onImages = item => {
     const { data } = this.state;
     wxapi.previewImage(item, data.images);
-  }
+  };
   render() {
     const { data, netBad, causeType } = this.state;
     if (netBad) return <RequestStatus type="no-net" />;
     if (!data) return <RequestStatus />;
     return (
-      <Layout title={`${causeType === 1 ? "退款（退货）" : "拒绝退款（退货）"}原因`}>
-        <NavBar title={`${causeType === 1 ? "退款（退货）" : "拒绝退款（退货）"}原因`} />
+      <Layout
+        title={`${causeType === 1 ? "退款（退货）" : "拒绝退款（退货）"}原因`}
+      >
+        <NavBar
+          title={`${causeType === 1 ? "退款（退货）" : "拒绝退款（退货）"}原因`}
+        />
         <div className="equal overflow-y">
           <div
             className="bg-white font28 plr30"
@@ -56,14 +60,14 @@ export default class extends Component {
             <div className="lh150" style={{ paddingBottom: "0.5rem" }}>
               {data.reason && data.reason}
             </div>
-            <div className="flex jc-between wrap">
+            <div className="flex wrap">
               {data.images &&
                 data.images.length > 0 &&
-                data.images.map((item) => (
+                data.images.map(item => (
                   <div
                     key={item}
                     onClick={() => this.onImages(item)}
-                    className="mb30"
+                    className="mb30 mr30"
                     style={{ width: "2.2rem", height: "2.2rem" }}
                   >
                     <img
