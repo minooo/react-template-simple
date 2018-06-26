@@ -59,7 +59,7 @@ export default class extends Component {
             <div className="flex jc-between wrap">
               {data.images &&
                 data.images.length > 0 &&
-                data.images.map((item) => (
+                data.images.map(item => (
                   <div
                     key={item}
                     onClick={() => this.onImages(item)}

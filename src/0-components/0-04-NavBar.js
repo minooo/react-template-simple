@@ -61,7 +61,7 @@ export default class extends React.PureComponent {
               } else if (
                 window &&
                 window.history &&
-                window.history.length > 1
+                window.history.length > 2
               ) {
                 window.history.go(-1);
               } else {
