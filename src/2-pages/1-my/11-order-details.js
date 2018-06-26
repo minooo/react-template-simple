@@ -511,7 +511,7 @@ export default class extends Component {
   // 初始化拼团状态
   initState = item => {
     const { goods, joins_num, launch_log_created_at } = item;
-    if(launch_log_created_at){
+    if(!launch_log_created_at){
       return
     }
     const remainNum = Math.max(
