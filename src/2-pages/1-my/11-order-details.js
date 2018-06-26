@@ -520,7 +520,7 @@ export default class extends Component {
     />
   );
   lookCheckCode = item => {
-    alert(item.verify_code ? "核销码" : "", item.verify_code || "拼单未满员，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
+    alert(item.verify_code ? "核销码" : "", item.verify_code || "拼单未满员或拼团失败，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
   }
   // 初始化拼团状态
   initState = item => {
