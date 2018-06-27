@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 // import VConsole from "vconsole"
-import { common, config, wxapi } from "@utils"
+import { common, http, config, wxapi } from "@utils"
 
 @connect(
   null,
@@ -13,6 +13,9 @@ export default class extends React.Component {
       wxapi.setConfig({ ...config("wx").jsConfig });
     }
     // let a = new VConsole()
+    window.addEventListener("beforeunload", () => {
+      http.post({ action: "user", operation: "closed" })
+    });
   }
   render() {
     return this.props.children;
