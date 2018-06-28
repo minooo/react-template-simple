@@ -7,7 +7,8 @@ import { http, common } from "@utils";
 
 export default class extends Component {
   state = {
-    isFoot: true
+    isFoot: true,
+    con: ""
   };
   componentDidMount() {
     this.getCon();
@@ -223,7 +224,7 @@ export default class extends Component {
                   ￥
                   <span className="font40 bold">
                     {common.clipPrice(
-                      (delivery_type === "1" ? ((+delivery_fee) || 0) : 0) + (+price)
+                      (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
                     )}
                   </span>
                 </span>
