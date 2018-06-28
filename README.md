@@ -10,6 +10,15 @@
 * 本地网址 http://mp.duduapp.localhost/#/
 * 填坑大全之如果支付出现问题，首先排查 Window.AppConfig.wx.jsConfig 是否有值，然后看url中#前面是否有 ?index, 最后是吊起支付时，传的支付参数是否对应。
 
+```
+// 开发
+npm start
+
+// 部署
+npm run build
+
+```
+
 ## 后端约定
 
 以下建议是根据近期项目开发总结而来，请各位务必认真对待。有问题随时提，我们要将此作为今后的约定规范
