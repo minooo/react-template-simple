@@ -9,7 +9,7 @@ export default class extends Component {
   constructor(props) {
     super(props)
     this.myRef = React.createRef();
-    this.state = {}
+    this.state = { con: "" }
   }
   componentDidMount() {
     this.getCon();
