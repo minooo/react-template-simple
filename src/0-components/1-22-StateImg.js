@@ -37,8 +37,8 @@ const More = ({ teamId }) => (
 
 export default ({ imgList, offerd_num, teamId }) => (
   <div className="flex jc-center" style={{ marginRight: "-0.2rem" }}>
-    <Avatar item={imgList[0]} isFirst />
-    {imgList[1] ? <Avatar item={imgList[1]} /> : <Add />}
+    {imgList[0] ? <Avatar item={imgList[0]} isFirst /> : <Add />}
+    {imgList[1] ? <Avatar item={imgList[1]} /> : imgList[0] && <Add />}
     {imgList[2] ? (
       imgList.length > 3 ? (
         offerd_num !== imgList.length ? (

@@ -52,20 +52,31 @@ export default class extends Component {
   }
   // 拼团数据 和 更多拼团列表
   onAddress = () => {
+    const { history } = this.props
     const { id } = this.props.match.params;
-    http.getC({ action: "collage", operation: "show", id }, data => {
-      this.setState(
-        () => ({ collageData: data.data }),
-        () => {
-          const { collageData } = this.state;
+    http.get({ action: "collage", operation: "show", id }).then(data => {
+      const { errcode, msg } = data
+      if (parseInt(errcode, 10) === 0) {
+        this.setState(
+          () => ({ collageData: data.data }),
+          () => {
+            const { collageData } = this.state;
 
-          // 初始化 剩余名额，结束日期总毫秒数，距离结束剩余毫秒数，状态
-          this.initState(collageData);
+            // 初始化 剩余名额，结束日期总毫秒数，距离结束剩余毫秒数，状态
+            this.initState(collageData);
 
-          // 分享配置
-          this.shareConfig(collageData);
-        }
-      );
+            // 分享配置
+            this.shareConfig(collageData);
+          }
+        );
+      } else {
+        Toast.info(msg || "请求出错，请稍后重试！", 2, () => {
+          history.replace("/")
+        })
+      }
+    }).catch(error => {
+      Toast.offline("网络出错，请稍后再试！", 2, () => { history.replace("/") })
+      console.error(error)
     });
   };
   // 获取拼团列表
