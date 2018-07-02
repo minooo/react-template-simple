@@ -150,7 +150,7 @@ export default class extends Component {
         <NavBar title="填写订单" />
         <div
           className="equal overflow-y"
-          style={{ marginTop: `${isFoot ? "0rem" : "-2.6rem"}` }}
+          // style={{ marginTop: `${isFoot ? "0rem" : "-2.6rem"}` }}
         >
           {/* 地址 */}
           {delivery_type === "1" && (
