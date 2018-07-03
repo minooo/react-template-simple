@@ -228,7 +228,6 @@ export default class extends Component {
         {/* 提交订单 */}
         <div
           className="h108 flex border-top w-100 bg-white"
-          style={{ position: "fixed", bottom: "0" }}
         >
           <div
             className="flex ai-center equal h-100"
