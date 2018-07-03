@@ -6,22 +6,15 @@ import { http, common } from "@utils";
 // const { alert } = Modal;
 
 export default class extends Component {
-  state = {
-    isFoot: true,
-    con: ""
-  };
+  constructor(props) {
+    super(props)
+    this.myRef = React.createRef();
+    this.state = { con: "" }
+  }
   componentDidMount() {
     this.getCon();
     const { delivery_type } = common.searchToObj();
     if (delivery_type === "1") this.onAddress();
-    if (common.isAndroid) {
-      window.addEventListener("resize", this.footHide);
-    }
-  }
-  componentWillUnmount() {
-    if (common.isAndroid) {
-      window.removeEventListener("resize", this.footHide);
-    }
   }
   // 获取默认地址
   onAddress = () => {
@@ -111,6 +104,11 @@ export default class extends Component {
         console.error(err);
       });
   };
+  onFocus = () => {
+    setTimeout(() => {
+      this.myRef.current.scrollTop = 100000
+    }, 400)
+  }
   // 获取留言
   getCon = () => {
     const { con } = common.searchToObj();
@@ -119,12 +117,6 @@ export default class extends Component {
         con
       }));
     }
-  };
-  // 软键盘弹起事件
-  footHide = () => {
-    this.setState(pre => ({
-      isFoot: !pre.isFoot
-    }));
   };
   // 进入地址保存留言
   goAdress = () => {
@@ -136,7 +128,7 @@ export default class extends Component {
     history.replace(`/address?${paramsStr}`);
   };
   render() {
-    const { addressData, con, isFoot } = this.state;
+    const { addressData, con } = this.state;
     const {
       title,
       thumb,
@@ -150,7 +142,7 @@ export default class extends Component {
         <NavBar title="填写订单" />
         <div
           className="equal overflow-y"
-          // style={{ marginTop: `${isFoot ? "0rem" : "-2.6rem"}` }}
+          ref={this.myRef}
         >
           {/* 地址 */}
           {delivery_type === "1" && (
@@ -215,6 +207,7 @@ export default class extends Component {
                 placeholder="请填写给卖家的留言（选填）"
                 value={con || ""}
                 onChange={val => this.onChange(val, "con")}
+                onFocus={this.onFocus}
               />
             </div>
             <div className="h84 flex ai-center font24 c333 jc-end">
@@ -231,35 +224,35 @@ export default class extends Component {
               </div>
             </div>
           </div>
-          {/* 提交订单 */}
+        </div>
+        {/* 提交订单 */}
+        <div
+          className="h108 flex border-top w-100 bg-white"
+          style={{ position: "fixed", bottom: "0" }}
+        >
           <div
-            className="h108 flex border-top w-100 bg-white"
-            style={{ position: "fixed", bottom: "0" }}
+            className="flex ai-center equal h-100"
+            style={{ paddingLeft: "0.35rem" }}
           >
-            <div
-              className="flex ai-center equal h-100"
-              style={{ paddingLeft: "0.35rem" }}
-            >
-              <div className="flex ai-end">
-                <div className="font24 c-main">
-                  <span className="font28 c333">合计：</span>
-                  ￥
-                  <span className="font40 pl5">
-                    {common.clipPrice(
-                      (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
-                    )}
-                  </span>
-                </div>
+            <div className="flex ai-end">
+              <div className="font24 c-main">
+                <span className="font28 c333">合计：</span>
+                ￥
+                <span className="font40 pl5">
+                  {common.clipPrice(
+                    (delivery_type === "1" ? +delivery_fee || 0 : 0) + +price
+                  )}
+                </span>
               </div>
             </div>
-            <WrapLink
-              onClick={this.onSetting}
-              style={{ width: "2.6rem" }}
-              className="font30 bg-main c-white text-center h-100 flex ai-center jc-center"
-            >
-              提交订单
-            </WrapLink>
           </div>
+          <WrapLink
+            onClick={this.onSetting}
+            style={{ width: "2.6rem" }}
+            className="font30 bg-main c-white text-center h-100 flex ai-center jc-center"
+          >
+            提交订单
+          </WrapLink>
         </div>
       </Layout>
     );

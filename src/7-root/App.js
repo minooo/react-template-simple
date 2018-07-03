@@ -13,6 +13,12 @@ export default class extends React.Component {
       wxapi.setConfig({ ...config("wx").jsConfig });
     }
     // let a = new VConsole()
+    // window.addEventListener("beforeunload", () => {
+    //   http.post({ action: "user", operation: "closed" })
+    // })
+  }
+  componentWillUnmount() {
+
   }
   render() {
     return this.props.children;
