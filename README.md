@@ -16,6 +16,7 @@ npm start
 
 // 部署
 npm run build
+// 完事之后，将dist 中的 index.html 格式化，取bundle后面的那一串。
 
 ```
 
