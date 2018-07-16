@@ -398,7 +398,7 @@ export default class extends Component {
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div>
                 {
-                  goods.being_collage_num === 0 ? "还木有人拼单，快来发起拼单吧！" : (
+                  goods.being_collage_num === 0 ? "还木有人正在拼单，快来发起拼单吧！" : (
                     <Fragment>有<span className="plr10 c-main">{goods.being_collage_num}</span>人正在参与拼单</Fragment>
                   )
                 }
