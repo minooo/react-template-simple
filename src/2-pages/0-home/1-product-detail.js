@@ -526,11 +526,11 @@ export default class extends Component {
             </div>
             <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
               {(
-                goods.attr &&
-                goods.attr.length > 0 &&
-                goods.attr.filter(x => x.attr_type === 1).length > 0) ? (
+                attr &&
+                attr.length > 0 &&
+                attr.filter(x => x.attr_type === 1).length > 0) ? (
                   <SyncList
-                    items={goods.attr.filter(x => x.attr_type === 1)}
+                    items={attr.filter(x => x.attr_type === 1)}
                     renderItem={this.renderParam}
                   />
                 ) : "暂无描述"}
