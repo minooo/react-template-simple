@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import App from "./App";
@@ -12,7 +12,7 @@ const Root = ({ store, history }) => (
   <Provider store={store}>
     <App>
       <ConnectedRouter history={history}>
-        <div className="box bg-body h-full">{routes}</div>
+        <Fragment>{routes}</Fragment>
       </ConnectedRouter>
     </App>
   </Provider>

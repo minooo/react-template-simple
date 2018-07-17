@@ -8,7 +8,8 @@
 * 测试 http://plugins.duduapp.net/
 * 模拟登陆 http://mp.dev.duduapp.net/h5/zKB4Db0a2PVqyV8YPve3?token=NkFtSlpUZFNrd1QxbUZRWkRCSExSUT09
 * 本地网址 http://mp.duduapp.localhost/#/
-* 填坑大全之如果支付出现问题，首先排查 Window.AppConfig.wx.jsConfig 是否有值，然后看url中#前面是否有 ?index, 最后是吊起支付时，传的支付参数是否对应。
+* 填坑大全之如果支付出现问题，首先排查 Window.AppConfig.wx.jsConfig 是否有值，然后看url中#前面是否有 ?index, 最后是调起支付时，传的支付参数是否对应。
+* http://mp.dev.duduapp.net/h5/w8LO1dXy9zzN9lRkjGEx?index=1&token=NkFtSlpUZFNrd1QxbUZRWkRCSExSUT09#/
 
 ```
 // 开发
@@ -16,6 +17,7 @@ npm start
 
 // 部署
 npm run build
+// 完事之后，将dist 中的 index.html 格式化，取bundle后面的那一串。
 
 ```
 

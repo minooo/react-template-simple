@@ -23,7 +23,7 @@ export default class extends Component {
       showOth: false,
       selectPrice: 1,
       stock: 1,
-      isInit: false,
+      isInit: false
     };
     this.onSinglePay = this.onPay.bind(this, "single");
     this.onGroupPay = this.onPay.bind(this, "group");
@@ -41,7 +41,7 @@ export default class extends Component {
     http.getC({ action: "goods", operation: "show", id }, response => {
       const goods = response.data;
       // 商品是否过期
-      const isOver = +parse(goods.end_time) - new Date() < 0
+      const isOver = +parse(goods.end_time) - new Date() < 0;
       this.setState(() => ({ goods, isOver }));
       const desc = common.filterHtml(goods.con);
       wxapi.setShare({
@@ -49,7 +49,7 @@ export default class extends Component {
         desc,
         imgUrl: goods.thumb,
         successCall: () => {
-          this.setState(pre => ({ isInit: !pre.isInit }))
+          this.setState(pre => ({ isInit: !pre.isInit }));
         }
       });
     });
@@ -139,10 +139,10 @@ export default class extends Component {
     }
   }
   onPay(type) {
-    const { isOver } = this.state
+    const { isOver } = this.state;
     if ((type === "single" || type === "group") && isOver) {
-      Toast.fail("该商品已过期！", 2)
-      return
+      Toast.fail("该商品已过期！", 2);
+      return;
     }
     this.setState(
       pre => ({ show: !pre.show, payType: type }),
@@ -351,7 +351,17 @@ export default class extends Component {
                 home_collage.length > 0 && <OrderTip data={home_collage} />}
             </div> */}
             <div className="common-img-bg h-100">
-              <div onClick={this.onImages} style={{ position: "absolute", zIndex: 200, top: 0, right: 0, bottom: 0, left: 0 }} />
+              <div
+                onClick={this.onImages}
+                style={{
+                  position: "absolute",
+                  zIndex: 200,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0
+                }}
+              />
               {goods.images &&
                 goods.images.length > 0 && (
                   <Fragment>
@@ -397,11 +407,15 @@ export default class extends Component {
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div>
-                {
-                  goods.being_collage_num === 0 ? "还木有人拼单，快来发起拼单吧！" : (
-                    <Fragment>有<span className="plr10 c-main">{goods.being_collage_num}</span>人正在参与拼单</Fragment>
-                  )
-                }
+                {goods.being_collage_num === 0 ? (
+                  "还木有人正在拼单，快来发起拼单吧！"
+                ) : (
+                  <Fragment>
+                    有
+                    <span className="plr10 c-main">{goods.being_collage_num}</span>
+                    人正在参与拼单
+                  </Fragment>
+                )}
               </div>
               {currentGroup &&
                 currentGroup.length > 2 && (
@@ -451,9 +465,9 @@ export default class extends Component {
             {/* 标题 */}
             <div className="border-bottom-one flex jc-between font24 c333 ptb25">
               <div className="font28 bold">
-                {
-                  currentComment && currentComment.length === 0 ? "还木有人评价" : "用户评价"
-                }
+                {currentComment && currentComment.length === 0
+                  ? "还木有人评价"
+                  : "用户评价"}
               </div>
               {currentComment &&
                 currentComment.length > 1 && (
@@ -474,175 +488,189 @@ export default class extends Component {
         </div>
 
         {/* 底部 */}
-        <div className="equal-no h108 flex border-top">
-          <a
-            href={`tel:${config("custom")}`}
-            className="equal3 flex column jc-center ai-center c999 bg-white"
-          >
-            <i className="i-phone font34 mb10" />
-            <span className="font28">联系卖家</span>
-          </a>
-          <WrapLink
-            className={`equal3 ${isOver ? "bg-d9" : "bg-second"} c-white flex jc-center ai-center column font28`}
-            onClick={this.onSinglePay}
-          >
-            <span className="font24">
-              <span className="font28">¥ </span>
-              <span className="font34 bold">
-                {common.tipPrice(goods.real_price).int}
-              </span>.{common.tipPrice(goods.real_price).dec}
-            </span>
-            <span className="lh100 mt5">单独购买</span>
-          </WrapLink>
-          <WrapLink
-            className={`equal4 ${isOver ? "bg-d9" : "bg-main"} c-white flex jc-center ai-center column font28`}
-            onClick={this.onGroupPay}
-          >
-            <span className="font24">
-              <span className="font28">¥ </span>
-              <span className="font34 bold">
-                {common.tipPrice(goods.low_price).int}
-              </span>.{common.tipPrice(goods.low_price).dec}
-            </span>
-            <span className="lh100 mt5">发起拼单</span>
-          </WrapLink>
-          {/* 半透明背景 */}
-          <div
-            className={show || showOth ? "common-alert-bg" : ""}
-            onClick={showOth ? this.onProductParam : this.onAlertBg}
-          />
+        {goods &&
+          goods.status === 1 && (
+            <div className="equal-no h108 flex border-top">
+              <a
+                href={`tel:${config("custom")}`}
+                className="equal3 flex column jc-center ai-center c999 bg-white"
+              >
+                <i className="i-phone font34 mb10" />
+                <span className="font28">联系卖家</span>
+              </a>
+              <WrapLink
+                className={`equal3 ${
+                  isOver ? "bg-d9" : "bg-second"
+                } c-white flex jc-center ai-center column font28`}
+                onClick={this.onSinglePay}
+              >
+                <span className="font24">
+                  <span className="font28">¥ </span>
+                  <span className="font34 bold">
+                    {common.tipPrice(goods.real_price).int}
+                  </span>.{common.tipPrice(goods.real_price).dec}
+                </span>
+                <span className="lh100 mt5">单独购买</span>
+              </WrapLink>
+              <WrapLink
+                className={`equal4 ${
+                  isOver ? "bg-d9" : "bg-main"
+                } c-white flex jc-center ai-center column font28`}
+                onClick={this.onGroupPay}
+              >
+                <span className="font24">
+                  <span className="font28">¥ </span>
+                  <span className="font34 bold">
+                    {common.tipPrice(goods.low_price).int}
+                  </span>.{common.tipPrice(goods.low_price).dec}
+                </span>
+                <span className="lh100 mt5">发起拼单</span>
+              </WrapLink>
+              {/* 半透明背景 */}
+              <div
+                className={show || showOth ? "common-alert-bg" : ""}
+                onClick={showOth ? this.onProductParam : this.onAlertBg}
+              />
 
-          {/* 商品参数展示 */}
-          <div
-            className={`product-pay bg-white ${
-              showOth ? "product-pay-show" : "product-pay-hide"
-            }`}
-          >
-            <div
-              style={{ lineHeight: "0.94rem" }}
-              className="h94 font34 bold text-center"
-            >
-              商品参数
-            </div>
-            <div style={{ maxHeight: "5.2rem" }} className="plr30 overflow-y">
-              {(attr &&
-                goods.attr &&
-                goods.attr.length > 0 &&
-                goods.attr.filter(x => x.attr_type === 1).length > 0) ? (
-                  <SyncList
-                    items={attr.filter(x => x.attr_type === 1)}
-                    renderItem={this.renderParam}
-                  />
-                ) : "暂无描述"}
-            </div>
-            {/* 按钮 */}
-            <button
-              className="h98 bg-main w-100 c-white font34 mt20"
-              onClick={this.onProductParam}
-            >
-              确定
-            </button>
-          </div>
-
-          {/* 商品具体规格选择窗口 */}
-          <div
-            className={`product-pay ${
-              show ? "product-pay-show" : "product-pay-hide"
-            }`}
-          >
-            {/* 上 */}
-            <div className="h60" />
-            <div className="bg-white">
-              {/* 头部 */}
-              <div className="relative flex ai-end plr30">
+              {/* 商品参数展示 */}
+              <div
+                className={`product-pay bg-white ${
+                  showOth ? "product-pay-show" : "product-pay-hide"
+                }`}
+              >
                 <div
-                  style={{
-                    width: "2rem",
-                    height: "2rem",
-                    position: "absolute",
-                    left: "0.3rem",
-                    bottom: 0
-                  }}
-                  className="overflow-h r10 common-img-bg"
+                  style={{ lineHeight: "0.94rem" }}
+                  className="h94 font34 bold text-center"
                 >
-                  <img src={goods.thumb} className="w-100 h-100" alt="" />
+                  商品参数
                 </div>
-                <div style={{ width: "2.3rem", height: "1.4rem" }} />
-                <div className="equal relative">
-                  <div
-                    style={{ position: "absolute", right: 0, top: 0 }}
-                    onClick={this.onAlertBg}
-                  >
-                    <i className="i-close font24 c999" />
-                  </div>
-                  <div className="font24 c999 ptb15">
-                    <span className="font22 c-main">¥</span>
-                    <span className="font40 bold c-main mr30">
-                      {selectPrice}
-                    </span>
-                    {goods.offerd_num}人拼团
-                    {/* &nbsp;&nbsp;&nbsp;&nbsp;库存：{stock} */}
-                  </div>
-                  {tipArrStr !== undefined && (
-                    <div className="font24 c666 ptb10">
-                      {tipArrStr.length === 0
-                        ? "可以立即购买啦！"
-                        : `请选择 ${tipArrStr.map(item => item)}`}
-                    </div>
+                <div
+                  style={{ maxHeight: "5.2rem" }}
+                  className="plr30 overflow-y"
+                >
+                  {attr &&
+                  attr.length > 0 &&
+                  attr.filter(x => x.attr_type === 1).length > 0 ? (
+                    <SyncList
+                      items={attr.filter(x => x.attr_type === 1)}
+                      renderItem={this.renderParam}
+                    />
+                  ) : (
+                    "暂无描述"
                   )}
                 </div>
+                {/* 按钮 */}
+                <button
+                  className="h98 bg-main w-100 c-white font34 mt20"
+                  onClick={this.onProductParam}
+                >
+                  确定
+                </button>
               </div>
 
-              {/* 主干 */}
-              <div style={{ maxHeight: "5.2rem" }} className="pl30 overflow-y">
-                {attr &&
-                  attr.length > 0 &&
-                  attr.filter(m => m.attr_type === 2).length > 0 &&
-                  attr.filter(m => m.attr_type === 2).map(item => (
-                    <div key={item.id} className="font24 c666">
-                      <div className="mb25 pt30">{item.title}</div>
-                      <div className="flex wrap">
-                        {item.values &&
-                          item.values.length > 0 &&
-                          item.values.map(x => (
-                            <button
-                              key={x.id}
-                              className={`plr25 lh100 ptb15 ${
-                                x.valid === 2
-                                  ? "c999 bg-border"
-                                  : this.state[`focus_${item.id}`] === x.id
-                                    ? "bg-main c-white"
-                                    : "c333 bg-border"
-                              } mr30 mb15 r100`}
-                              onClick={
-                                x.valid === 2
-                                  ? null
-                                  : () => this.onItem(item.id, x)
-                              }
-                            >
-                              {x.title}
-                            </button>
-                          ))}
-                      </div>
+              {/* 商品具体规格选择窗口 */}
+              <div
+                className={`product-pay ${
+                  show ? "product-pay-show" : "product-pay-hide"
+                }`}
+              >
+                {/* 上 */}
+                <div className="h60" />
+                <div className="bg-white">
+                  {/* 头部 */}
+                  <div className="relative flex ai-end plr30">
+                    <div
+                      style={{
+                        width: "2rem",
+                        height: "2rem",
+                        position: "absolute",
+                        left: "0.3rem",
+                        bottom: 0
+                      }}
+                      className="overflow-h r10 common-img-bg"
+                    >
+                      <img src={goods.thumb} className="w-100 h-100" alt="" />
                     </div>
-                  ))}
-                <div className="flex jc-between ai-center pt20 pr30">
-                  <div className="font24 c666">购买数量</div>
-                  <div className="font30 bold-mid">1</div>
+                    <div style={{ width: "2.3rem", height: "1.4rem" }} />
+                    <div className="equal relative">
+                      <div
+                        style={{ position: "absolute", right: 0, top: 0 }}
+                        onClick={this.onAlertBg}
+                      >
+                        <i className="i-close font24 c999" />
+                      </div>
+                      <div className="font24 c999 ptb15">
+                        <span className="font22 c-main">¥</span>
+                        <span className="font40 bold c-main mr30">
+                          {selectPrice}
+                        </span>
+                        {goods.offerd_num}人拼团
+                        {/* &nbsp;&nbsp;&nbsp;&nbsp;库存：{stock} */}
+                      </div>
+                      {tipArrStr !== undefined && (
+                        <div className="font24 c666 ptb10">
+                          {tipArrStr.length === 0
+                            ? "可以立即购买啦！"
+                            : `请选择 ${tipArrStr.map(item => item)}`}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 主干 */}
+                  <div
+                    style={{ maxHeight: "5.2rem" }}
+                    className="pl30 overflow-y"
+                  >
+                    {attr &&
+                      attr.length > 0 &&
+                      attr.filter(m => m.attr_type === 2).length > 0 &&
+                      attr.filter(m => m.attr_type === 2).map(item => (
+                        <div key={item.id} className="font24 c666">
+                          <div className="mb25 pt30">{item.title}</div>
+                          <div className="flex wrap">
+                            {item.values &&
+                              item.values.length > 0 &&
+                              item.values.map(x => (
+                                <button
+                                  key={x.id}
+                                  className={`plr25 lh100 ptb15 ${
+                                    x.valid === 2
+                                      ? "c999 bg-border"
+                                      : this.state[`focus_${item.id}`] === x.id
+                                        ? "bg-main c-white"
+                                        : "c333 bg-border"
+                                  } mr30 mb15 r100`}
+                                  onClick={
+                                    x.valid === 2
+                                      ? null
+                                      : () => this.onItem(item.id, x)
+                                  }
+                                >
+                                  {x.title}
+                                </button>
+                              ))}
+                          </div>
+                        </div>
+                      ))}
+                    <div className="flex jc-between ai-center pt20 pr30">
+                      <div className="font24 c666">购买数量</div>
+                      <div className="font30 bold-mid">1</div>
+                    </div>
+                    <div className="h40" />
+                  </div>
                 </div>
-                <div className="h40" />
+
+                {/* 按钮 */}
+                <button
+                  className="h98 bg-main w-100 c-white font34"
+                  onClick={this.onPaySure}
+                >
+                  确定
+                </button>
               </div>
             </div>
-
-            {/* 按钮 */}
-            <button
-              className="h98 bg-main w-100 c-white font34"
-              onClick={this.onPaySure}
-            >
-              确定
-            </button>
-          </div>
-        </div>
+          )}
       </Layout>
     );
   }
