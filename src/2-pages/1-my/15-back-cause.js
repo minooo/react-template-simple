@@ -66,14 +66,17 @@ export default class extends Component {
                 data.images.map(item => (
                   <div
                     key={item}
+                    style={{ width: "33%" }}
+                    className="flex jc-center mb30"
                     onClick={() => this.onImages(item)}
-                    className="retreat-img"
                   >
-                    <img
-                      src={item}
-                      className="h-100 w-100 common-img-bg"
-                      alt=""
-                    />
+                    <div style={{ width: "1.8rem", height: "1.8rem" }}>
+                      <img
+                        src={item}
+                        className="h-100 w-100 common-img-bg"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 ))}
             </div>
