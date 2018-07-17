@@ -158,9 +158,7 @@ const statusConfig = {
       ico: "i-fail font60 c-white",
       bg: "bg-second"
     },
-    btns: [
-      { text: "查看核销码", class: "equal bg-main", type: "checkCode" }
-    ],
+    btns: [{ text: "查看核销码", class: "equal bg-main", type: "checkCode" }],
     showGroup: true
   },
   10: {
@@ -190,7 +188,9 @@ const statusConfig = {
       ico: "i-back font56 c-white",
       bg: "bg-second"
     },
-    btns: [{ text: "提醒卖家收货", class: "equal bg-second", type: "tipReceipt" }],
+    btns: [
+      { text: "提醒卖家收货", class: "equal bg-second", type: "tipReceipt" }
+    ],
     showGroup: true
   },
   12: {
@@ -258,7 +258,7 @@ const statusConfig = {
       ico: "i-back font56 c-white",
       bg: "bg-d9"
     },
-    btns: [{ text: "等待卖家退款", class: "equal equal bg-d9 c666" }],
+    btns: [{ text: "等待卖家退款", class: "equal equal bg-d9 c666" }]
   }
 };
 
@@ -292,7 +292,11 @@ const orderInfoList = [
   { sign: "refund_created_at", title: "退款（退货）申请时间" },
   { sign: "reason", title: "退款（退货）原因", type: "reason" },
   { sign: "refund_refused_updated_at", title: "拒绝退款（退货）时间" },
-  { sign: "refused_reason", title: "拒绝退款（退货）原因", type: "rejectReason" },
+  {
+    sign: "refused_reason",
+    title: "拒绝退款（退货）原因",
+    type: "rejectReason"
+  },
   { sign: "refund_updated_at", title: "退款（退货）同意时间" },
   { sign: "refund_express_comp_name", title: "退货物流" },
   { sign: "refund_express_code", title: "退货单号" },
@@ -385,9 +389,13 @@ export default class extends Component {
           }
           this.setState(() => ({ config: newConfig }));
         }
-        this.setState(() => ({ item: response }), ()=>{
-          const { item }=this.state
-          this.initState(item)});
+        this.setState(
+          () => ({ item: response }),
+          () => {
+            const { item } = this.state;
+            this.initState(item);
+          }
+        );
       });
     });
   }
@@ -430,7 +438,9 @@ export default class extends Component {
   handle = type => {
     const { item, status } = this.state;
     const { history } = this.props;
-    const isFull = item.buy_type !== 2 && (item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1)
+    const isFull =
+      item.buy_type !== 2 &&
+      item.goods.offerd_num - ((item.joins && item.joins.length) || 0) === 1;
     const payState = {
       goods_id: item.goods.id,
       id: item.id,
@@ -457,7 +467,7 @@ export default class extends Component {
         }
         break;
       case "checkCode": // 查看核销码
-        this.lookCheckCode(item)
+        this.lookCheckCode(item);
         break;
       case "confirmReceipt": // 确认收货
         commonAlert("确认收货", () => {
@@ -484,9 +494,7 @@ export default class extends Component {
   deleOrder = id => {
     const { history } = this.props;
     http.deleteC({ action: "order", operation: "destroy", id }, () => {
-      Toast.info("删除成功", 1, () =>
-        history.replace("/order_list")
-      );
+      Toast.info("删除成功", 1, () => history.replace("/order_list"));
     });
   };
   // 更新订单状态
@@ -500,17 +508,21 @@ export default class extends Component {
       },
       () => {
         this.getData(id, data => {
-          Toast.info(text, 1)
-          this.setState(() => ({
-            item: data
-          }), () => {
+          Toast.info(text, 1);
+          this.setState(
+            () => ({
+              item: data
+            }),
             () => {
-              const {item}=this.state
-              this.initState(item)
+              () => {
+                const { item } = this.state;
+                this.initState(item);
+              };
             }
-          });
+          );
         });
-      })
+      }
+    );
   };
   renderOrderDetail = item => (
     <OrderDetailList
@@ -520,18 +532,19 @@ export default class extends Component {
     />
   );
   lookCheckCode = item => {
-    alert(item.verify_code ? "核销码" : "", item.verify_code || "拼单未满员或拼团失败，待拼单成功后才能查看核销码哦~", [{ text: "确定" }]);
-  }
+    alert(
+      item.verify_code ? "核销码" : "",
+      item.verify_code || "拼单未满员或拼团失败，待拼单成功后才能查看核销码哦~",
+      [{ text: "确定" }]
+    );
+  };
   // 初始化拼团状态
   initState = item => {
     const { goods, joins_num, launch_log_created_at } = item;
 
-    const remainNum = Math.max(
-      +goods.offerd_num - ((joins_num) || 0),
-      0
-    );
+    const remainNum = Math.max(+goods.offerd_num - (joins_num || 0), 0);
     const milliseconds =
-      +parse(launch_log_created_at) + (goods.available_time * 3600 * 1000);
+      +parse(launch_log_created_at) + goods.available_time * 3600 * 1000;
     const remainMilliseconds = milliseconds - new Date();
 
     // 拼团状态(0-未开始、1-拼团中、2-拼团成功、3-拼团失败)
@@ -547,16 +560,19 @@ export default class extends Component {
     }
     this.setState(() => ({
       collageStatus: status
-    }))
+    }));
     if (remainMilliseconds > 0) {
       this.tick = setTimeout(() => {
         this.getData(id, data => {
-          this.setState(() => ({
-            item: data
-          }),()=>{
-            const {item}=this.state
-            this.initState(item)
-          } );
+          this.setState(
+            () => ({
+              item: data
+            }),
+            () => {
+              const { item } = this.state;
+              this.initState(item);
+            }
+          );
         });
       }, remainMilliseconds);
     }
@@ -568,7 +584,7 @@ export default class extends Component {
     const validOrderInfoList = orderInfoList.filter(x => {
       if (item[x.sign]) {
         x.caption = item[x.sign];
-        x.status=item.status
+        x.status = item.status;
       }
       return item[x.sign] !== undefined;
     });
@@ -583,16 +599,19 @@ export default class extends Component {
           )}
 
           {/* 收货地址 */}
-          {item && parseInt(item.delivery_type, 10) === 1 && (
-            <OrderAddress
-              nickname={item.member_nickname}
-              mobile={item.member_mobile}
-              address={item.member_address}
-            />
-          )}
+          {item &&
+            parseInt(item.delivery_type, 10) === 1 && (
+              <OrderAddress
+                nickname={item.member_nickname}
+                mobile={item.member_mobile}
+                address={item.member_address}
+              />
+            )}
 
           {/* 拼单成功 */}
-          {item.buy_type !== 2 && item.launch_log_id && collageStatus !== undefined && (
+          {item.buy_type !== 2 &&
+            item.launch_log_id &&
+            collageStatus !== undefined && (
               <OrderGroup
                 status={collageStatus}
                 list={item.joins}
@@ -609,7 +628,8 @@ export default class extends Component {
                 isOrder={{ price: item.pay_price }}
               />
             )}
-            {item.delivery_type === 1 && item.goods &&
+            {item.delivery_type === 1 &&
+              item.goods &&
               item.goods.delivery_fee !== undefined && (
                 <div className="h84 flex ai-center jc-between font24 c333 border-bottom-one">
                   <div>运费</div>
@@ -620,11 +640,9 @@ export default class extends Component {
                   </div>
                 </div>
               )}
-            <div className="h86 font28 c333 flex ai-center border-bottom-one">
-              <span className="pr20">留言</span>
-              <div className="pl20 equal">
-                {item.con || "用户很懒，什么也没说"}
-              </div>
+            <div className="pb25 font28 c333 border-bottom-one">
+              留言：
+              {item.con || "用户很懒，什么也没说"}
             </div>
             <div className="h84 flex jc-end ai-center">
               <div className="font24 c333">
