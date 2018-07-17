@@ -640,7 +640,7 @@ export default class extends Component {
                   </div>
                 </div>
               )}
-            <div className="ptb20 font28 c333 lh150 border-bottom-one">
+            <div className="ptb25 font28 c333 lh150 border-bottom-one">
               留言：
               {item.con || "用户很懒，什么也没说"}
             </div>
