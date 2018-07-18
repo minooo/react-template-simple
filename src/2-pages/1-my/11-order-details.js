@@ -169,7 +169,7 @@ const statusConfig = {
       bg: "bg-second"
     },
     btns: [
-      { text: "等待卖家发货", class: "equal bg-second", type: "backGoods" }
+      { text: "等待卖家发货", class: "equal bg-d9 c666"}
     ],
     showGroup: true
   },
