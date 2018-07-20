@@ -489,7 +489,7 @@ export default class extends Component {
 
         {/* 底部 */}
         {goods &&
-          goods.status === 1 && new Date(goods.begin_time) - new Date() < 0 && new Date(goods.end_time) - new Date() > 0 && (
+          goods.status === 1 && goods.begin_time - new Date() < 0 && goods.end_time - new Date() > 0 && (
             <div className="equal-no h108 flex border-top">
               <a
                 href={`tel:${config("custom")}`}
