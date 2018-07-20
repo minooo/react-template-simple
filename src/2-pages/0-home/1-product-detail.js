@@ -139,10 +139,16 @@ export default class extends Component {
     }
   }
   onPay(type) {
-    const { isOver } = this.state;
-    if ((type === "single" || type === "group") && isOver) {
-      Toast.fail("该商品已过期！", 2);
-      return;
+    const { isOver, goods } = this.state;
+    if ((type === "single" || type === "group")) {
+      if (isOver) {
+        Toast.fail("该商品已过期！", 2);
+        return;
+      }
+      if (!(goods.status === 1 && goods.begin_time - new Date() < 0 && goods.end_time - new Date() > 0)) {
+        Toast.fail("该商品处于预览状态或不在开团时间内，故无法购买", 2);
+        return;
+      }
     }
     this.setState(
       pre => ({ show: !pre.show, payType: type }),
@@ -488,8 +494,7 @@ export default class extends Component {
         </div>
 
         {/* 底部 */}
-        {goods &&
-          goods.status === 1 && goods.begin_time - new Date() < 0 && goods.end_time - new Date() > 0 && (
+        {goods && (
             <div className="equal-no h108 flex border-top">
               <a
                 href={`tel:${config("custom")}`}
